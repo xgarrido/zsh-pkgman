@@ -50,3 +50,22 @@ function cmt::setup()
 {
     source ${location}/mgr/setup.sh
 }
+
+function cmt::unsetup()
+{
+    if ! $(pkgtools__check_variable CMTROOT); then
+        return 0
+    fi
+
+    pkgtools__remove_path_to_PATH ${CMTROOT}/${CMTBIN}
+    pkgtools__unset_variable CMTROOT
+    pkgtools__unset_variable CMTBIN
+    pkgtools__unset_variable CMTCONFIG
+    pkgtools__unset_variable CLASSPATH
+    pkgtools__unset_variable jmct
+    pkgtools__unset_variable cmt
+    pkgtools__unset_variable MAKEFLAGS
+    unalias cmt
+    unfunction cmt_actions cmt_default_path cmt_make cmt_aliases cmt_fragments \
+               cmt_patterns cmt_constituents cmt_macros cmt_sets
+}
