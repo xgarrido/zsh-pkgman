@@ -14,12 +14,12 @@ function pkgman()
     __pkgtools__default_values
     __pkgtools__at_function_enter pkgman
 
-    local token_fcns=(setup unsetup update install uninstall dump)
+    local fcns=(setup unsetup update install uninstall dump)
 
     local mode
     local append_list_of_pkgs_arg
     local append_list_of_options_arg
-    local pkgman_install_dir=$(pwd)
+    local pkgman_install_dir=/tmp
     while [ -n "$1" ]; do
         local token="$1"
         if [ "${token[0,1]}" = "-" ]; then
@@ -42,7 +42,7 @@ function pkgman()
                 pkgman_install_dir="$1"
             fi
         else
-            if (( ${token_fcns[(I)${token}]} )); then
+            if (( ${fcns[(I)${token}]} )); then
                 pkgtools__msg_devel "Mode ${token} exists !"
                 mode=${token}
             else
@@ -74,27 +74,35 @@ function pkgman()
     do
         pkgtools__msg_debug "Check existence of package '${ipkg}'"
         local pkg=$(basename $ipkg)
-        local pkg_dir=$(find ${packages_dir}/$(dirname $ipkg) -name ${pkg}.zsh)
-        pkgtools__msg_devel "pkg_dir=${pkg_dir}"
-        if [[ -z ${pkg_dir} ]]; then
+        local pkg_file=$(find ${packages_dir}/$(dirname $ipkg) -name ${pkg}.zsh)
+        pkgtools__msg_devel "pkg_file=${pkg_file}"
+        if [[ -z ${pkg_file} ]]; then
 	    pkgtools__msg_error "Package '${ipkg}' not found !"
             continue
-        elif [[ $(echo "${pkg_dir}" | wc -l) > 1 ]]; then
+        elif [[ $(echo "${pkg_file}" | wc -l) > 1 ]]; then
             pkgtools__msg_error "Package '${ipkg}' has ambiguous declaration !"
-            pkgtools__msg_error "Choose between "$(echo "${pkg_dir}" | sed -e 's#'${packages_dir}'/./##g' -e 's/.zsh$//')
+            pkgtools__msg_error "Choose between "$(echo "${pkg_file}" | sed -e 's#'${packages_dir}'/./##g' -e 's/.zsh$//')
             continue
 	fi
 
-        pkgtools__msg_debug "Load '${pkg_dir}' file..."
-        . ${pkg_dir}
-        fcn="${pkg}::${mode}"
+        pkgtools__msg_debug "Load '${pkg_file}' file..."
+        . ${pkg_file}
+        local fcn="${pkg}::${mode}"
         if (( ! $+functions[$fcn] )); then
-            pkgtools__msg_error "Missing function '$fcn' ! Need to be implemented within '${pkg_dir}'!"
-            continue
+            pkgtools__msg_error "Missing function '$fcn' ! Need to be implemented within '${pkg_file}'!"
+        else
+            pkgtools__msg_debug "Run '$fcn' function"
+            $fcn
         fi
-        pkgtools__msg_debug "Run '$fcn' function"
-        $fcn
-        unfunction $fcn
+
+        # Clean functions
+        for i in ${=fcns}
+        do
+            local fcn="${pkg}::${i}"
+            if (( $+functions[$fcn] )); then
+                unfunction $fcn
+            fi
+        done
     done
 
 
