@@ -14,7 +14,7 @@ function python2::dump()
 {
     pkgtools__msg_notice "Python"
     pkgtools__msg_notice " |- version : ${version}"
-    pkgtools__msg_notice " |- to      : ${location}"
+    pkgtools__msg_notice " \`- to      : ${location}"
 }
 
 function python2::install()

@@ -16,7 +16,7 @@ function cmt::dump()
     pkgtools__msg_notice "CMT"
     pkgtools__msg_notice " |- version : ${version}"
     pkgtools__msg_notice " |- from    : ${address}"
-    pkgtools__msg_notice " |- to      : ${location}"
+    pkgtools__msg_notice " \`- to      : ${location}"
 }
 
 function cmt::install()
