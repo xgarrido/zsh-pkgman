@@ -69,9 +69,14 @@ function pkgman()
     #     return 1
     # fi
 
+    local -a loaded_pkgs
+    function --load_pkgs()
+    {
+        loaded_pkgs+=($1)
+    }
+
     local packages_dir=${pkgman_dir}/packages
-    for ipkg in ${=append_list_of_pkgs_arg}
-    do
+    for ipkg in ${=append_list_of_pkgs_arg}; do
         pkgtools__msg_debug "Check existence of package '${ipkg}'"
         local pkg=$(basename $ipkg)
         local pkg_file=$(find ${packages_dir}/$(dirname $ipkg) -name ${pkg}.zsh)
@@ -86,7 +91,7 @@ function pkgman()
 	fi
 
         pkgtools__msg_debug "Load '${pkg_file}' file..."
-        . ${pkg_file}
+        . ${pkg_file} && --load_pkgs ${pkg}
         local fcn="${pkg}::${mode}"
         if (( ! $+functions[$fcn] )); then
             pkgtools__msg_error "Missing function '$fcn' ! Need to be implemented within '${pkg_file}'!"
@@ -94,17 +99,17 @@ function pkgman()
             pkgtools__msg_debug "Run '$fcn' function"
             $fcn
         fi
+    done
 
-        # Clean functions
-        for i in ${=fcns}
-        do
-            local fcn="${pkg}::${i}"
+    for ipkg in ${loaded_pkgs}; do
+        for ifcn in ${fcns}; do
+            local fcn="${ipkg}::${ifcn}"
             if (( $+functions[$fcn] )); then
+                pkgtools__msg_devel "Unloading $fcn function"
                 unfunction $fcn
             fi
         done
     done
-
 
     __pkgtools__at_function_exit
     return 0
