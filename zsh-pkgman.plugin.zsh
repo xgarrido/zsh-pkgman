@@ -10,10 +10,6 @@
 pkgman_dir=$(dirname $0)
 pkgman_install_dir=/tmp
 
-# pkgman database file
-pkgman_db_file=${pkgman_dir}/.pkgman_db_file
-touch ${pkgman_db_file}
-
 function pkgman()
 {
     __pkgtools__default_values
@@ -24,9 +20,10 @@ function pkgman()
     local mode
     local append_list_of_pkgs_arg
     local append_list_of_options_arg
-    while [ -n "$1" ]; do
-        local token="$1"
-        if [ "${token[0,1]}" = "-" ]; then
+
+    local args=($@)
+    for token in ${args}; do
+        if [ ${token[0,1]} = - ]; then
 	    local opt=${token}
             append_list_of_options_arg+="${opt} "
 	    if [[ ${opt} = -h || ${opt} = --help ]]; then
@@ -50,7 +47,7 @@ function pkgman()
                 pkgtools__msg_devel "Mode ${token} exists !"
                 mode=${token}
             else
-                pkgtools__msg_devel "Mode ${token} does not exist !"
+                pkgtools__msg_devel "Adding package ${token} !"
 	        append_list_of_pkgs_arg+="${token} "
             fi
         fi
@@ -64,8 +61,40 @@ function pkgman()
     pkgtools__msg_devel "append_list_of_pkgs_arg=${append_list_of_pkgs_arg}"
     pkgtools__msg_devel "append_list_of_options_arg=${append_list_of_options_arg}"
 
-    local -a loaded_pkgs
+    # pkgman internal database
+    local pkgman_db_file=${pkgman_dir}/.pkgman_db_file
+    [[ ! -f ${pkgman_db_file} ]] && touch ${pkgman_db_file}
+
+    # Internal functions
+    __pkgman::get_install_dir()
+    {
+        local pkg=$1
+        local version=$2
+        local install_dir="$(cat $pkgman_db_file | awk '/^'${pkg}'.*'${version}'/{print $3}')"
+        echo ${install_dir}
+    }
+
+    __pkgman::store_install_dir()
+    {
+        local pkg=$1
+        local version=$2
+        local new_install_dir=$3
+        local current_install_dir=$(__pkgman::get_install_dir $pkg $version)
+        if [[ ${current_install_dir} = ${new_install_dir} ]]; then
+            __pkgman::remove_install_dir $(echo ${pkg} ${version})
+        fi
+        echo ${ipkg} ${version} ${new_install_dir} >> ${pkgman_db_file}
+    }
+
+    __pkgman::remove_install_dir()
+    {
+        local pkg=$1
+        local version=$2
+        sed -i -e '/^'${pkg}'.*'${version}'/d' ${pkgman_db_file}
+    }
+
     local packages_dir=${pkgman_dir}/packages
+    local -a loaded_pkgs
     for ipkg in ${=append_list_of_pkgs_arg}; do
         pkgtools__msg_debug "Check existence of package '${ipkg}'"
         local pkg=$(basename $ipkg)
@@ -75,16 +104,25 @@ function pkgman()
 	    pkgtools__msg_error "Package '${ipkg}' not found !"
             continue
         elif [[ $(echo "${pkg_file}" | wc -l) > 1 ]]; then
-            pkgtools__msg_error "Package '${ipkg}' has ambiguous declaration !"
+            pkgtools__msg_error "Package '${ipkg}' has ambiguous declaration!"
             pkgtools__msg_error "Choose between "$(echo "${pkg_file}" | sed -e 's#'${packages_dir}'/./##g' -e 's/.zsh$//')
             continue
 	fi
 
+        pkgtools__msg_notice "Load '${pkg}' package..."
+        . ${pkg_file} && loaded_pkgs+=(${pkg})
+
+        # Check package version (mandatory)
+        if [[ -z ${version} ]]; then
+            pkgtools__msg_error "Missing package version!"
+            continue
+        fi
+
         # Install directory from database
-        local pkg_install_dir=$(pkgman::get_install_dir $ipkg)
+        local pkg_install_dir=$(__pkgman::get_install_dir $ipkg $version)
         if [[ -z ${pkg_install_dir} ]]; then
             if [[ ${mode} != install ]]; then
-                pkgtools__msg_error "The current package ${ipkg} is not installed !"
+                pkgtools__msg_error "The current package ${ipkg} is not installed!"
                 continue
             fi
         else
@@ -96,17 +134,19 @@ function pkgman()
             pkgman_install_dir=${pkg_install_dir}
         fi
 
-        pkgtools__msg_debug "Load '${pkg_file}' file..."
-        . ${pkg_file} && loaded_pkgs+=(${pkg})
         local fcn="${pkg}::${mode}"
         if (( ! $+functions[$fcn] )); then
             pkgtools__msg_error \
                 "Missing function '$fcn'! Need to be implemented within '${pkg_file}'!"
         else
-            pkgtools__msg_debug "Run '$fcn' function"
-            $fcn ${append_list_of_options_arg}
-            if [[ ${mode} = install ]]; then
-                pkgman::store_install_dir ${ipkg} ${pkgman_install_dir}
+            pkgtools__msg_notice "Run '$fcn' function for version ${version}"
+            pkgtools__quietly_run $fcn ${append_list_of_options_arg}
+            if $(pkgtools__last_command_succeeds); then
+                if [[ ${mode} = install ]]; then
+                    __pkgman::store_install_dir $(echo ${ipkg} ${version} ${pkgman_install_dir})
+                elif [[ ${mode} = uninstall ]]; then
+                    __pkgman::remove_install_dir $(echo ${ipkg} ${version})
+                fi
             fi
         fi
     done
@@ -125,24 +165,10 @@ function pkgman()
     awk '!seen[$0]++' ${pkgman_db_file} > ${pkgman_db_file}.tmp
     mv ${pkgman_db_file}.tmp ${pkgman_db_file}
 
+    unfunction __pkgman::get_install_dir
+    unfunction __pkgman::store_install_dir
+    unfunction __pkgman::remove_install_dir
+
     __pkgtools__at_function_exit
     return 0
-}
-
-function pkgman::get_install_dir()
-{
-    local pkg=$1
-    local install_dir="$(cat $pkgman_db_file | awk '/^'${pkg}'/{print $2}')"
-    echo ${install_dir}
-}
-
-function pkgman::store_install_dir()
-{
-    local pkg=$1
-    local new_install_dir=$2
-    local current_install_dir=$(pkgman::get_install_dir $pkg)
-    if [[ ${current_install_dir} = ${new_install_dir} ]]; then
-        sed '#^'${pkg}'#d' ${pkgman_db_file}
-    fi
-    echo ${ipkg} ${new_install_dir} >> ${pkgman_db_file}
 }
