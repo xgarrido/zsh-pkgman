@@ -21,17 +21,13 @@ function cmt::dump()
 
 function cmt::install()
 {
-    if [ ! -d ${location} ]; then
-        mkdir -p ${location}
-        (
-            cd $(mktemp -d)
-            wget ${address}
-            tar xzvf CMT${version}.tar.gz
-            cp -r CMT/${version}/* ${location}
-            rm -rf $(pwd)
-        )
-    fi
     (
+        mkdir -p ${location}
+        cd $(mktemp -d)
+        wget ${address}
+        tar xzvf CMT${version}.tar.gz
+        cp -r CMT/${version}/* ${location}
+        rm -rf $(pwd)
         cd ${location}/mgr
         ./INSTALL && source setup.sh && make
     )
