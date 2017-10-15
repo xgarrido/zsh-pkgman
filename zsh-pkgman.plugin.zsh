@@ -15,14 +15,16 @@ function pkgman()
     __pkgtools__default_values
     __pkgtools__at_function_enter pkgman
 
+    local packages_dir=${pkgman_dir}/packages
+
     local fcns=(setup unsetup update install uninstall dump)
 
     local mode
     local append_list_of_pkgs_arg
     local append_list_of_options_arg
 
-    local args=($@)
-    for token in ${args}; do
+    while [ -n "$1" ]; do
+        local token="$1"
         if [ ${token[0,1]} = - ]; then
 	    local opt=${token}
             append_list_of_options_arg+="${opt} "
@@ -46,6 +48,11 @@ function pkgman()
             if (( ${fcns[(I)${token}]} )); then
                 pkgtools__msg_devel "Mode ${token} exists !"
                 mode=${token}
+            elif [[ ${token} = add ]]; then
+                shift 1
+                local address="$1"
+                pkgtools__msg_notice "Adding packages from ${address}"
+                git clone git@github.com:$address ${packages_dir}/${address}
             else
                 pkgtools__msg_devel "Adding package ${token} !"
 	        append_list_of_pkgs_arg+="${token} "
@@ -93,7 +100,6 @@ function pkgman()
         sed -i -e '/^'${pkg}'.*'${version}'/d' ${pkgman_db_file}
     }
 
-    local packages_dir=${pkgman_dir}/packages
     local -a loaded_pkgs
     for ipkg in ${=append_list_of_pkgs_arg}; do
         pkgtools__msg_debug "Check existence of package '${ipkg}'"
