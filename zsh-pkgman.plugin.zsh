@@ -109,6 +109,14 @@ function pkgman()
             continue
 	fi
 
+        # Check for aggregator of packages
+        local has_decorator=false
+        if [[ ${pkg} = @* ]]; then
+            has_decorator=true
+            pkg=${pkg:1}
+        fi
+        pkgtools__msg_devel "has_decorator=${has_decorator}"
+
         pkgtools__msg_notice "Load '${pkg}' package..."
         . ${pkg_file} && loaded_pkgs+=(${pkg})
 
@@ -121,7 +129,7 @@ function pkgman()
         # Install directory from database
         local pkg_install_dir=$(__pkgman::get_install_dir $ipkg $version)
         if [[ -z ${pkg_install_dir} ]]; then
-            if [[ ${mode} != install ]]; then
+            if [[ ! ${has_decorator} && ${mode} != install ]]; then
                 pkgtools__msg_error "The current package ${ipkg} is not installed!"
                 continue
             fi
@@ -142,10 +150,12 @@ function pkgman()
             pkgtools__msg_notice "Run '$fcn' function for version ${version}"
             pkgtools__quietly_run $fcn ${append_list_of_options_arg}
             if $(pkgtools__last_command_succeeds); then
-                if [[ ${mode} = install ]]; then
-                    __pkgman::store_install_dir $(echo ${ipkg} ${version} ${pkgman_install_dir})
-                elif [[ ${mode} = uninstall ]]; then
-                    __pkgman::remove_install_dir $(echo ${ipkg} ${version})
+                if ! ${has_decorator}; then
+                    if [[ ${mode} = install ]]; then
+                        __pkgman::store_install_dir $(echo ${ipkg} ${version} ${pkgman_install_dir})
+                    elif [[ ${mode} = uninstall ]]; then
+                        __pkgman::remove_install_dir $(echo ${ipkg} ${version})
+                    fi
                 fi
             fi
         fi
@@ -161,13 +171,18 @@ function pkgman()
         done
     done
 
+    local internals_fcns=(__pkgman::get_install_dir
+                          __pkgman::store_install_dir
+                          __pkgman::remove_install_dir)
+    for ifcn in ${internals_fcns}; do
+        if (( $+functions[$ifcn] )); then
+            unfunction $ifcn
+        fi
+    done
+
     # Remove duplicate lines
     awk '!seen[$0]++' ${pkgman_db_file} > ${pkgman_db_file}.tmp
     mv ${pkgman_db_file}.tmp ${pkgman_db_file}
-
-    unfunction __pkgman::get_install_dir
-    unfunction __pkgman::store_install_dir
-    unfunction __pkgman::remove_install_dir
 
     __pkgtools__at_function_exit
     return 0
