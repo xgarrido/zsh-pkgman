@@ -8,7 +8,7 @@
 # Status: not intended to be distributed yet
 
 pkgman_dir=$(dirname $0)
-pkgman_install_dir=/tmp
+pkgman_install_dir=
 
 function pkgman()
 {
@@ -145,7 +145,10 @@ function pkgman()
                     "The current package ${ipkg} is already installed @ ${pkg_install_dir}! Remove it first!"
                 continue
             fi
-            pkgman_install_dir=${pkg_install_dir}
+            # If install dir is not empty, it means it has been forced
+            if [[ -z ${pkgman_install_dir} ]]; then
+                pkgman_install_dir=${pkg_install_dir}
+            fi
         fi
 
         local fcn="${pkg}::${mode}"
