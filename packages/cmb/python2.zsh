@@ -20,7 +20,19 @@ function python2::dump()
 function python2::install()
 {
     if [ ! -d ${location} ]; then
-        virtualenv --python=/usr/bin/python2.7 ${location}
+        if ! $(pkgtools__has_binary virtualenv); then
+            (
+                cd $(mktemp -d)
+                wget \
+                    "https://pypi.python.org/packages/d4/0c/9840c08189e030873387a73b90ada981885010dd9aea134d6de30cd24cb8/virtualenv-15.1.0.tar.gz#md5=44e19f4134906fe2d75124427dc9b716"
+                tar xzvf virtualenv-15.1.0.tar.gz
+                cd virtualenv-15.1.0
+                python${version} virtualenv.py ${location}
+                rm -rf $(pwd)
+            )
+        else
+            virtualenv --python=$(which python)/${version} ${location}
+        fi
     fi
     python2::setup
     pip install -U pip numpy==1.6.1 scipy==0.10.1 cython pyfits ipython jupyter
