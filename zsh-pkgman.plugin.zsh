@@ -22,6 +22,7 @@ function pkgman()
     local mode
     local append_list_of_pkgs_arg
     local append_list_of_options_arg
+    local new_pkgman_install_dir
 
     while [ -n "$1" ]; do
         local token="$1"
@@ -42,7 +43,7 @@ function pkgman()
 	        pkgtools__msg_using_quiet
 	    elif [[ ${opt} = --install-dir ]]; then
                 shift 1
-                pkgman_install_dir="$1"
+                new_pkgman_install_dir="$1"
             fi
         else
             if (( ${fcns[(I)${token}]} )); then
@@ -145,11 +146,13 @@ function pkgman()
                     "The current package ${ipkg} is already installed @ ${pkg_install_dir}! Remove it first!"
                 continue
             fi
-            # If install dir is not empty, it means it has been forced
-            if [[ -z ${pkgman_install_dir} ]]; then
-                pkgman_install_dir=${pkg_install_dir}
-            fi
+            pkgman_install_dir=${pkg_install_dir}
         fi
+        # If install dir is not empty, it means it has been forced
+        if [[ ! -z ${new_pkgman_install_dir} ]]; then
+            pkgman_install_dir=${new_pkgman_install_dir}
+        fi
+        pkgtools__msg_notice ${pkgman_install_dir}
 
         local fcn="${pkg}::${mode}"
         if (( ! $+functions[$fcn] )); then
