@@ -28,10 +28,14 @@ function class::install()
         cmt create class ${version}
         cd ${location}/cmt
         if $(pkgtools__has_binary icc); then
-            wget http://camel.in2p3.fr/wiki/uploads/Main/requirements-class-icc.txt
+            [[ ! -f requirements-class-icc.txt ]] && \
+                wget http://camel.in2p3.fr/wiki/uploads/Main/requirements-class-icc.txt
+            sed -i -e 's#-openmp#-qopenmp -qoverride-limits#' requirements-class-icc.txt
+            sed -i -e 's#/afs/in2p3.fr/.*-liomp5#'$(dirname $(which icc))'/../../lib/intel64 -liomp5#' requirements-class-icc.txt
             rm -f requirements; ln -sf requirements-class-icc.txt requirements
         elif $(pkgtools__has_binary gcc); then
-            wget http://camel.in2p3.fr/wiki/uploads/Main/requirements-class-gcc.txt
+            [[ ! -f requirements-class-gcc.txt ]] && \
+                wget http://camel.in2p3.fr/wiki/uploads/Main/requirements-class-gcc.txt
             rm -f requirements; ln -sf requirements-class-gcc.txt requirements
         fi
         cmt config
