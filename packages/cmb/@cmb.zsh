@@ -10,7 +10,14 @@
 local version=master
 local cmb_pkgs=(python2 cmt class pypico planck camel)
 
-pkgman_install_dir=$HOME/Workdir/CMB/software
+case $(hostname) in
+    cca*)
+        pkgman_install_dir=$SCRATCH_DIR/workdir/cmb/software
+        ;;
+    *)
+        pkgman_install_dir=$HOME/Workdir/CMB/software
+        ;;
+esac
 
 function --cmb::action()
 {
