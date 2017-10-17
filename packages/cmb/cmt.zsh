@@ -45,7 +45,7 @@ function cmt::uninstall()
 function cmt::setup()
 {
     source ${location}/mgr/setup.sh
-    pkgtools__set_variable CMTCONFIG "Linux-x86_64"
+    pkgtools__reset_variable CMTCONFIG "Linux-x86_64"
 }
 
 function cmt::unsetup()
