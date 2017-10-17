@@ -152,7 +152,6 @@ function pkgman()
         if [[ ! -z ${new_pkgman_install_dir} ]]; then
             pkgman_install_dir=${new_pkgman_install_dir}
         fi
-        pkgtools__msg_notice ${pkgman_install_dir}
 
         local fcn="${pkg}::${mode}"
         if (( ! $+functions[$fcn] )); then
