@@ -39,8 +39,6 @@ function pkgman()
 	        pkgtools__msg_using_verbose
 	    elif [[ ${opt} = -W || ${opt} = --no-warning ]]; then
 	        pkgtools__msg_not_using_warning
-	    elif [[ ${opt} = -q || ${opt} = --quiet ]]; then
-	        pkgtools__msg_using_quiet
 	    elif [[ ${opt} = --install-dir ]]; then
                 shift 1
                 new_pkgman_install_dir="$1"
@@ -158,8 +156,8 @@ function pkgman()
             pkgtools__msg_error \
                 "Missing function '$fcn'! Need to be implemented within '${pkg_file}'!"
         else
-            pkgtools__msg_notice "Run '$fcn' function for version ${version}"
-            pkgtools__quietly_run $fcn ${append_list_of_options_arg}
+            pkgtools__msg_debug "Run '$fcn' function for version ${version}"
+            pkgtools__quietly_run "$fcn ${append_list_of_options_arg}"
             if $(pkgtools__last_command_succeeds); then
                 if ! ${has_decorator}; then
                     if [[ ${mode} = install ]]; then
