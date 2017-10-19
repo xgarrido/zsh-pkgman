@@ -1,0 +1,180 @@
+#compdef pkgman
+
+# Global variables; setup the first time _pkgman is called.
+# For $_pkgman_commands[] generation, see the very end of this file.
+typeset -ga _pkgman_commands _pkgman_aliases
+typeset -gA _pkgman_aliasmap
+typeset -ga _pkgman_components
+
+_pkgman_aliasmap=(
+  setup     setup
+  unsetup   unsetup
+  conf      configure
+  build     build
+  install   install
+  uninstall uninstall
+  dump      dump
+)
+
+_pkgman_components=(
+  $(find $pkgman_dir/packages -name "*.zsh" -exec basename {} \; | sed 's/\.zsh//')
+)
+
+# --- Sub-command functions ---
+# These *must* be called _pkgman-*(); The description generation relies on
+# them being names that way. *No* other functions may match that pattern.
+# Other utility functions should be named __pkgman-*() (see below).
+#
+# Another thing, the description generation needs, is handling of
+# $pkgman_describe: If that parameter is non-empty, the sub-command function
+# should only print a description of the sub-command it handles and return
+# immidiately after doing so.
+#
+# To add support for a new sub-command, you only have to add a new
+# _pkgman-<foo>() function below (preferably alphabetically sorted), that
+# behaves like described above; and add a alias->command pair in the
+# _pkgman_aliasmap associative array above (if the comand in fact has an
+# alias). The rest should just work[tm].
+
+function _pkgman-install()
+{
+    [[ -n ${pkgman_describe} ]] && print "Install a component" && return
+    __pkgman-choose-component
+}
+
+function _pkgman-uninstall()
+{
+    [[ -n ${pkgman_describe} ]] && print "Uninstall a component" && return
+    __pkgman-choose-component
+}
+
+function _pkgman-configure()
+{
+    [[ -n ${pkgman_describe} ]] && print "Configure a component" && return
+    local -a args
+    args=(
+        '--with-test[build with test (default)]'
+        '--without-test[do not build test programs]'
+        '--with-doc[build documentation]'
+        '--without-doc[do not build documentation (default)]'
+        '*:: :->'
+    )
+    _arguments ${args} && return
+    __pkgman-choose-component
+}
+
+function _pkgman-goto()
+{
+    [[ -n ${pkgman_describe} ]] && print "Goto a component directory" && return
+    __pkgman-choose-component
+}
+
+function _pkgman-setup()
+{
+    [[ -n ${pkgman_describe} ]] && print "Source a component" && return
+    __pkgman-choose-component
+}
+
+function _pkgman-unsetup()
+{
+    [[ -n ${pkgman_describe} ]] && print "Un-Source a component" && return
+    __pkgman-choose-component
+}
+
+function _pkgman-dump()
+{
+    [[ -n ${pkgman_describe} ]] && print "Dump a component" && return
+    __pkgman-choose-component
+}
+
+function _pkgman-update()
+{
+    [[ -n ${pkgman_describe} ]] && print "Update a component" && return
+    __pkgman-choose-component
+}
+
+# They should be called __pkgman-*() and kept seperate from the
+# sub-command functions.
+
+function __pkgman-choose-component()
+{
+    _describe -t _pkgman_components 'pkgman option' _pkgman_components
+}
+
+# And here is the actual _pkgman(), that puts it all together:
+function _pkgman() {
+    local curcontext="${curcontext}"
+    local mode state ret
+    local -x pkgmancommand
+    unset pkgman_describe
+
+    local -a args=(
+      '-h[print help]'
+      '-d[debug mode]'
+      '-D[devel mode]'
+      '-v[verbose mode]'
+      '-q[quiet mode]'
+      '*:: :->subcommand_or_options'
+    )
+    _arguments -C -s -w ${args} && return
+
+    if [[ ${state} == "subcommand_or_options" ]]; then
+        if (( CURRENT == 1 )) ; then
+            zstyle -s ":completion:${curcontext}:subcommands" mode mode || mode='commands'
+            if [[ ${mode} == 'commands' ]]; then
+                _describe -t subcommands 'pkgman commands' _pkgman_commands
+            elif [[ ${mode} == 'aliases' ]]; then
+                _describe -t subcommands 'pkgman aliases' _pkgman_aliases
+            else
+                _describe -t subcommands 'pkgman commands and aliases' _pkgman_commands -- _pkgman_aliases
+            fi
+        else
+            if (( ${+functions[pkgman]} == 0 )); then
+                _message '`pkgman'\'' not found in $path; sub-cmd completions disabled.'
+                return 0
+            fi
+            pkgmancommand="${words[1]}"
+            if [[ -n ${_pkgman_aliasmap[$pkgmancommand]} ]] ; then
+                pkgmancommand="${_pkgman_aliasmap[$pkgmancommand]}"
+            fi
+            if ! (( ${+functions[_pkgman-$pkgmancommand]} )); then
+              local low high
+              low=$_pkgman_commands[(i)$pkgmancommand*]
+              high=$_pkgman_commands[(I)$pkgmancommand*]
+              if (( low == high )); then
+                pkgmancommand=${_pkgman_commands[low]%%:*}
+              elif (( low < high )); then
+                _message -e "Ambiguous command $pkgmancommand"
+              else
+                _message -e "Subcommand $pkgmancommand not known"
+              fi
+            fi
+            curcontext="${curcontext%:*:*}:pkgman-${pkgmancommand}:"
+            _call_function ret _pkgman-${pkgmancommand}
+        fi
+    fi
+}
+
+# description generation follows; only done on 1st _pkgman call.
+local f desc
+local -A rev
+local -x pkgman_describe
+pkgman_describe='yes, please'
+for f in ${(k)_pkgman_aliasmap} ; do
+    rev+=( ${_pkgman_aliasmap[$f]} $f )
+done
+for f in ${(M)${(k)functions}:#_pkgman-*} ; do
+    desc="$($f)"
+    _pkgman_commands+=( "${f#_pkgman-}${desc:+:$desc}" )
+    [[ -n ${rev[${f#_pkgman-}]} ]] && _pkgman_aliases+=( "${rev[${f#_pkgman-}]}${desc:+:$desc}" )
+done
+unset desc f rev pkgman_describe
+
+_pkgman
+
+# Local Variables:
+# mode: Shell-Script
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
