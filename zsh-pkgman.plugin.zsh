@@ -7,8 +7,11 @@
 # Requirements: pkgtools
 # Status: not intended to be distributed yet
 
+# Add completion
+fpath=(${ADOTDIR}/bundles/xgarrido/zsh-pkgman/completions $fpath)
+
 pkgman_dir=$(dirname $0)
-pkgman_install_dir=
+pkgman_install_dir=/tmp/
 
 function pkgman()
 {
@@ -37,6 +40,8 @@ function pkgman()
 	        pkgtools__msg_using_devel
 	    elif [[ ${opt} = -v || ${opt} = --verbose ]]; then
 	        pkgtools__msg_using_verbose
+	    elif [[ ${opt} = -q || ${opt} = --quiet ]]; then
+	        pkgtools__msg_using_quiet
 	    elif [[ ${opt} = -W || ${opt} = --no-warning ]]; then
 	        pkgtools__msg_not_using_warning
 	    elif [[ ${opt} = --install-dir ]]; then
@@ -157,7 +162,7 @@ function pkgman()
                 "Missing function '$fcn'! Need to be implemented within '${pkg_file}'!"
         else
             pkgtools__msg_debug "Run '$fcn' function for version ${version}"
-            pkgtools__quietly_run "$fcn ${append_list_of_options_arg}"
+            pkgtools__quietly_run $fcn ${append_list_of_options_arg}
             if $(pkgtools__last_command_succeeds); then
                 if ! ${has_decorator}; then
                     if [[ ${mode} = install ]]; then
@@ -166,6 +171,8 @@ function pkgman()
                         __pkgman::remove_install_dir $(echo ${ipkg} ${version})
                     fi
                 fi
+            else
+                pkgtools__msg_error "Running '$fcn' function fails !"
             fi
         fi
     done
