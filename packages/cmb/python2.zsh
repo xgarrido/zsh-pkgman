@@ -31,7 +31,7 @@ function python2::install()
                 rm -rf $(pwd)
             )
         else
-            virtualenv --python=$(which python)/${version} ${location}
+            virtualenv --python=$(which python)${version} ${location}
         fi
     fi
     python2::setup
