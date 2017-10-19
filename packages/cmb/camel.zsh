@@ -14,15 +14,19 @@ local data="${pkgman_install_dir}/../data/camel_data"
 
 function camel::dump()
 {
+    __pkgtools__at_function_enter camel::dump
     pkgtools__msg_notice "CAMEL"
     pkgtools__msg_notice " |- version : ${version}"
     pkgtools__msg_notice " |- data    : ${data}"
     pkgtools__msg_notice " |- to      : ${location}"
     pkgtools__msg_notice " \`- from    : ${address}"
+    __pkgtools__at_function_exit
+    return 0
 }
 
 function camel::install()
 {
+    __pkgtools__at_function_enter camel::install
     (
         pkgman setup python2
         pkgman setup cmt
@@ -47,10 +51,13 @@ function camel::install()
         # sed -i -e '/export PYTHONPATH=${PICO_CODE}/ s/^/#/' camel_setup.sh
         source camel_setup.sh && make && make exec
     )
+    __pkgtools__at_function_exit
+    return 0
 }
 
 function camel::uninstall()
 {
+    __pkgtools__at_function_enter camel::uninstall
     pkgtools__msg_warning "Do you really want to remove camel code @ [${location}]?"
     pkgtools__yesno_question
     if $(pkgtools__answer_is_yes); then
@@ -61,21 +68,34 @@ function camel::uninstall()
     if $(pkgtools__answer_is_yes); then
         rm -rf ${data}
     fi
+    __pkgtools__at_function_exit
+    return 0
 }
 
 function camel::setup()
 {
-    local opwd=$(pwd)
+    __pkgtools__at_function_enter camel::setup
+    pkgtools__set_variable CAMEL_DATA ${data}
+    pkgtools__add_path_to_PATH ${location}/Linux-x86_64
+
+    local opwd=$PWD
     cd ${location}/cmt
     pkgtools__quietly_run "source camel_setup.sh"
+    if $(pkgtools__last_command_fails); then
+        cd ${opwd}
+        __pkgtools__at_function_exit
+        return 1
+    fi
     cd ${opwd}
-
-    pkgtools__add_path_to_PATH ${location}/Linux-x86_64
-    pkgtools__set_variable CAMEL_DATA ${data}
+    __pkgtools__at_function_exit
+    return 0
 }
 
 function camel::unsetup()
 {
+    __pkgtools__at_function_enter camel::unsetup
     pkgtools__remove_path_to_PATH ${location}/Linux-x86_64
     pkgtools__unset_variable CAMEL_DATA
+    __pkgtools__at_function_exit
+    return 0
 }
