@@ -44,7 +44,7 @@ function camel::install()
         elif $(pkgtools__has_binary gcc); then
             rm -f requirements; ln -sf requirements-gcc requirements
         fi
-        sed -i -e '/export PYTHONPATH=${PICO_CODE}/ s/^/#/' camel_setup.sh
+        # sed -i -e '/export PYTHONPATH=${PICO_CODE}/ s/^/#/' camel_setup.sh
         source camel_setup.sh && make && make exec
     )
 }
