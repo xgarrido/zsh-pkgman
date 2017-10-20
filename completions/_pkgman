@@ -116,11 +116,11 @@ function _pkgman() {
     unset pkgman_describe
 
     local -a args=(
-      '-h[print help]'
-      '-d[debug mode]'
-      '-D[devel mode]'
-      '-v[verbose mode]'
-      '-q[quiet mode]'
+      {-h,--help}'[print help]'
+      {-d,--debug}'[debug mode]'
+      {-D,--devel}'[devel mode]'
+      {-v,--verbose}'[verbose mode]'
+      {-q,--quiet}'[quiet mode]'
       '*:: :->subcommand_or_options'
     )
     _arguments -C -s -w ${args} && return
