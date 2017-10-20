@@ -8,7 +8,7 @@
 # Status: not intended to be distributed yet
 
 local version=master
-local snemo_pkgs=(brew)# bayeux falaise)
+local snemo_pkgs=(brew bayeux)# falaise)
 
 pkgman_install_dir=$HOME/Workdir/tmp
 
