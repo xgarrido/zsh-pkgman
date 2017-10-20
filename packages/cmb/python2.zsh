@@ -22,7 +22,7 @@ function python2::dump()
 
 function python2::install()
 {
-    __pkgtools__at_function_enter python2::dump
+    __pkgtools__at_function_enter python2::install
     (
         if [ ! -d ${location} ]; then
             if ! $(pkgtools__has_binary virtualenv); then
@@ -53,7 +53,7 @@ function python2::install()
 
 function python2::uninstall()
 {
-    __pkgtools__at_function_enter python2::dump
+    __pkgtools__at_function_enter python2::uninstall
     pkgtools__msg_warning "Do you really want to delete ${location} ?"
     pkgtools__yesno_question
     if $(pkgtools__answer_is_yes); then
@@ -65,7 +65,7 @@ function python2::uninstall()
 
 function python2::setup()
 {
-    __pkgtools__at_function_enter python2::dump
+    __pkgtools__at_function_enter python2::setup
     source ${location}/bin/activate
     if $(pkgtools__last_command_fails); then
         pkgtools__msg_error "Something wrong occurs when initializing python2!"
@@ -78,7 +78,7 @@ function python2::setup()
 
 function python2::unsetup()
 {
-    __pkgtools__at_function_enter python2::dump
+    __pkgtools__at_function_enter python2::unsetup
     if [[ ${location} = $VIRTUAL_ENV ]]; then
         deactivate
     fi
