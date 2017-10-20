@@ -21,34 +21,62 @@ esac
 
 function --cmb::action()
 {
+    __pkgtools__at_function_enter --cmb::action
     for ipkg in ${cmb_pkgs}; do
         pkgman $@ ${ipkg}
     done
+    __pkgtools__at_function_exit
+    return 0
 }
 
 function cmb::dump()
 {
+    __pkgtools__at_function_enter cmb::dump
     --cmb::action dump $@
+    __pkgtools__at_function_exit
+    return 0
 }
 
 function cmb::install()
 {
+    __pkgtools__at_function_enter cmb::install
     --cmb::action install $@
+    __pkgtools__at_function_exit
+    return 0
 }
 
 function cmb::uninstall()
 {
+    __pkgtools__at_function_enter cmb::uninstall
     --cmb::action uninstall $@
+    __pkgtools__at_function_exit
+    return 0
 }
 
 function cmb::setup()
 {
+    __pkgtools__at_function_enter cmb::setup
+    if [[ ${PKGMAN_SETUP_DONE} = cmb ]]; then
+        pkgtools__msg_error "CMB packages are already setup!"
+        __pkgtools__at_function_exit
+        return 1
+    fi
     --cmb::action setup $@
     pkgtools__reset_variable PKGMAN_SETUP_DONE "cmb"
+    __pkgtools__at_function_exit
+    return 0
 }
 
 function cmb::unsetup()
 {
-    --cmb::action unsetup $@
+    __pkgtools__at_function_enter cmb::unsetup
+    if [[ ${PKGMAN_SETUP_DONE} != cmb ]]; then
+        pkgtools__msg_error "CMB packages are not setup!"
+        __pkgtools__at_function_exit
+        return 1
+    fi
+   --cmb::action unsetup $@
     pkgtools__unset_variable PKGMAN_SETUP_DONE
+    __pkgtools__at_function_exit
+    return 0
 }
