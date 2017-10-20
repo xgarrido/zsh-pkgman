@@ -119,7 +119,7 @@ function pkgman()
             continue
 	fi
 
-        pkgtools__msg_notice "Load '${pkg}' package..."
+        pkgtools__msg_debug "Load '${pkg}' package..."
         . ${pkg_file} && loaded_pkgs+=(${pkg})
 
         # Check package version (mandatory)
