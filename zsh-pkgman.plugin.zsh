@@ -20,7 +20,7 @@ function pkgman()
 
     local packages_dir=${pkgman_dir}/packages
 
-    local fcns=(setup unsetup update build install uninstall dump)
+    local fcns=(setup unsetup goto update build install uninstall dump)
 
     local mode
     local append_list_of_pkgs_arg
@@ -119,14 +119,6 @@ function pkgman()
             continue
 	fi
 
-        # Check for aggregator of packages
-        local has_decorator=false
-        if [[ ${pkg} = @* ]]; then
-            has_decorator=true
-            pkg=${pkg:1}
-        fi
-        pkgtools__msg_devel "has_decorator=${has_decorator}"
-
         pkgtools__msg_notice "Load '${pkg}' package..."
         . ${pkg_file} && loaded_pkgs+=(${pkg})
 
@@ -135,6 +127,14 @@ function pkgman()
             pkgtools__msg_error "Missing package version!"
             continue
         fi
+
+        # Check for aggregator of packages
+        local has_decorator=false
+        if [[ ${pkg} = @* ]]; then
+            has_decorator=true
+            pkg=${pkg:1}
+        fi
+        pkgtools__msg_devel "has_decorator=${has_decorator}"
 
         # Install directory from database
         local pkg_install_dir=$(__pkgman::get_install_dir $ipkg $version)
@@ -154,6 +154,21 @@ function pkgman()
         # If install dir is not empty, it means it has been forced
         if [[ ! -z ${new_pkgman_install_dir} ]]; then
             pkgman_install_dir=${new_pkgman_install_dir}
+        fi
+        pkgtools__msg_devel "pkgman_install_dir=${pkgman_install_dir}"
+        # Need to be reloaded to update location variable
+        . ${pkg_file}
+
+        # Goto mode
+        if [[ ${mode} = goto ]]; then
+            if (( ${has_decorator} )); then
+                pkgtools__msg_error "Can not go into a decorator package!"
+                __pkgtools__at_function_exit
+                return 1
+            else
+                cd ${location}
+                break
+            fi
         fi
 
         local fcn="${pkg}::${mode}"
