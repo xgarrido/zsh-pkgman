@@ -56,7 +56,7 @@ function snemo::setup()
         return 1
     fi
     --snemo::action setup $@
-    pkgtools__reset_variable PKGMAN_SETUP_DONE "cmb"
+    pkgtools__reset_variable PKGMAN_SETUP_DONE "snemo"
     __pkgtools__at_function_exit
     return 0
 }
@@ -70,6 +70,7 @@ function snemo::unsetup()
         return 1
     fi
     --snemo::action unsetup $@
+    pkgtools__unset_variable PKGMAN_SETUP_DONE
     __pkgtools__at_function_exit
     return 0
 }
