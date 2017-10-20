@@ -21,7 +21,7 @@ function pkgman()
 
     local packages_dir=${pkgman_dir}/packages
 
-    local fcns=(setup unsetup goto update build install uninstall dump)
+    local fcns=(setup unsetup goto update configure build install uninstall dump)
 
     local mode
     local append_list_of_pkgs_arg
@@ -208,6 +208,7 @@ function pkgman()
                           __pkgman::remove_install_dir)
     for ifcn in ${internals_fcns}; do
         if (( $+functions[$ifcn] )); then
+            pkgtools__msg_devel "Unloading $ifcn function"
             unfunction $ifcn
         fi
     done
