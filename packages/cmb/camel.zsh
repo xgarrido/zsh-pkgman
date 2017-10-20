@@ -27,20 +27,17 @@ function camel::dump()
 function camel::update()
 {
     __pkgtools__at_function_enter camel::update
-    (
-        if [[ ! -d ${location}/.git ]]; then
-            pkgtools__msg_error "CAMEL is not a git repository !"
-            __pkgtools__at_function_exit
-            return 1
-        fi
-        cd ${location}
-        git pull
-        if $(pkgtools__last_command_fails); then
-            pkgtools__msg_error "CAMEL update fails !"
-            __pkgtools__at_function_exit
-            return 1
-        fi
-    )
+    if [[ ! -d ${location}/.git ]]; then
+        pkgtools__msg_error "CAMEL is not a git repository !"
+        __pkgtools__at_function_exit
+        return 1
+    fi
+    git --git-dir=${location}/.git --work-tree=${location} pull
+    if $(pkgtools__last_command_fails); then
+        pkgtools__msg_error "CAMEL update fails !"
+        __pkgtools__at_function_exit
+        return 1
+    fi
     __pkgtools__at_function_exit
     return 0
 }
@@ -48,20 +45,17 @@ function camel::update()
 function camel::build()
 {
     __pkgtools__at_function_enter camel::build
-    (
-        if ! $(pkgtools__check_variable CAMEL_DATA); then
-            pkgtools__msg_error "CAMEL is not setup !"
-            __pkgtools__at_function_exit
-            return 1
-        fi
-        cd ${location}/cmt
-        make exec
-        if $(pkgtools__last_command_fails); then
-            pkgtools__msg_error "CAMEL build fails !"
-            __pkgtools__at_function_exit
-            return 1
-        fi
-    )
+    if ! $(pkgtools__check_variable CAMEL_DATA); then
+        pkgtools__msg_error "CAMEL is not setup !"
+        __pkgtools__at_function_exit
+        return 1
+    fi
+    make -C ${location}/cmt exec
+    if $(pkgtools__last_command_fails); then
+        pkgtools__msg_error "CAMEL build fails !"
+        __pkgtools__at_function_exit
+        return 1
+    fi
     __pkgtools__at_function_exit
     return 0
 }
@@ -120,17 +114,16 @@ function camel::setup()
     pkgtools__set_variable CAMEL_DATA ${data}
     pkgtools__add_path_to_PATH ${location}/Linux-x86_64
 
-    local opwd=$PWD
-    cd ${location}/cmt
-    pkgtools__quietly_run "source camel_setup.sh"
+    local ret=0
+    pkgtools__enter_directory ${location}/cmt
+    source camel_setup.sh
     if $(pkgtools__last_command_fails); then
-        cd ${opwd}
-        __pkgtools__at_function_exit
-        return 1
+        pkgtools__msg_error "Something fails when sourcing camel setup!"
+        ret=1
     fi
-    cd ${opwd}
+    pkgtools__exit_directory
     __pkgtools__at_function_exit
-    return 0
+    return ${ret}
 }
 
 function camel::unsetup()
