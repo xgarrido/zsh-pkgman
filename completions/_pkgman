@@ -10,6 +10,7 @@ _pkgman_aliasmap=(
   setup     setup
   unsetup   unsetup
   conf      configure
+  update    update
   build     build
   install   install
   uninstall uninstall

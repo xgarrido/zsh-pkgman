@@ -24,6 +24,27 @@ function camel::dump()
     return 0
 }
 
+function camel::update()
+{
+    __pkgtools__at_function_enter camel::update
+    (
+        if [[ ! -d ${location}/.git ]]; then
+            pkgtools__msg_error "CAMEL is not a git repository !"
+            __pkgtools__at_function_exit
+            return 1
+        fi
+        cd ${location}
+        git pull
+        if $(pkgtools__last_command_fails); then
+            pkgtools__msg_error "CAMEL update fails !"
+            __pkgtools__at_function_exit
+            return 1
+        fi
+    )
+    __pkgtools__at_function_exit
+    return 0
+}
+
 function camel::build()
 {
     __pkgtools__at_function_enter camel::build
@@ -35,6 +56,11 @@ function camel::build()
         fi
         cd ${location}/cmt
         make exec
+        if $(pkgtools__last_command_fails); then
+            pkgtools__msg_error "CAMEL build fails !"
+            __pkgtools__at_function_exit
+            return 1
+        fi
     )
     __pkgtools__at_function_exit
     return 0
