@@ -24,6 +24,22 @@ function camel::dump()
     return 0
 }
 
+function camel::build()
+{
+    __pkgtools__at_function_enter camel::build
+    (
+        if ! $(pkgtools__check_variable CAMEL_DATA); then
+            pkgtools__msg_error "CAMEL is not setup !"
+            __pkgtools__at_function_exit
+            return 1
+        fi
+        cd ${location}/cmt
+        make exec
+    )
+    __pkgtools__at_function_exit
+    return 0
+}
+
 function camel::install()
 {
     __pkgtools__at_function_enter camel::install
