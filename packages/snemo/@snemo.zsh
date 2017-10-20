@@ -15,10 +15,8 @@ pkgman_install_dir=$HOME/Workdir/tmp
 function --snemo::action()
 {
     __pkgtools__at_function_enter --snemo::action
-    # local status=0
     for ipkg in ${snemo_pkgs}; do
         pkgman $@ ${ipkg}
-        # [[ $(pkgtools__last_command_fails) ]] && status=1
     done
     __pkgtools__at_function_exit
     return 0
@@ -52,7 +50,13 @@ function snemo::uninstall()
 function snemo::setup()
 {
     __pkgtools__at_function_enter snemo::setup
+    if [[ ${PKGMAN_SETUP_DONE} = snemo ]]; then
+        pkgtools__msg_error "snemo packages are already setup!"
+        __pkgtools__at_function_exit
+        return 1
+    fi
     --snemo::action setup $@
+    pkgtools__reset_variable PKGMAN_SETUP_DONE "cmb"
     __pkgtools__at_function_exit
     return 0
 }
@@ -60,6 +64,11 @@ function snemo::setup()
 function snemo::unsetup()
 {
     __pkgtools__at_function_enter snemo::unsetup
+    if [[ ${PKGMAN_SETUP_DONE} != snemo ]]; then
+        pkgtools__msg_error "snemo packages are not setup!"
+        __pkgtools__at_function_exit
+        return 1
+    fi
     --snemo::action unsetup $@
     __pkgtools__at_function_exit
     return 0
