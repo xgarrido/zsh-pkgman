@@ -12,6 +12,7 @@ fpath=(${ADOTDIR}/bundles/xgarrido/zsh-pkgman/completions $fpath)
 
 pkgman_dir=$(dirname $0)
 pkgman_install_dir=/tmp/
+export PKGMAN_SETUP_DONE
 
 function pkgman()
 {
@@ -161,7 +162,7 @@ function pkgman()
 
         # Goto mode
         if [[ ${mode} = goto ]]; then
-            if (( ${has_decorator} )); then
+            if ${has_decorator}; then
                 pkgtools__msg_error "Can not go into a decorator package!"
                 __pkgtools__at_function_exit
                 return 1

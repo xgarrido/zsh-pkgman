@@ -44,9 +44,11 @@ function cmb::uninstall()
 function cmb::setup()
 {
     --cmb::action setup $@
+    pkgtools__reset_variable PKGMAN_SETUP_DONE "cmb"
 }
 
 function cmb::unsetup()
 {
     --cmb::action unsetup $@
+    pkgtools__unset_variable PKGMAN_SETUP_DONE
 }
