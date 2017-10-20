@@ -20,7 +20,7 @@ function pkgman()
 
     local packages_dir=${pkgman_dir}/packages
 
-    local fcns=(setup unsetup update install uninstall dump)
+    local fcns=(setup unsetup update build install uninstall dump)
 
     local mode
     local append_list_of_pkgs_arg

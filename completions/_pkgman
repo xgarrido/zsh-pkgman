@@ -36,6 +36,12 @@ _pkgman_components=(
 # _pkgman_aliasmap associative array above (if the comand in fact has an
 # alias). The rest should just work[tm].
 
+function _pkgman-build()
+{
+    [[ -n ${pkgman_describe} ]] && print "Build a component" && return
+    __pkgman-choose-component
+}
+
 function _pkgman-install()
 {
     [[ -n ${pkgman_describe} ]] && print "Install a component" && return
