@@ -4,7 +4,7 @@
 # For $_pkgman_commands[] generation, see the very end of this file.
 typeset -ga _pkgman_commands _pkgman_aliases
 typeset -gA _pkgman_aliasmap
-typeset -ga _pkgman_components
+typeset -ga _pkgman_packages
 
 _pkgman_aliasmap=(
   setup     setup
@@ -15,9 +15,10 @@ _pkgman_aliasmap=(
   install   install
   uninstall uninstall
   dump      dump
+  test      test
 )
 
-_pkgman_components=(
+_pkgman_packages=(
   $(find $pkgman_dir/packages -name "*.zsh" -exec basename {} \; | sed 's/\.zsh//')
 )
 
@@ -39,73 +40,81 @@ _pkgman_components=(
 
 function _pkgman-build()
 {
-    [[ -n ${pkgman_describe} ]] && print "Build a component" && return
-    __pkgman-choose-component
+    [[ -n ${pkgman_describe} ]] && print "Build a package" && return
+    __pkgman-choose-package
 }
 
 function _pkgman-install()
 {
-    [[ -n ${pkgman_describe} ]] && print "Install a component" && return
-    __pkgman-choose-component
+    [[ -n ${pkgman_describe} ]] && print "Install a package" && return
+    __pkgman-choose-package
 }
 
 function _pkgman-uninstall()
 {
-    [[ -n ${pkgman_describe} ]] && print "Uninstall a component" && return
-    __pkgman-choose-component
+    [[ -n ${pkgman_describe} ]] && print "Uninstall a package" && return
+    __pkgman-choose-package
 }
 
 function _pkgman-configure()
 {
-    [[ -n ${pkgman_describe} ]] && print "Configure a component" && return
+    [[ -n ${pkgman_describe} ]] && print "Configure a package" && return
     local -a args
     args=(
         '--with-test[build with test (default)]'
         '--without-test[do not build test programs]'
         '--with-doc[build documentation]'
         '--without-doc[do not build documentation (default)]'
+        '--with-warning[consider warning as error (default)]'
+        '--without-warning[do not consider warning as error]'
         '*:: :->'
     )
     _arguments ${args} && return
-    __pkgman-choose-component
+    __pkgman-choose-package
+}
+
+function _pkgman-test()
+{
+    [[ -n ${pkgman_describe} ]] && print "Test a package" && return
+    __pkgman-choose-package
 }
 
 function _pkgman-goto()
 {
-    [[ -n ${pkgman_describe} ]] && print "Goto a component directory" && return
-    __pkgman-choose-component
+    [[ -n ${pkgman_describe} ]] && print "Goto package directory" && return
+    __pkgman-choose-package
 }
 
 function _pkgman-setup()
 {
-    [[ -n ${pkgman_describe} ]] && print "Source a component" && return
-    __pkgman-choose-component
+    [[ -n ${pkgman_describe} ]] && print "Source a package" && return
+    __pkgman-choose-package
 }
 
 function _pkgman-unsetup()
 {
-    [[ -n ${pkgman_describe} ]] && print "Un-Source a component" && return
-    __pkgman-choose-component
+    [[ -n ${pkgman_describe} ]] && print "Un-Source a package" && return
+    __pkgman-choose-package
 }
 
 function _pkgman-dump()
 {
-    [[ -n ${pkgman_describe} ]] && print "Dump a component" && return
-    __pkgman-choose-component
+    [[ -n ${pkgman_describe} ]] && print "Dump a package" && return
+    __pkgman-choose-package
 }
 
 function _pkgman-update()
 {
-    [[ -n ${pkgman_describe} ]] && print "Update a component" && return
-    __pkgman-choose-component
+    [[ -n ${pkgman_describe} ]] && print "Update a package" && return
+    __pkgman-choose-package
 }
 
 # They should be called __pkgman-*() and kept seperate from the
 # sub-command functions.
 
-function __pkgman-choose-component()
+function __pkgman-choose-package()
 {
-    _describe -t _pkgman_components 'pkgman option' _pkgman_components
+    _describe -t _pkgman_packages 'pkgman option' _pkgman_packages
 }
 
 # And here is the actual _pkgman(), that puts it all together:

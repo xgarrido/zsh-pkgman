@@ -21,7 +21,8 @@ function pkgman()
 
     local packages_dir=${pkgman_dir}/packages
 
-    local fcns=(setup unsetup goto update configure build install uninstall dump)
+    local fcns=(setup unsetup configure build install uninstall
+                dump goto update test)
 
     local mode
     local append_list_of_pkgs_arg
@@ -203,15 +204,15 @@ function pkgman()
         done
     done
 
-    local internals_fcns=(__pkgman::get_install_dir
-                          __pkgman::store_install_dir
-                          __pkgman::remove_install_dir)
-    for ifcn in ${internals_fcns}; do
-        if (( $+functions[$ifcn] )); then
-            pkgtools__msg_devel "Unloading $ifcn function"
-            unfunction $ifcn
-        fi
-    done
+    # local internals_fcns=(__pkgman::get_install_dir
+    #                       __pkgman::store_install_dir
+    #                       __pkgman::remove_install_dir)
+    # for ifcn in ${internals_fcns}; do
+    #     if (( $+functions[$ifcn] )); then
+    #         pkgtools__msg_devel "Unloading $ifcn function"
+    #         unfunction $ifcn
+    #     fi
+    # done
 
     # Remove duplicate lines
     awk '!seen[$0]++' ${pkgman_db_file} > ${pkgman_db_file}.tmp
