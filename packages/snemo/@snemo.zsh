@@ -10,7 +10,14 @@
 local version=master
 local snemo_pkgs=(brew bayeux falaise)
 
-pkgman_install_dir=$HOME/Workdir/tmp
+case $(hostname) in
+    cca*)
+        pkgman_install_dir=$SCRATCH_DIR/workdir/snemo/software
+        ;;
+    *)
+        pkgman_install_dir=$HOME/Workdir/NEMO/supernemo/software
+        ;;
+esac
 
 function --snemo::action()
 {
