@@ -110,6 +110,14 @@ function bayeux::install()
     fi
     bayeux::configure $@ --with-test
     bayeux::build $@
+
+    # Add emacs dir locals
+    cat << EOF > ${location}/${version}/.dir-locals.el
+((nil . (
+         (compile-command . "ninja -C ${location}/build install")
+         )
+))
+EOF
     __pkgtools__at_function_exit
     return 0
 }
