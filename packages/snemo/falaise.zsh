@@ -115,6 +115,37 @@ function falaise::install()
         pkgtools__msg_notice "Checkout falaise from ${address}"
         git clone ${address} ${location}/${version}
     fi
+    # Anonymous function to add falaise modules
+    function {
+        pkgtools__enter_directory ${location}/${version}/modules
+        if [[ ! -d ParticleIdentification ]]; then
+            pkgtools__msg_notice "Checkout falaise/PID module"
+            git clone git@github.com:xgarrido/ParticleIdentification.git
+        fi
+        if [[ ! -d ProcessReport ]]; then
+            pkgtools__msg_notice "Checkout falaise/ProcessReport module"
+            git clone git@github.com:xgarrido/ProcessReport.git
+        fi
+        local gs_desc="No more FalaiseModule + PID/Process report modules"
+        local gs_list=$(git stash list)
+        local gs_id
+        for gs in ${gs_list}; do
+            if [[ $gs = *${gs_desc}* ]]; then
+                gs_id=$(echo $gs | awk '{print $1}')
+                break
+            fi
+        done
+        if [[ -z ${gs_id} ]]; then
+            sed -i -e 's/things2root/ParticleIdentification\nProcessReport/' CMakeLists.txt
+            find . -name "CMakeLists.txt" \
+                 -exec sed -i -e 's/FalaiseModule/Falaise/' {} \;
+            git stash save ${gs_desc}
+            git stash apply
+        else
+            git stash apply ${gs_id/:/}
+        fi
+        pkgtools__exit_directory
+    }
     falaise::configure $@ --with-test
     falaise::build $@
     __pkgtools__at_function_exit
