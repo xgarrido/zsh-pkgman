@@ -61,6 +61,10 @@ function snemo::setup()
         pkgtools__msg_error "snemo packages are already setup!"
         __pkgtools__at_function_exit
         return 1
+    elif [[ ! -z ${PKGMAN_SETUP_DONE} ]]; then
+        pkgtools__msg_error "Another set of packages (${PKGMAN_SETUP_DONE}) is setup!"
+        __pkgtools__at_function_exit
+        return 1
     fi
     --snemo::action setup $@
     pkgtools__reset_variable PKGMAN_SETUP_DONE "snemo"
