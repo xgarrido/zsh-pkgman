@@ -83,6 +83,24 @@ function bayeux::configure()
     return ${ret}
 }
 
+function bayeux::update()
+{
+    __pkgtools__at_function_enter bayeux::update
+    if [[ ! -d ${location}/${version}/.git ]]; then
+        pkgtools__msg_error "bayeux is not a git repository !"
+        __pkgtools__at_function_exit
+        return 1
+    fi
+    git --git-dir=${location}/${version}/.git --work-tree=${location}/${version} pull
+    if $(pkgtools__last_command_fails); then
+        pkgtools__msg_error "bayeux update fails !"
+        __pkgtools__at_function_exit
+        return 1
+    fi
+    __pkgtools__at_function_exit
+    return 0
+}
+
 function bayeux::build()
 {
     __pkgtools__at_function_enter bayeux::build

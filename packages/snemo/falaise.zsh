@@ -87,6 +87,24 @@ function falaise::configure()
     return ${ret}
 }
 
+function falaise::update()
+{
+    __pkgtools__at_function_enter falaise::update
+    if [[ ! -d ${location}/${version}/.git ]]; then
+        pkgtools__msg_error "falaise is not a git repository !"
+        __pkgtools__at_function_exit
+        return 1
+    fi
+    git --git-dir=${location}/${version}/.git --work-tree=${location}/${version} pull
+    if $(pkgtools__last_command_fails); then
+        pkgtools__msg_error "falaise update fails !"
+        __pkgtools__at_function_exit
+        return 1
+    fi
+    __pkgtools__at_function_exit
+    return 0
+}
+
 function falaise::build()
 {
     __pkgtools__at_function_enter falaise::build
