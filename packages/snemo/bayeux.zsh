@@ -38,8 +38,10 @@ function bayeux::configure()
         -DCMAKE_BUILD_TYPE:STRING=Release
         -DCMAKE_INSTALL_PREFIX=${location}/install
         -DCMAKE_PREFIX_PATH=${brew_install_dir}/brew
-        -DBAYEUX_CXX_STANDARD=14
-        -DBAYEUX_WITH_QT_GUI=ON "
+        -DBAYEUX_CXX_STANDARD=14 "
+    if [[ $(hostname) != cca* ]]; then
+        bayeux_options+="-DBAYEUX_WITH_QT_GUI=ON "
+    fi
     local args=($@)
     local -A opts=(with-test       BAYEUX_ENABLE_TESTING
                    with-doc        BAYEUX_WITH_DOCS
