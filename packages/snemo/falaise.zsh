@@ -7,9 +7,29 @@
 # Requirements: pkgtools
 # Status: not intended to be distributed yet
 
-local version=master
-local address="git@github.com:SuperNEMO-DBD-France/Falaise.git"
-local location="${pkgman_install_dir}/falaise"
+local version=xgarrido
+local address="git@github.com:${version}/Falaise.git"
+local location="${pkgman_install_dir}/falaise/repo/${version}"
+local build_dir="${location}/../../build"
+local install_dir="${location}/../../install"
+local local_dir=$(dirname $0)
+
+function --falaise::select()
+{
+    local versions=(xgarrido SuperNEMO-DBD SuperNEMO-DBD-France)
+    pkgtools__msg_notice "Which falaise version do you want to use ?"
+    select v in ${versions[@]}; do
+        version=$v
+        pkgtools__msg_devel "Selecting $version"
+        break
+    done
+    address="git@github.com:${version}/Falaise.git"
+    location="${pkgman_install_dir}/falaise/repo/${version}"
+    build_dir="${location}/../../build"
+    install_dir="${location}/../../install"
+    sed -i -e 's/^local version=\(.*\)/local version='${version}'/' ${local_dir}/falaise.zsh
+    return 0
+}
 
 function falaise::dump()
 {
@@ -25,7 +45,6 @@ function falaise::dump()
 function falaise::configure()
 {
     __pkgtools__at_function_enter falaise::configure
-
     local brew_install_dir=$(__pkgman::get_install_dir brew master)
     if [[ -z ${brew_install_dir} ]]; then
         pkgtools__msg_error "Missing brew install!"
@@ -42,7 +61,7 @@ function falaise::configure()
     # Parse Falaise options
     local falaise_options="
         -DCMAKE_BUILD_TYPE:STRING=Release
-        -DCMAKE_INSTALL_PREFIX=${location}/install
+        -DCMAKE_INSTALL_PREFIX=${install_dir}
         -DCMAKE_PREFIX_PATH=${brew_install_dir}/brew;${bayeux_install_dir}/bayeux/install
         -DFALAISE_WITH_DEVELOPER_TOOLS=ON
         -DFALAISE_CXX_STANDARD=14 "
@@ -76,8 +95,8 @@ function falaise::configure()
     pkgtools__reset_variable CC ${cc}
 
     local ret=0
-    pkgtools__enter_directory ${location}/build
-    cmake $(echo ${falaise_options}) ${location}/${version}
+    pkgtools__enter_directory ${build_dir}
+    cmake $(echo ${falaise_options}) ${location}
     if $(pkgtools__last_command_fails); then
         pkgtools__msg_error "Configuration of falaise fails!"
         ret=1
@@ -90,12 +109,12 @@ function falaise::configure()
 function falaise::update()
 {
     __pkgtools__at_function_enter falaise::update
-    if [[ ! -d ${location}/${version}/.git ]]; then
+    if [[ ! -d ${location}/.git ]]; then
         pkgtools__msg_error "falaise is not a git repository !"
         __pkgtools__at_function_exit
         return 1
     fi
-    git --git-dir=${location}/${version}/.git --work-tree=${location}/${version} pull
+    git --git-dir=${location}/.git --work-tree=${location} pull
     if $(pkgtools__last_command_fails); then
         pkgtools__msg_error "falaise update fails !"
         __pkgtools__at_function_exit
@@ -109,9 +128,9 @@ function falaise::build()
 {
     __pkgtools__at_function_enter falaise::build
     if $(pkgtools__has_binary ninja); then
-        ninja -C ${location}/build install
+        ninja -C ${build_dir} install
     elif $(pkgtools__has_binary make); then
-        make -j$(nproc) -C ${location}/build install
+        make -j$(nproc) -C ${build_dir} install
     else
         pkgtools__msg_error "Missing both 'ninja' and 'make' to compile falaise !"
         __pkgtools__at_function_exit
@@ -129,13 +148,14 @@ function falaise::build()
 function falaise::install()
 {
     __pkgtools__at_function_enter falaise::install
-    if [[ ! -d ${location}/${version}/.git ]]; then
+    --falaise::select
+    if [[ ! -d ${location}/.git ]]; then
         pkgtools__msg_notice "Checkout falaise from ${address}"
-        git clone ${address} ${location}/${version}
+        git clone ${address} ${location}
     fi
     # Anonymous function to add falaise modules
     function {
-        pkgtools__enter_directory ${location}/${version}/modules
+        pkgtools__enter_directory ${location}/modules
         if [[ ! -d ParticleIdentification ]]; then
             pkgtools__msg_notice "Checkout falaise/PID module"
             git clone git@github.com:xgarrido/ParticleIdentification.git
@@ -168,7 +188,7 @@ function falaise::install()
     falaise::build $@
 
     # Add emacs dir locals
-    cat << EOF > ${location}/${version}/.dir-locals.el
+    cat << EOF > ${location}/.dir-locals.el
 ((nil . (
          (compile-command . "ninja -C ${location}/build install")
          )
@@ -181,10 +201,10 @@ EOF
 function falaise::uninstall()
 {
     __pkgtools__at_function_enter falaise::uninstall
-    pkgtools__msg_warning "Do you really want to delete ${location}/{build,install} ?"
+    pkgtools__msg_warning "Do you really want to delete build/install directories ?"
     pkgtools__yesno_question
     if $(pkgtools__answer_is_yes); then
-       rm -rf ${location}/{build,install}
+        rm -rf ${build_dir} ${install_dir}
     fi
     __pkgtools__at_function_exit
     return 0
@@ -196,7 +216,7 @@ function falaise::test()
     if $(pkgtools__has_binary ninja); then
         ninja -C ${location}/build test
     elif $(pkgtools__has_binary make); then
-        make -j$(nproc) -C ${location}/build test
+        make -j$(nproc) -C ${build_dir} test
     else
         pkgtools__msg_error "Missing both 'ninja' and 'make' to compile falaise !"
         __pkgtools__at_function_exit
@@ -214,7 +234,8 @@ function falaise::test()
 function falaise::setup()
 {
     __pkgtools__at_function_enter falaise::setup
-    pkgtools__add_path_to_PATH ${location}/install/bin
+    pkgtools__msg_notice "Using falaise/${version}"
+    pkgtools__add_path_to_PATH ${install_dir}/bin
     __pkgtools__at_function_exit
     return 0
 }
@@ -222,7 +243,7 @@ function falaise::setup()
 function falaise::unsetup()
 {
     __pkgtools__at_function_enter falaise::unsetup
-    pkgtools__remove_path_to_PATH ${location}/install/bin
+    pkgtools__remove_path_to_PATH ${install_dir}/bin
     __pkgtools__at_function_exit
     return 0
 }
