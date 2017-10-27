@@ -190,7 +190,7 @@ function falaise::install()
     # Add emacs dir locals
     cat << EOF > ${location}/.dir-locals.el
 ((nil . (
-         (compile-command . "ninja -C ${location}/build install")
+         (compile-command . "ninja -C ${build_dir} install")
          )
 ))
 EOF
