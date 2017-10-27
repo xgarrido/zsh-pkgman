@@ -40,7 +40,7 @@ function python2::install()
             fi
         fi
         python2::setup
-        pip install -U pip numpy==1.6.1 scipy==0.10.1 cython pyfits ipython jupyter
+        pip install -U pip numpy==1.6.1 scipy==0.10.1 cython pyfits ipython jupyter healpy
         if $(pkgtools__last_command_fails); then
             pkgtools__msg_error "Something wrong occurs when installing python packages!"
             __pkgtools__at_function_exit
