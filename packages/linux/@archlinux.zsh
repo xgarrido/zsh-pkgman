@@ -90,13 +90,13 @@ function archlinux::install()
     function {
         local pkg_options="-S --noconfirm"
         if ! $(pkgtools__has_binary g++); then
-            sudo pacman ${pkg_options} base-devel
+            sudo pacman ${=pkg_options} base-devel
         fi
         if ! $(pkgtools__has_binary yaourt); then
             sudo echo "[archlinuxfr]\nSigLevel = Never\nServer = http://repo.archlinux.fr/$arch" >> /etc/pacman.conf
-            sudo pacman ${pkg_options} yaourt
+            sudo pacman ${=pkg_options} yaourt
         fi
-        yaourt ${pkg_options} $(eval print -l ${_pkgs})
+        yaourt ${=pkg_options} $(eval print -l ${_pkgs})
     }
 
     # Lambda function for pip packages
