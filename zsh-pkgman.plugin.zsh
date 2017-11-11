@@ -123,10 +123,8 @@ function pkgman()
 
         pkgtools__msg_debug "Load '${pkg}' package..."
         . ${pkg_file} && loaded_pkgs+=(${pkg})
-
-        # Check package version (mandatory)
-        if [[ -z ${version} ]]; then
-            pkgtools__msg_error "Missing package version!"
+        if $(pkgtools__last_command_fails); then
+            pkgtools__msg_error "Package '${pkg}' can not be run!"
             continue
         fi
 
