@@ -138,6 +138,12 @@ function pkgman()
         fi
         pkgtools__msg_devel "has_decorator=${has_decorator}"
 
+        # Check package version
+        if [[ -z ${version} && ! ${has_decorator} ]]; then
+            pkgtools__msg_error "Missing package version!"
+            continue
+        fi
+
         # Install directory from database
         local pkg_install_dir=$(__pkgman::get_install_dir $ipkg $version)
         if [[ -z ${pkg_install_dir} ]]; then
