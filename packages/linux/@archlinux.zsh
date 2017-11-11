@@ -75,7 +75,10 @@ function archlinux::dump()
     done
     echo "2) via pip ($(python --version)):"
     for ipip in ${_pips}; do
-        echo " ➜ ${ipip}: $(pip show ${ipip} | grep '^Version' | awk '{print $2}')"
+        echo -ne " ➜ ${ipip}"
+        if $(pkgtools__has_binary pip); then
+            echo ": $(pip show ${ipip} | grep '^Version' | awk '{print $2}')"
+        fi
     done
     pkgtools__msg_color_normal
     __pkgtools__at_function_exit
