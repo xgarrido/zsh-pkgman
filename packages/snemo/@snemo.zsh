@@ -7,7 +7,6 @@
 # Requirements: pkgtools
 # Status: not intended to be distributed yet
 
-local version=master
 local snemo_pkgs=(brew bayeux falaise)
 
 case $(hostname) in
@@ -33,7 +32,6 @@ function snemo::dump()
 {
     __pkgtools__at_function_enter snemo::dump
     --snemo::action dump $@
-    echo "dump=$?"
     __pkgtools__at_function_exit
     return 0
 }
