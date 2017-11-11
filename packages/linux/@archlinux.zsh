@@ -104,7 +104,7 @@ function archlinux::install()
 
     # Lambda function for pip packages
     function {
-        pip -U install --user $(eval print -l ${_pips})
+        pip install -U --user $(eval print -l ${_pips})
     }
     __pkgtools__at_function_exit
     return 0
