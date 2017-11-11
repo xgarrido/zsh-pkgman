@@ -101,7 +101,7 @@ function archlinux::install()
 
     # Lambda function for pip packages
     function {
-        sudo pip -U install $(eval print -l ${_pips})
+        pip -U install --user $(eval print -l ${_pips})
     }
     __pkgtools__at_function_exit
     return 0
@@ -110,6 +110,16 @@ function archlinux::install()
 function archlinux::uninstall()
 {
     __pkgtools__at_function_enter archlinux::uninstall
+    pkgtools__msg_warning "Do you really want to uninstall arch packages ?"
+    pkgtools__yesno_question
+    if $(pkgtools__answer_is_yes); then
+        yaourt -R $(eval print -l ${_pkgs})
+    fi
+    pkgtools__msg_warning "Do you really want to uninstall pip packages ?"
+    pkgtools__yesno_question
+    if $(pkgtools__answer_is_yes); then
+        pip uninstall $(eval print -l ${_pips})
+    fi
     __pkgtools__at_function_exit
     return 0
 }
