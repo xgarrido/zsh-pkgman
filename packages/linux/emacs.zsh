@@ -22,9 +22,9 @@ function emacs::install()
     __pkgtools__at_function_enter emacs::install
     local from_source=false
     if $(pkgtools__has_binary yaourt); then
-        yaourt -S --noconfirm emacs
+        yaourt -S --noconfirm --needed emacs
     elif $(pkgtools__has_binary pacman); then
-        yaourt -S --noconfirm emacs
+        pacmane -S --noconfirm --needed emacs
     else
         (
             cd $(mktemp -d)
