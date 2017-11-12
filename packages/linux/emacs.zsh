@@ -24,7 +24,7 @@ function emacs::install()
     if $(pkgtools__has_binary yaourt); then
         yaourt -S --noconfirm --needed emacs
     elif $(pkgtools__has_binary pacman); then
-        pacmane -S --noconfirm --needed emacs
+        pacman -S --noconfirm --needed emacs
     else
         (
             cd $(mktemp -d)
@@ -48,8 +48,9 @@ function emacs::install()
             cd $(mktemp -d)
             git clone git://orgmode.org/org-mode.git
         fi
+        make
         if ${from_source}; then
-            sed -i -e '/^prefix/ s/.*/prefix = '$HOME'\/.local/share' local.mk
+            sed -i -e '/^prefix/ s#.*#prefix = '$HOME'\/.local/share#' local.mk
             make install
         else
             sudo make install
