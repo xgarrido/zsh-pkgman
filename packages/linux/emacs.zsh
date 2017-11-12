@@ -36,6 +36,9 @@ function emacs::install()
         from_source=true
     fi
 
+    # Make sure .profile has been setup
+    source ~/.profile
+
     # Lambda function to install org-mode
     function {
         git get git://orgmode.org/org-mode.git > /dev/null 2>&1
