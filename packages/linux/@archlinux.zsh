@@ -91,7 +91,7 @@ function archlinux::install()
 
     # Lambda function for pacman/yaourt packages
     function {
-        local pkg_options="-S --noconfirm"
+        local pkg_options="-S --noconfirm --needed"
         if ! $(pkgtools__has_binary g++); then
             sudo pacman ${=pkg_options} base-devel
         fi
