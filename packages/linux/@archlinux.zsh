@@ -106,7 +106,7 @@ function archlinux::install()
     function {
         pip install -U --user $(eval print -l ${_pips})
         # Fix for colout
-        pip install --user git+https://github.com/njohan/colout.git
+        pip install --user https://github.com/njohan/colout.git
     }
 
     # Install home setup
