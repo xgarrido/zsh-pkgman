@@ -9,7 +9,7 @@
 
 local version
 
-function archhome::install()
+function dotfiles::install()
 {
     __pkgtools__at_function_enter home::install
 
