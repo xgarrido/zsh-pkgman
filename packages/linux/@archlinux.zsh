@@ -109,6 +109,9 @@ function archlinux::install()
         pip install --user git+https://github.com/njohan/colout.git
     }
 
+    # Install home setup
+    pkgman install dotfiles
+
     # Install emacs
     pkgman install emacs
 
