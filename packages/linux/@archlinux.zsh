@@ -54,7 +54,6 @@ local _pkgs=(
 )
 
 local _pips=(
-    colout
     Glances
     ipython
     jupyter
@@ -106,6 +105,8 @@ function archlinux::install()
     # Lambda function for pip packages
     function {
         pip install -U --user $(eval print -l ${_pips})
+        # Fix for colout
+        pip install --user git+https://github.com/njohan/colout.git
     }
 
     # Install emacs
