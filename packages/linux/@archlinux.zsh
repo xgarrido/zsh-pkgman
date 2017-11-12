@@ -50,6 +50,7 @@ local _pkgs=(
     ttf-adobe-fonts
     ttf-inconsolata
     ttf-ubuntu-font-family
+    xclip
 )
 
 local _pips=(
