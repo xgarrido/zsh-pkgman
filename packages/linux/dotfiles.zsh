@@ -11,7 +11,7 @@ local version
 
 function dotfiles::install()
 {
-    __pkgtools__at_function_enter home::install
+    __pkgtools__at_function_enter dotfiles::install
 
     # Lambda function to generate ssh key
     function {
