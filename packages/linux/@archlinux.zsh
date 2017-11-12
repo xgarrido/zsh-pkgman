@@ -24,7 +24,6 @@ local _pkgs=(
     go
     gparted
     imagemagick
-    insync
     ncurses
     mplayer
     offlineimap
@@ -106,6 +105,10 @@ function archlinux::install()
     function {
         pip install -U --user $(eval print -l ${_pips})
     }
+
+    # Install emacs
+    pkgman install emacs
+
     __pkgtools__at_function_exit
     return 0
 }
