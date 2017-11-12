@@ -25,6 +25,7 @@ local _pkgs=(
     gparted
     imagemagick
     ncurses
+    meld
     mplayer
     offlineimap
     owncloud-client
@@ -58,7 +59,6 @@ local _pips=(
     ipython
     jupyter
     matplotlib
-    meld
     numpy
     pandas
     Pygments
