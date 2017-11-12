@@ -41,7 +41,7 @@ function emacs::install()
 
     # Lambda function to install org-mode
     function {
-        git get git://orgmode.org/org-mode.git > /dev/null 2>&1
+        git get git://orgmode.org/org-mode.git
         if $(pkgtools__last_command_succeeds); then
             cd ~/Development/org-mode
         else
@@ -58,7 +58,7 @@ function emacs::install()
 
     # Lambda function to install mu/mu4e
     function {
-        git get https://github.com/djcb/mu > /dev/null 2>&1
+        git get https://github.com/djcb/mu
         if $(pkgtools__last_command_succeeds); then
             cd ~/Development/org-mode
         else
