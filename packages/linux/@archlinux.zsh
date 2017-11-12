@@ -46,6 +46,7 @@ local _pkgs=(
     texlive-publishers
     texlive-science
     the_silver_searcher
+    tree
     ttf-adobe-fonts
     ttf-inconsolata
     ttf-ubuntu-font-family
