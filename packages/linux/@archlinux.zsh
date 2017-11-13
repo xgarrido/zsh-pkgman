@@ -23,10 +23,12 @@ local _pkgs=(
     gdb
     go
     gparted
+    gmime
     imagemagick
     ncurses
     meld
     mplayer
+    ninja
     offlineimap
     owncloud-client
     python-pip
@@ -51,6 +53,7 @@ local _pkgs=(
     ttf-adobe-fonts
     ttf-inconsolata
     ttf-ubuntu-font-family
+    xapian-core
     xclip
 )
 
