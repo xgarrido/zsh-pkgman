@@ -43,10 +43,11 @@ function emacs::install()
     function {
         git get git://orgmode.org/org-mode.git
         if $(pkgtools__last_command_succeeds); then
-            cd ~/Development/org-mode
+            cd ~/Development/orgmode.org/org-mode
         else
             cd $(mktemp -d)
             git clone git://orgmode.org/org-mode.git
+            cd org-mode
         fi
         make
         if ${from_source}; then
@@ -61,11 +62,14 @@ function emacs::install()
     function {
         git get https://github.com/djcb/mu
         if $(pkgtools__last_command_succeeds); then
-            cd ~/Development/org-mode
+            cd ~/Development/github.com/djcb/mu
         else
             cd $(mktemp -d)
             git clone https://github.com/djcb/mu
+            cd mu
         fi
+        ./autogen.sh
+        make
         sudo make install
     }
     __pkgtools__at_function_exit
