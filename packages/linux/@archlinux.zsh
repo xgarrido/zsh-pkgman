@@ -25,9 +25,10 @@ local _pkgs=(
     gparted
     gmime
     imagemagick
-    ncurses
+    lapack
     meld
     mplayer
+    ncurses
     ninja
     offlineimap
     owncloud-client
