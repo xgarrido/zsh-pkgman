@@ -185,7 +185,7 @@ function pkgman()
             pkgtools__msg_debug "Run '$fcn' function for version ${version}"
             pkgtools__quietly_run $fcn ${append_list_of_options_arg}
             if $(pkgtools__last_command_succeeds); then
-                if [[ ! ${has_decorator} || ! ${version} ]]; then
+                if [[ ! ${has_decorator} && ${version} ]]; then
                     if [[ ${mode} = install ]]; then
                         __pkgman::store_install_dir $(echo ${ipkg} ${version} ${pkgman_install_dir})
                     elif [[ ${mode} = uninstall ]]; then
