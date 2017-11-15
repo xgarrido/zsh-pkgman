@@ -16,6 +16,7 @@ fi
 local _pkgs=(
     autofs
     bzip2
+    cblas
     ccache
     cmake
     dropbox
