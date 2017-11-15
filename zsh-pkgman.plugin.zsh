@@ -185,11 +185,15 @@ function pkgman()
             pkgtools__msg_debug "Run '$fcn' function for version ${version}"
             pkgtools__quietly_run $fcn ${append_list_of_options_arg}
             if $(pkgtools__last_command_succeeds); then
-                if [[ ! ${has_decorator} && ${version} ]]; then
-                    if [[ ${mode} = install ]]; then
-                        __pkgman::store_install_dir $(echo ${ipkg} ${version} ${pkgman_install_dir})
-                    elif [[ ${mode} = uninstall ]]; then
-                        __pkgman::remove_install_dir $(echo ${ipkg} ${version})
+                pkgtools__msg_devel "Function '$fcn' successfully finished"
+                if ! ${has_decorator}; then
+                    if [[ ! -z ${version} ]]; then
+                        if [[ ${mode} = install ]]; then
+                            pkgtools__msg_devel "Store install directory ${pkgman_install_dir}"
+                            __pkgman::store_install_dir $(echo ${ipkg} ${version} ${pkgman_install_dir})
+                        elif [[ ${mode} = uninstall ]]; then
+                            __pkgman::remove_install_dir $(echo ${ipkg} ${version})
+                        fi
                     fi
                 fi
             else
