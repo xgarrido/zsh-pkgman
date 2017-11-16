@@ -7,8 +7,6 @@
 # Requirements: pkgtools
 # Status: not intended to be distributed yet
 
-local version
-
 function dotfiles::install()
 {
     __pkgtools__at_function_enter dotfiles::install
@@ -49,6 +47,21 @@ function dotfiles::install()
         git get github.com/xgarrido/${igit}
     done
 
+    # Install LaTeX styles files
+    function {
+        # Make sure emacs has been already installed otherwise do it
+        if ! $(pkgtools__has_binary emacs); then
+            pkgman install emacs
+        fi
+        cd ~/Development/github.com/xgarrido/latex-templates
+        make
+        cd $TEXMFHOME/tex/latex/commonstuff
+        if [[ ! -f font-awesomesty ]]; then
+            wget \
+                https://gist.githubusercontent.com/xgarrido/b4176717a24c530ed3f309c46c38fc5a/raw/0016c76e532b55d5802aefad248b39472776420c/font-awesome.sty
+        fi
+        pip install --user pygments-style-solarized
+    }
     __pkgtools__at_function_exit
     return 0
 }
