@@ -33,6 +33,7 @@ local _pkgs=(
     ninja
     offlineimap
     owncloud-client
+    perl-term-readkey
     python-pip
     rsync
     subversion
