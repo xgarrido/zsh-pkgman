@@ -19,6 +19,7 @@ local _pkgs=(
     cblas
     ccache
     cmake
+    docker
     dropbox
     gcc-fortran
     gdb
@@ -58,6 +59,8 @@ local _pkgs=(
     ttf-ubuntu-font-family
     xapian-core
     xclip
+    xdotool
+    wmctrl
 )
 
 local _pips=(
