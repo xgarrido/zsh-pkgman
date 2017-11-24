@@ -52,6 +52,7 @@ local _pkgs=(
     texlive-pstricks
     texlive-publishers
     texlive-science
+    tk
     the_silver_searcher
     tree
     ttf-adobe-fonts
