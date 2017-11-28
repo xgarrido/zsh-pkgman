@@ -19,6 +19,12 @@ function dotfiles::install()
         pkgtools__msg_warning "Do not forget to copy the ssh key to github.com!"
     }
 
+    # Lambda function to install emacs.d
+    function {
+        cd ~
+        git clone git@github.com:xgarrido/emacs-starter-kit
+    }
+
     # Lambda function to install xgarrido/dotfiles
     function {
         mkdir -p ~/Development/github.com/xgarrido
@@ -61,6 +67,12 @@ function dotfiles::install()
                 https://gist.githubusercontent.com/xgarrido/b4176717a24c530ed3f309c46c38fc5a/raw/0016c76e532b55d5802aefad248b39472776420c/font-awesome.sty
         fi
         pip install --user pygments-style-solarized
+    }
+
+    # Install go packages
+    function {
+        go get -u github.com/sbinet/go-svn2git
+        go get -u github.com/junegunn/fzf
     }
     __pkgtools__at_function_exit
     return 0
