@@ -21,6 +21,7 @@ local _pkgs=(
     cmake
     docker
     dropbox
+    freerdp
     gcc-fortran
     gdb
     go
@@ -36,6 +37,7 @@ local _pkgs=(
     owncloud-client
     perl-term-readkey
     python-pip
+    remmina
     rsync
     subversion
     terminator
