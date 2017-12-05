@@ -11,7 +11,11 @@ local cmb_pkgs=(python2 cmt class pypico planck camel)
 
 case $(hostname) in
     cca*)
-        pkgman_install_dir=$SCRATCH_DIR/workdir/cmb/software
+        # pkgman_install_dir=$SCRATCH_DIR/workdir/cmb/software
+        sysname=${SYSNAME/*_/}
+        if [[ ${sysname} = sl6 || ${sysname} = sl7 ]]; then
+            pkgman_install_dir=/sps/planck/camel/${sysname:u}/software
+        fi
         ;;
     *)
         pkgman_install_dir=$HOME/Workdir/CMB/software
