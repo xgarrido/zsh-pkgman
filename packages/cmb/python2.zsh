@@ -25,6 +25,16 @@ function python2::install()
     __pkgtools__at_function_enter python2::install
     (
         if [ ! -d ${location} ]; then
+            if [[ $(hostname) = cca* ]]; then
+                (
+                    cd $(mktemp -d)
+                    wget https://www.python.org/ftp/python/2.7.14/Python-2.7.14.tgz
+                    tar xzvf Python-2.7.14.tgz
+                    cd Python-2.7.14
+                    ./configure --prefix=${location}/.. && make && make install
+                )
+                pkgtools__add_path_to_PATH ${location}/../bin
+            fi
             if ! $(pkgtools__has_binary virtualenv); then
                 (
                     cd $(mktemp -d)
