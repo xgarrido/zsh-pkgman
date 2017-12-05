@@ -30,6 +30,10 @@ function brew::install()
         git clone ${address} ${location}
     fi
     local gcc_version=$(g++ --version | head -1 | awk '{print $3}')
+    if [[ $(hostname) = cca* ]]; then
+        ln -sf $(which g++) ${location}/bin/g++-${gcc_version:0:1}
+        ln -sf $(which gcc) ${location}/bin/gcc-${gcc_version:0:1}
+    fi
     if [[ ${gcc_version} > 6 ]]; then
         (
             cd ${location}/Library/Homebrew/shims/linux/super
