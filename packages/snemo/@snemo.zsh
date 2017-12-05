@@ -11,7 +11,7 @@ local snemo_pkgs=(brew bayeux falaise)
 
 case $(hostname) in
     cca*)
-        pkgman_install_dir=$SCRATCH_DIR/workdir/snemo/software
+        pkgman_install_dir=$SCRATCH_DIR/workdir/supernemo/software
         ;;
     *)
         pkgman_install_dir=$HOME/Workdir/NEMO/supernemo/software
