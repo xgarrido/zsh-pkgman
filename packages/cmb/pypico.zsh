@@ -31,7 +31,7 @@ function pypico::install()
         python setup.py --build_cython install
         if [ ! -f ${data} ]; then
             mkdir -p $(dirname ${data})
-            wget -O ${data} https://owncloud.lal.in2p3.fr/index.php/s/Q0VsmRpisQQUMKL
+            wget -O ${data} https://owncloud.lal.in2p3.fr/index.php/s/Q0VsmRpisQQUMKL/download
         fi
     )
 }
