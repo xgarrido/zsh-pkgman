@@ -28,9 +28,10 @@ function python2::install()
             if [[ $(hostname) = cca* ]]; then
                 (
                     cd $(mktemp -d)
-                    wget https://www.python.org/ftp/python/2.7.14/Python-2.7.14.tgz
-                    tar xzvf Python-2.7.14.tgz
-                    cd Python-2.7.14
+                    local python_version=2.7.3
+                    wget https://www.python.org/ftp/python/${python_version}/Python-${python_version}.tgz
+                    tar xzvf Python-${python_version}.tgz
+                    cd Python-${python_version}
                     ./configure --prefix=${location}/.. && make && make install
                 )
                 pkgtools__add_path_to_PATH ${location}/../bin
