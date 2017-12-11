@@ -7,6 +7,6 @@
 
 if ! $(pkgtools::has_binary apt-get); then
     pkgtools::msg_error "Not an ubuntu flavour distribution!"
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 1
 fi

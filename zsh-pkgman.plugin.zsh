@@ -16,8 +16,8 @@ export PKGMAN_SETUP_DONE
 
 function pkgman()
 {
-    __pkgtools__default_values
-    __pkgtools__at_function_enter pkgman
+    pkgtools::default_values
+    pkgtools::at_function_enter pkgman
 
     local packages_dir=${pkgman_dir}/packages
 
@@ -169,7 +169,7 @@ function pkgman()
         if [[ ${mode} = goto ]]; then
             if ${has_decorator}; then
                 pkgtools::msg_error "Can not go into a decorator package!"
-                __pkgtools__at_function_exit
+                pkgtools::at_function_exit
                 return 1
             else
                 cd ${location}
@@ -226,6 +226,6 @@ function pkgman()
     awk '!seen[$0]++' ${pkgman_db_file} > ${pkgman_db_file}.tmp
     mv ${pkgman_db_file}.tmp ${pkgman_db_file}
 
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }

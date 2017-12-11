@@ -33,28 +33,28 @@ function --falaise::select()
 
 function falaise::dump()
 {
-    __pkgtools__at_function_enter falaise::dump
+    pkgtools::at_function_enter falaise::dump
     pkgtools::msg_notice "falaise"
     pkgtools::msg_notice " |- version : ${version}"
     pkgtools::msg_notice " |- from    : ${address}"
     pkgtools::msg_notice " \`- to      : ${location}"
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function falaise::configure()
 {
-    __pkgtools__at_function_enter falaise::configure
+    pkgtools::at_function_enter falaise::configure
     local brew_install_dir=$(__pkgman::get_install_dir brew master)
     if [[ -z ${brew_install_dir} ]]; then
         pkgtools::msg_error "Missing brew install!"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
     local bayeux_install_dir=$(__pkgman::get_install_dir bayeux master)
     if [[ -z ${brew_install_dir} ]]; then
         pkgtools::msg_error "Missing bayeux install!"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
 
@@ -102,52 +102,52 @@ function falaise::configure()
         ret=1
     fi
     pkgtools::exit_directory
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return ${ret}
 }
 
 function falaise::update()
 {
-    __pkgtools__at_function_enter falaise::update
+    pkgtools::at_function_enter falaise::update
     if [[ ! -d ${location}/.git ]]; then
         pkgtools::msg_error "falaise is not a git repository !"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
     git --git-dir=${location}/.git --work-tree=${location} pull
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "falaise update fails !"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function falaise::build()
 {
-    __pkgtools__at_function_enter falaise::build
+    pkgtools::at_function_enter falaise::build
     if $(pkgtools::has_binary ninja); then
         ninja -C ${build_dir} install
     elif $(pkgtools::has_binary make); then
         make -j$(nproc) -C ${build_dir} install
     else
         pkgtools::msg_error "Missing both 'ninja' and 'make' to compile falaise !"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "Compilation of falaise fails!"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function falaise::install()
 {
-    __pkgtools__at_function_enter falaise::install
+    pkgtools::at_function_enter falaise::install
     --falaise::select
     if [[ ! -d ${location}/.git ]]; then
         pkgtools::msg_notice "Checkout falaise from ${address}"
@@ -194,56 +194,56 @@ function falaise::install()
          )
 ))
 EOF
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function falaise::uninstall()
 {
-    __pkgtools__at_function_enter falaise::uninstall
+    pkgtools::at_function_enter falaise::uninstall
     pkgtools::msg_warning "Do you really want to delete build/install directories ?"
     pkgtools::yesno_question
     if $(pkgtools::answer_is_yes); then
         rm -rf ${build_dir} ${install_dir}
     fi
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function falaise::test()
 {
-    __pkgtools__at_function_enter falaise::test
+    pkgtools::at_function_enter falaise::test
     if $(pkgtools::has_binary ninja); then
         ninja -C ${location}/build test
     elif $(pkgtools::has_binary make); then
         make -j$(nproc) -C ${build_dir} test
     else
         pkgtools::msg_error "Missing both 'ninja' and 'make' to compile falaise !"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "Tests of falaise fails!"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function falaise::setup()
 {
-    __pkgtools__at_function_enter falaise::setup
+    pkgtools::at_function_enter falaise::setup
     pkgtools::msg_notice "Using falaise/${version}"
     pkgtools::add_path_to_PATH ${install_dir}/bin
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function falaise::unsetup()
 {
-    __pkgtools__at_function_enter falaise::unsetup
+    pkgtools::at_function_enter falaise::unsetup
     pkgtools::remove_path_to_PATH ${install_dir}/bin
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }

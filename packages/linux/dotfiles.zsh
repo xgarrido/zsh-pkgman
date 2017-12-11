@@ -9,7 +9,7 @@
 
 function dotfiles::install()
 {
-    __pkgtools__at_function_enter dotfiles::install
+    pkgtools::at_function_enter dotfiles::install
 
     # Lambda function to generate ssh key
     function {
@@ -74,6 +74,6 @@ function dotfiles::install()
         go get -u github.com/sbinet/go-svn2git
         go get -u github.com/junegunn/fzf
     }
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }

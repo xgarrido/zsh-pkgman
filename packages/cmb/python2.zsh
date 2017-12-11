@@ -12,17 +12,17 @@ local location="${pkgman_install_dir}/python.d/cmb_${version}"
 
 function python2::dump()
 {
-    __pkgtools__at_function_enter python2::dump
+    pkgtools::at_function_enter python2::dump
     pkgtools::msg_notice "Python"
     pkgtools::msg_notice " |- version : ${version}"
     pkgtools::msg_notice " \`- to      : ${location}"
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function python2::install()
 {
-    __pkgtools__at_function_enter python2::install
+    pkgtools::at_function_enter python2::install
     (
         if [ ! -d ${location} ]; then
             if [[ $(hostname) = cca* && ${SYSNAME/*_/} = sl6 ]]; then
@@ -55,45 +55,45 @@ function python2::install()
         pip install -U pip numpy==1.6.1 scipy==0.10.1 cython pyfits ipython jupyter healpy
         if $(pkgtools::last_command_fails); then
             pkgtools::msg_error "Something wrong occurs when installing python packages!"
-            __pkgtools__at_function_exit
+            pkgtools::at_function_exit
             return 1
         fi
     )
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function python2::uninstall()
 {
-    __pkgtools__at_function_enter python2::uninstall
+    pkgtools::at_function_enter python2::uninstall
     pkgtools::msg_warning "Do you really want to delete ${location} ?"
     pkgtools::yesno_question
     if $(pkgtools::answer_is_yes); then
        rm -rf ${location}
     fi
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function python2::setup()
 {
-    __pkgtools__at_function_enter python2::setup
+    pkgtools::at_function_enter python2::setup
     source ${location}/bin/activate
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "Something wrong occurs when initializing python2!"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function python2::unsetup()
 {
-    __pkgtools__at_function_enter python2::unsetup
+    pkgtools::at_function_enter python2::unsetup
     if [[ ${location} = $VIRTUAL_ENV ]]; then
         deactivate
     fi
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }

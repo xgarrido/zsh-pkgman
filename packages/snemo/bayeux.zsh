@@ -13,23 +13,23 @@ local location="${pkgman_install_dir}/bayeux"
 
 function bayeux::dump()
 {
-    __pkgtools__at_function_enter bayeux::dump
+    pkgtools::at_function_enter bayeux::dump
     pkgtools::msg_notice "bayeux"
     pkgtools::msg_notice " |- version : ${version}"
     pkgtools::msg_notice " |- from    : ${address}"
     pkgtools::msg_notice " \`- to      : ${location}"
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function bayeux::configure()
 {
-    __pkgtools__at_function_enter bayeux::configure
+    pkgtools::at_function_enter bayeux::configure
 
     local brew_install_dir=$(__pkgman::get_install_dir brew master)
     if [[ -z ${brew_install_dir} ]]; then
         pkgtools::msg_error "Missing brew install!"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
 
@@ -79,52 +79,52 @@ function bayeux::configure()
         ret=1
     fi
     pkgtools::exit_directory
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return ${ret}
 }
 
 function bayeux::update()
 {
-    __pkgtools__at_function_enter bayeux::update
+    pkgtools::at_function_enter bayeux::update
     if [[ ! -d ${location}/${version}/.git ]]; then
         pkgtools::msg_error "bayeux is not a git repository !"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
     git --git-dir=${location}/${version}/.git --work-tree=${location}/${version} pull
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "bayeux update fails !"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function bayeux::build()
 {
-    __pkgtools__at_function_enter bayeux::build
+    pkgtools::at_function_enter bayeux::build
     if $(pkgtools::has_binary ninja); then
         ninja -C ${location}/build install
     elif $(pkgtools::has_binary make); then
         make -j$(nproc) -C ${location}/build install
     else
         pkgtools::msg_error "Missing both 'ninja' and 'make' to compile bayeux !"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "Compilation of bayeux fails!"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function bayeux::install()
 {
-    __pkgtools__at_function_enter bayeux::install
+    pkgtools::at_function_enter bayeux::install
     if [[ ! -d ${location}/${version}/.git ]]; then
         pkgtools::msg_notice "Checkout bayeux from ${address}"
         git clone ${address} ${location}/${version}
@@ -139,55 +139,55 @@ function bayeux::install()
          )
 ))
 EOF
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function bayeux::uninstall()
 {
-    __pkgtools__at_function_enter bayeux::uninstall
+    pkgtools::at_function_enter bayeux::uninstall
     pkgtools::msg_warning "Do you really want to delete ${location}/{build,install} ?"
     pkgtools::yesno_question
     if $(pkgtools::answer_is_yes); then
        rm -rf ${location}/{build,install}
     fi
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function bayeux::test()
 {
-    __pkgtools__at_function_enter bayeux::test
+    pkgtools::at_function_enter bayeux::test
     if $(pkgtools::has_binary ninja); then
         ninja -C ${location}/build test
     elif $(pkgtools::has_binary make); then
         make -j$(nproc) -C ${location}/build test
     else
         pkgtools::msg_error "Missing both 'ninja' and 'make' to compile bayeux !"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "Tests of bayeux fails!"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function bayeux::setup()
 {
-    __pkgtools__at_function_enter bayeux::setup
+    pkgtools::at_function_enter bayeux::setup
     pkgtools::add_path_to_PATH ${location}/install/bin
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function bayeux::unsetup()
 {
-    __pkgtools__at_function_enter bayeux::unsetup
+    pkgtools::at_function_enter bayeux::unsetup
     pkgtools::remove_path_to_PATH ${location}/install/bin
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }

@@ -13,18 +13,18 @@ local location="${pkgman_install_dir}/brew"
 
 function brew::dump()
 {
-    __pkgtools__at_function_enter brew::dump
+    pkgtools::at_function_enter brew::dump
     pkgtools::msg_notice "brew"
     pkgtools::msg_notice " |- version : ${version}"
     pkgtools::msg_notice " |- from    : ${address}"
     pkgtools::msg_notice " \`- to      : ${location}"
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function brew::install()
 {
-    __pkgtools__at_function_enter brew::install
+    pkgtools::at_function_enter brew::install
     if [[ ! -d ${location}/.git ]]; then
         pkgtools::msg_notice "Checkout brew from ${address}"
         git clone ${address} ${location}
@@ -53,38 +53,38 @@ function brew::install()
          supernemo-dbd/cadfael/camp
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "Something wrongs occurs when installing brew !"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
     brew::unsetup
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function brew::uninstall()
 {
-    __pkgtools__at_function_enter brew::uninstall
+    pkgtools::at_function_enter brew::uninstall
     pkgtools::msg_warning "Do you really want to delete ${location} ?"
     pkgtools::yesno_question
     if $(pkgtools::answer_is_yes); then
        rm -rf ${location}
     fi
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function brew::setup()
 {
-    __pkgtools__at_function_enter brew::setup
+    pkgtools::at_function_enter brew::setup
     pkgtools::add_path_to_PATH ${location}/bin
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function brew::unsetup()
 {
-    __pkgtools__at_function_enter brew::unsetup
+    pkgtools::at_function_enter brew::unsetup
     pkgtools::remove_path_to_PATH ${location}/bin
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }

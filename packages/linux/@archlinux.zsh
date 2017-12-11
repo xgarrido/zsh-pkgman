@@ -9,7 +9,7 @@
 
 if ! $(pkgtools::has_binary pacman); then
     pkgtools::msg_error "Not an archlinux distribution!"
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 1
 fi
 
@@ -78,7 +78,7 @@ local _pips=(
 
 function archlinux::dump()
 {
-    __pkgtools__at_function_enter archlinux::dump
+    pkgtools::at_function_enter archlinux::dump
     pkgtools::msg_notice "Following packages will be installed:"
     pkgtools::msg_color_blue
     echo "1) via pacman/yaourt:"
@@ -93,13 +93,13 @@ function archlinux::dump()
         fi
     done
     pkgtools::msg_color_normal
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function archlinux::install()
 {
-    __pkgtools__at_function_enter archlinux::install
+    pkgtools::at_function_enter archlinux::install
 
     # Lambda function for pacman/yaourt packages
     function {
@@ -127,13 +127,13 @@ function archlinux::install()
     # Install emacs
     pkgman install emacs
 
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function archlinux::uninstall()
 {
-    __pkgtools__at_function_enter archlinux::uninstall
+    pkgtools::at_function_enter archlinux::uninstall
     pkgtools::msg_warning "Do you really want to uninstall arch packages ?"
     pkgtools::yesno_question
     if $(pkgtools::answer_is_yes); then
@@ -144,6 +144,6 @@ function archlinux::uninstall()
     if $(pkgtools::answer_is_yes); then
         pip uninstall $(eval print -l ${_pips})
     fi
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }

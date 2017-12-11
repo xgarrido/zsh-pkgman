@@ -20,7 +20,7 @@ esac
 
 function --snemo::action()
 {
-    __pkgtools__at_function_enter --snemo::action
+    pkgtools::at_function_enter --snemo::action
     for ipkg in ${snemo_pkgs}; do
         pkgman $@ ${ipkg}
         if $(pkgtools::last_command_fails); then
@@ -28,62 +28,62 @@ function --snemo::action()
             return 1
         fi
     done
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function snemo::dump()
 {
-    __pkgtools__at_function_enter snemo::dump
+    pkgtools::at_function_enter snemo::dump
     --snemo::action dump $@
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function snemo::install()
 {
-    __pkgtools__at_function_enter snemo::install
+    pkgtools::at_function_enter snemo::install
     --snemo::action install $@
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function snemo::uninstall()
 {
-    __pkgtools__at_function_enter snemo::uninstall
+    pkgtools::at_function_enter snemo::uninstall
     --snemo::action uninstall $@
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function snemo::setup()
 {
-    __pkgtools__at_function_enter snemo::setup
+    pkgtools::at_function_enter snemo::setup
     if [[ ${PKGMAN_SETUP_DONE} = snemo ]]; then
         pkgtools::msg_error "snemo packages are already setup!"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     elif [[ ! -z ${PKGMAN_SETUP_DONE} ]]; then
         pkgtools::msg_error "Another set of packages (${PKGMAN_SETUP_DONE}) is setup!"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
     --snemo::action setup $@
     pkgtools::reset_variable PKGMAN_SETUP_DONE "snemo"
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function snemo::unsetup()
 {
-    __pkgtools__at_function_enter snemo::unsetup
+    pkgtools::at_function_enter snemo::unsetup
     if [[ ${PKGMAN_SETUP_DONE} != snemo ]]; then
         pkgtools::msg_error "snemo packages are not setup!"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
     --snemo::action unsetup $@
     pkgtools::unset_variable PKGMAN_SETUP_DONE
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }

@@ -14,55 +14,55 @@ local data="${pkgman_install_dir}/../data/camel_data"
 
 function camel::dump()
 {
-    __pkgtools__at_function_enter camel::dump
+    pkgtools::at_function_enter camel::dump
     pkgtools::msg_notice "CAMEL"
     pkgtools::msg_notice " |- version : ${version}"
     pkgtools::msg_notice " |- data    : ${data}"
     pkgtools::msg_notice " |- to      : ${location}"
     pkgtools::msg_notice " \`- from    : ${address}"
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function camel::update()
 {
-    __pkgtools__at_function_enter camel::update
+    pkgtools::at_function_enter camel::update
     if [[ ! -d ${location}/.git ]]; then
         pkgtools::msg_error "CAMEL is not a git repository !"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
     git --git-dir=${location}/.git --work-tree=${location} pull
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "CAMEL update fails !"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function camel::build()
 {
-    __pkgtools__at_function_enter camel::build
+    pkgtools::at_function_enter camel::build
     if ! $(pkgtools::check_variable CAMEL_DATA); then
         pkgtools::msg_error "CAMEL is not setup !"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
     make -C ${location}/cmt exec
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "CAMEL build fails !"
-        __pkgtools__at_function_exit
+        pkgtools::at_function_exit
         return 1
     fi
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function camel::install()
 {
-    __pkgtools__at_function_enter camel::install
+    pkgtools::at_function_enter camel::install
     (
         pkgman setup python2
         pkgman setup cmt
@@ -87,13 +87,13 @@ function camel::install()
         # sed -i -e '/export PYTHONPATH=${PICO_CODE}/ s/^/#/' camel_setup.sh
         source camel_setup.sh && make && make exec
     )
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function camel::uninstall()
 {
-    __pkgtools__at_function_enter camel::uninstall
+    pkgtools::at_function_enter camel::uninstall
     pkgtools::msg_warning "Do you really want to remove camel code @ [${location}]?"
     pkgtools::yesno_question
     if $(pkgtools::answer_is_yes); then
@@ -104,13 +104,13 @@ function camel::uninstall()
     if $(pkgtools::answer_is_yes); then
         rm -rf ${data}
     fi
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
 
 function camel::setup()
 {
-    __pkgtools__at_function_enter camel::setup
+    pkgtools::at_function_enter camel::setup
     pkgtools::set_variable CAMEL_DATA ${data}
     pkgtools::add_path_to_PATH ${location}/Linux-x86_64
 
@@ -122,15 +122,15 @@ function camel::setup()
         ret=1
     fi
     pkgtools::exit_directory
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return ${ret}
 }
 
 function camel::unsetup()
 {
-    __pkgtools__at_function_enter camel::unsetup
+    pkgtools::at_function_enter camel::unsetup
     pkgtools::remove_path_to_PATH ${location}/Linux-x86_64
     pkgtools::unset_variable CAMEL_DATA
-    __pkgtools__at_function_exit
+    pkgtools::at_function_exit
     return 0
 }
