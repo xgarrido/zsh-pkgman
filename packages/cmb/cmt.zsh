@@ -14,10 +14,10 @@ local location="${pkgman_install_dir}/CMT/${version}"
 function cmt::dump()
 {
     __pkgtools__at_function_enter cmt::dump
-    pkgtools__msg_notice "CMT"
-    pkgtools__msg_notice " |- version : ${version}"
-    pkgtools__msg_notice " |- from    : ${address}"
-    pkgtools__msg_notice " \`- to      : ${location}"
+    pkgtools::msg_notice "CMT"
+    pkgtools::msg_notice " |- version : ${version}"
+    pkgtools::msg_notice " |- from    : ${address}"
+    pkgtools::msg_notice " \`- to      : ${location}"
     __pkgtools__at_function_exit
     return 0
 }
@@ -42,9 +42,9 @@ function cmt::install()
 function cmt::uninstall()
 {
     __pkgtools__at_function_enter cmt::uninstall
-    pkgtools__msg_warning "Do you really want to delete ${location} ?"
-    pkgtools__yesno_question
-    if $(pkgtools__answer_is_yes); then
+    pkgtools::msg_warning "Do you really want to delete ${location} ?"
+    pkgtools::yesno_question
+    if $(pkgtools::answer_is_yes); then
        rm -rf ${location}
     fi
     __pkgtools__at_function_exit
@@ -55,7 +55,7 @@ function cmt::setup()
 {
     __pkgtools__at_function_enter cmt::setup
     source ${location}/mgr/setup.sh
-    pkgtools__reset_variable CMTCONFIG "Linux-x86_64"
+    pkgtools::reset_variable CMTCONFIG "Linux-x86_64"
     __pkgtools__at_function_exit
     return 0
 }
@@ -63,18 +63,18 @@ function cmt::setup()
 function cmt::unsetup()
 {
     __pkgtools__at_function_enter cmt::unsetup
-    if ! $(pkgtools__check_variable CMTROOT); then
+    if ! $(pkgtools::check_variable CMTROOT); then
         return 0
     fi
 
-    pkgtools__remove_path_to_PATH ${CMTROOT}/${CMTBIN}
-    pkgtools__unset_variable CMTROOT
-    pkgtools__unset_variable CMTBIN
-    pkgtools__unset_variable CMTCONFIG
-    pkgtools__unset_variable CLASSPATH
-    pkgtools__unset_variable jmct
-    pkgtools__unset_variable cmt
-    pkgtools__unset_variable MAKEFLAGS
+    pkgtools::remove_path_to_PATH ${CMTROOT}/${CMTBIN}
+    pkgtools::unset_variable CMTROOT
+    pkgtools::unset_variable CMTBIN
+    pkgtools::unset_variable CMTCONFIG
+    pkgtools::unset_variable CLASSPATH
+    pkgtools::unset_variable jmct
+    pkgtools::unset_variable cmt
+    pkgtools::unset_variable MAKEFLAGS
     unalias cmt
     unfunction cmt_actions cmt_default_path cmt_make cmt_aliases cmt_fragments \
                cmt_patterns cmt_constituents cmt_macros cmt_sets

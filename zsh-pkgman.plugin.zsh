@@ -37,30 +37,30 @@ function pkgman()
 	    if [[ ${opt} = -h || ${opt} = --help ]]; then
                 return 0
 	    elif [[ ${opt} = -d || ${opt} = --debug ]]; then
-	        pkgtools__msg_using_debug
+	        pkgtools::msg_using_debug
 	    elif [[ ${opt} = -D || ${opt} = --devel ]]; then
-	        pkgtools__msg_using_devel
+	        pkgtools::msg_using_devel
 	    elif [[ ${opt} = -v || ${opt} = --verbose ]]; then
-	        pkgtools__msg_using_verbose
+	        pkgtools::msg_using_verbose
 	    elif [[ ${opt} = -q || ${opt} = --quiet ]]; then
-	        pkgtools__msg_using_quiet
+	        pkgtools::msg_using_quiet
 	    elif [[ ${opt} = -W || ${opt} = --no-warning ]]; then
-	        pkgtools__msg_not_using_warning
+	        pkgtools::msg_not_using_warning
 	    elif [[ ${opt} = --install-dir ]]; then
                 shift 1
                 new_pkgman_install_dir="$1"
             fi
         else
             if (( ${fcns[(I)${token}]} )); then
-                pkgtools__msg_devel "Mode ${token} exists !"
+                pkgtools::msg_devel "Mode ${token} exists !"
                 mode=${token}
             elif [[ ${token} = add ]]; then
                 shift 1
                 local address="$1"
-                pkgtools__msg_notice "Adding packages from ${address}"
+                pkgtools::msg_notice "Adding packages from ${address}"
                 git clone git@github.com:$address ${packages_dir}/${address}
             else
-                pkgtools__msg_devel "Adding package ${token} !"
+                pkgtools::msg_devel "Adding package ${token} !"
 	        append_list_of_pkgs_arg+="${token} "
             fi
         fi
@@ -70,9 +70,9 @@ function pkgman()
     append_list_of_pkgs_arg=${append_list_of_pkgs_arg%?}
     append_list_of_options_arg=${append_list_of_options_arg%?}
 
-    pkgtools__msg_devel "mode=${mode}"
-    pkgtools__msg_devel "append_list_of_pkgs_arg=${append_list_of_pkgs_arg}"
-    pkgtools__msg_devel "append_list_of_options_arg=${append_list_of_options_arg}"
+    pkgtools::msg_devel "mode=${mode}"
+    pkgtools::msg_devel "append_list_of_pkgs_arg=${append_list_of_pkgs_arg}"
+    pkgtools::msg_devel "append_list_of_options_arg=${append_list_of_options_arg}"
 
     # pkgman internal database
     local pkgman_db_file=${pkgman_dir}/.pkgman_db_file
@@ -108,23 +108,23 @@ function pkgman()
 
     local -a loaded_pkgs
     for ipkg in ${=append_list_of_pkgs_arg}; do
-        pkgtools__msg_debug "Check existence of package '${ipkg}'"
+        pkgtools::msg_debug "Check existence of package '${ipkg}'"
         local pkg=$(basename $ipkg)
         local pkg_file=$(find ${packages_dir}/$(dirname $ipkg) -name ${pkg}.zsh)
-        pkgtools__msg_devel "pkg_file=${pkg_file}"
+        pkgtools::msg_devel "pkg_file=${pkg_file}"
         if [[ -z ${pkg_file} ]]; then
-	    pkgtools__msg_error "Package '${ipkg}' not found !"
+	    pkgtools::msg_error "Package '${ipkg}' not found !"
             continue
         elif [[ $(echo "${pkg_file}" | wc -l) > 1 ]]; then
-            pkgtools__msg_error "Package '${ipkg}' has ambiguous declaration!"
-            pkgtools__msg_error "Choose between "$(echo "${pkg_file}" | sed -e 's#'${packages_dir}'/./##g' -e 's/.zsh$//')
+            pkgtools::msg_error "Package '${ipkg}' has ambiguous declaration!"
+            pkgtools::msg_error "Choose between "$(echo "${pkg_file}" | sed -e 's#'${packages_dir}'/./##g' -e 's/.zsh$//')
             continue
 	fi
 
-        pkgtools__msg_debug "Load '${pkg}' package..."
+        pkgtools::msg_debug "Load '${pkg}' package..."
         . ${pkg_file} && loaded_pkgs+=(${pkg})
-        if $(pkgtools__last_command_fails); then
-            pkgtools__msg_error "Package '${pkg}' can not be run!"
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_error "Package '${pkg}' can not be run!"
             continue
         fi
 
@@ -134,11 +134,11 @@ function pkgman()
             has_decorator=true
             pkg=${pkg:1}
         fi
-        pkgtools__msg_devel "has_decorator=${has_decorator}"
+        pkgtools::msg_devel "has_decorator=${has_decorator}"
 
         # Check package version
         if [[ -z ${version} && ! ${has_decorator} ]]; then
-            pkgtools__msg_error "Missing package version!"
+            pkgtools::msg_error "Missing package version!"
             continue
         fi
 
@@ -146,12 +146,12 @@ function pkgman()
         local pkg_install_dir=$(__pkgman::get_install_dir $ipkg $version)
         if [[ -z ${pkg_install_dir} ]]; then
             if [[ ! ${has_decorator} && ${mode} != install ]]; then
-                pkgtools__msg_error "The current package ${ipkg} is not installed!"
+                pkgtools::msg_error "The current package ${ipkg} is not installed!"
                 continue
             fi
         else
             if [[ ${mode} = install ]]; then
-                pkgtools__msg_warning \
+                pkgtools::msg_warning \
                     "The current package ${ipkg} is already installed @ ${pkg_install_dir}! Remove it first!"
                 continue
             fi
@@ -161,14 +161,14 @@ function pkgman()
         if [[ ! -z ${new_pkgman_install_dir} ]]; then
             pkgman_install_dir=${new_pkgman_install_dir}
         fi
-        pkgtools__msg_devel "pkgman_install_dir=${pkgman_install_dir}"
+        pkgtools::msg_devel "pkgman_install_dir=${pkgman_install_dir}"
         # Need to be reloaded to update location variable
         . ${pkg_file}
 
         # Goto mode
         if [[ ${mode} = goto ]]; then
             if ${has_decorator}; then
-                pkgtools__msg_error "Can not go into a decorator package!"
+                pkgtools::msg_error "Can not go into a decorator package!"
                 __pkgtools__at_function_exit
                 return 1
             else
@@ -179,17 +179,17 @@ function pkgman()
 
         local fcn="${pkg}::${mode}"
         if (( ! $+functions[$fcn] )); then
-            pkgtools__msg_error \
+            pkgtools::msg_error \
                 "Missing function '$fcn'! Need to be implemented within '${pkg_file}'!"
         else
-            pkgtools__msg_debug "Run '$fcn' function for version ${version}"
-            pkgtools__quietly_run $fcn ${append_list_of_options_arg}
-            if $(pkgtools__last_command_succeeds); then
-                pkgtools__msg_devel "Function '$fcn' successfully finished"
+            pkgtools::msg_debug "Run '$fcn' function for version ${version}"
+            pkgtools::quietly_run $fcn ${append_list_of_options_arg}
+            if $(pkgtools::last_command_succeeds); then
+                pkgtools::msg_devel "Function '$fcn' successfully finished"
                 if ! ${has_decorator}; then
                     if [[ ! -z ${version} ]]; then
                         if [[ ${mode} = install ]]; then
-                            pkgtools__msg_devel "Store install directory ${pkgman_install_dir}"
+                            pkgtools::msg_devel "Store install directory ${pkgman_install_dir}"
                             __pkgman::store_install_dir $(echo ${ipkg} ${version} ${pkgman_install_dir})
                         elif [[ ${mode} = uninstall ]]; then
                             __pkgman::remove_install_dir $(echo ${ipkg} ${version})
@@ -197,7 +197,7 @@ function pkgman()
                     fi
                 fi
             else
-                pkgtools__msg_error "Running '$fcn' function fails !"
+                pkgtools::msg_error "Running '$fcn' function fails !"
             fi
         fi
     done
@@ -206,7 +206,7 @@ function pkgman()
         for ifcn in ${fcns}; do
             local fcn="${ipkg}::${ifcn}"
             if (( $+functions[$fcn] )); then
-                pkgtools__msg_devel "Unloading $fcn function"
+                pkgtools::msg_devel "Unloading $fcn function"
                 unfunction $fcn
             fi
         done
@@ -217,7 +217,7 @@ function pkgman()
     #                       __pkgman::remove_install_dir)
     # for ifcn in ${internals_fcns}; do
     #     if (( $+functions[$ifcn] )); then
-    #         pkgtools__msg_devel "Unloading $ifcn function"
+    #         pkgtools::msg_devel "Unloading $ifcn function"
     #         unfunction $ifcn
     #     fi
     # done

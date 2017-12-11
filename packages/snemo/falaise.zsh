@@ -17,10 +17,10 @@ local local_dir=$(dirname $0)
 function --falaise::select()
 {
     local versions=(xgarrido SuperNEMO-DBD SuperNEMO-DBD-France)
-    pkgtools__msg_notice "Which falaise version do you want to use ?"
+    pkgtools::msg_notice "Which falaise version do you want to use ?"
     select v in ${versions[@]}; do
         version=$v
-        pkgtools__msg_devel "Selecting $version"
+        pkgtools::msg_devel "Selecting $version"
         break
     done
     address="git@github.com:${version}/Falaise.git"
@@ -34,10 +34,10 @@ function --falaise::select()
 function falaise::dump()
 {
     __pkgtools__at_function_enter falaise::dump
-    pkgtools__msg_notice "falaise"
-    pkgtools__msg_notice " |- version : ${version}"
-    pkgtools__msg_notice " |- from    : ${address}"
-    pkgtools__msg_notice " \`- to      : ${location}"
+    pkgtools::msg_notice "falaise"
+    pkgtools::msg_notice " |- version : ${version}"
+    pkgtools::msg_notice " |- from    : ${address}"
+    pkgtools::msg_notice " \`- to      : ${location}"
     __pkgtools__at_function_exit
     return 0
 }
@@ -47,13 +47,13 @@ function falaise::configure()
     __pkgtools__at_function_enter falaise::configure
     local brew_install_dir=$(__pkgman::get_install_dir brew master)
     if [[ -z ${brew_install_dir} ]]; then
-        pkgtools__msg_error "Missing brew install!"
+        pkgtools::msg_error "Missing brew install!"
         __pkgtools__at_function_exit
         return 1
     fi
     local bayeux_install_dir=$(__pkgman::get_install_dir bayeux master)
     if [[ -z ${brew_install_dir} ]]; then
-        pkgtools__msg_error "Missing bayeux install!"
+        pkgtools::msg_error "Missing bayeux install!"
         __pkgtools__at_function_exit
         return 1
     fi
@@ -79,29 +79,29 @@ function falaise::configure()
             [[ $k == without-* ]] && falaise_options+="ON " || falaise_options+="OFF "
         fi
     done
-    if $(pkgtools__has_binary ninja); then
-        falaise_options+="-G Ninja -DCMAKE_MAKE_PROGRAM=$(pkgtools__get_binary_path ninja)"
+    if $(pkgtools::has_binary ninja); then
+        falaise_options+="-G Ninja -DCMAKE_MAKE_PROGRAM=$(pkgtools::get_binary_path ninja)"
     fi
-    pkgtools__msg_devel "falaise_options=${falaise_options}"
+    pkgtools::msg_devel "falaise_options=${falaise_options}"
 
     # Compiler options
     local cxx="g++ -Wno-noexcept-type"
     local cc="gcc"
-    if $(pkgtools__has_binary ccache); then
+    if $(pkgtools::has_binary ccache); then
         cxx="ccache ${cxx}"
         cc="ccache ${cc}"
     fi
-    pkgtools__reset_variable CXX ${cxx}
-    pkgtools__reset_variable CC ${cc}
+    pkgtools::reset_variable CXX ${cxx}
+    pkgtools::reset_variable CC ${cc}
 
     local ret=0
-    pkgtools__enter_directory ${build_dir}
+    pkgtools::enter_directory ${build_dir}
     cmake $(echo ${falaise_options}) ${location}
-    if $(pkgtools__last_command_fails); then
-        pkgtools__msg_error "Configuration of falaise fails!"
+    if $(pkgtools::last_command_fails); then
+        pkgtools::msg_error "Configuration of falaise fails!"
         ret=1
     fi
-    pkgtools__exit_directory
+    pkgtools::exit_directory
     __pkgtools__at_function_exit
     return ${ret}
 }
@@ -110,13 +110,13 @@ function falaise::update()
 {
     __pkgtools__at_function_enter falaise::update
     if [[ ! -d ${location}/.git ]]; then
-        pkgtools__msg_error "falaise is not a git repository !"
+        pkgtools::msg_error "falaise is not a git repository !"
         __pkgtools__at_function_exit
         return 1
     fi
     git --git-dir=${location}/.git --work-tree=${location} pull
-    if $(pkgtools__last_command_fails); then
-        pkgtools__msg_error "falaise update fails !"
+    if $(pkgtools::last_command_fails); then
+        pkgtools::msg_error "falaise update fails !"
         __pkgtools__at_function_exit
         return 1
     fi
@@ -127,17 +127,17 @@ function falaise::update()
 function falaise::build()
 {
     __pkgtools__at_function_enter falaise::build
-    if $(pkgtools__has_binary ninja); then
+    if $(pkgtools::has_binary ninja); then
         ninja -C ${build_dir} install
-    elif $(pkgtools__has_binary make); then
+    elif $(pkgtools::has_binary make); then
         make -j$(nproc) -C ${build_dir} install
     else
-        pkgtools__msg_error "Missing both 'ninja' and 'make' to compile falaise !"
+        pkgtools::msg_error "Missing both 'ninja' and 'make' to compile falaise !"
         __pkgtools__at_function_exit
         return 1
     fi
-    if $(pkgtools__last_command_fails); then
-        pkgtools__msg_error "Compilation of falaise fails!"
+    if $(pkgtools::last_command_fails); then
+        pkgtools::msg_error "Compilation of falaise fails!"
         __pkgtools__at_function_exit
         return 1
     fi
@@ -150,18 +150,18 @@ function falaise::install()
     __pkgtools__at_function_enter falaise::install
     --falaise::select
     if [[ ! -d ${location}/.git ]]; then
-        pkgtools__msg_notice "Checkout falaise from ${address}"
+        pkgtools::msg_notice "Checkout falaise from ${address}"
         git clone ${address} ${location}
     fi
     # Anonymous function to add falaise modules
     function {
-        pkgtools__enter_directory ${location}/modules
+        pkgtools::enter_directory ${location}/modules
         if [[ ! -d ParticleIdentification ]]; then
-            pkgtools__msg_notice "Checkout falaise/PID module"
+            pkgtools::msg_notice "Checkout falaise/PID module"
             git clone git@github.com:xgarrido/ParticleIdentification.git
         fi
         if [[ ! -d ProcessReport ]]; then
-            pkgtools__msg_notice "Checkout falaise/ProcessReport module"
+            pkgtools::msg_notice "Checkout falaise/ProcessReport module"
             git clone git@github.com:xgarrido/ProcessReport.git
         fi
         local gs_desc="No more FalaiseModule + PID/Process report modules"
@@ -182,7 +182,7 @@ function falaise::install()
         else
             git stash apply ${gs_id/:/}
         fi
-        pkgtools__exit_directory
+        pkgtools::exit_directory
     }
     falaise::configure $@ --with-test
     falaise::build $@
@@ -201,9 +201,9 @@ EOF
 function falaise::uninstall()
 {
     __pkgtools__at_function_enter falaise::uninstall
-    pkgtools__msg_warning "Do you really want to delete build/install directories ?"
-    pkgtools__yesno_question
-    if $(pkgtools__answer_is_yes); then
+    pkgtools::msg_warning "Do you really want to delete build/install directories ?"
+    pkgtools::yesno_question
+    if $(pkgtools::answer_is_yes); then
         rm -rf ${build_dir} ${install_dir}
     fi
     __pkgtools__at_function_exit
@@ -213,17 +213,17 @@ function falaise::uninstall()
 function falaise::test()
 {
     __pkgtools__at_function_enter falaise::test
-    if $(pkgtools__has_binary ninja); then
+    if $(pkgtools::has_binary ninja); then
         ninja -C ${location}/build test
-    elif $(pkgtools__has_binary make); then
+    elif $(pkgtools::has_binary make); then
         make -j$(nproc) -C ${build_dir} test
     else
-        pkgtools__msg_error "Missing both 'ninja' and 'make' to compile falaise !"
+        pkgtools::msg_error "Missing both 'ninja' and 'make' to compile falaise !"
         __pkgtools__at_function_exit
         return 1
     fi
-    if $(pkgtools__last_command_fails); then
-        pkgtools__msg_error "Tests of falaise fails!"
+    if $(pkgtools::last_command_fails); then
+        pkgtools::msg_error "Tests of falaise fails!"
         __pkgtools__at_function_exit
         return 1
     fi
@@ -234,8 +234,8 @@ function falaise::test()
 function falaise::setup()
 {
     __pkgtools__at_function_enter falaise::setup
-    pkgtools__msg_notice "Using falaise/${version}"
-    pkgtools__add_path_to_PATH ${install_dir}/bin
+    pkgtools::msg_notice "Using falaise/${version}"
+    pkgtools::add_path_to_PATH ${install_dir}/bin
     __pkgtools__at_function_exit
     return 0
 }
@@ -243,7 +243,7 @@ function falaise::setup()
 function falaise::unsetup()
 {
     __pkgtools__at_function_enter falaise::unsetup
-    pkgtools__remove_path_to_PATH ${install_dir}/bin
+    pkgtools::remove_path_to_PATH ${install_dir}/bin
     __pkgtools__at_function_exit
     return 0
 }

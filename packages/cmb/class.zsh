@@ -13,10 +13,10 @@ local location="${pkgman_install_dir}/class/${version}"
 
 function class::dump()
 {
-    pkgtools__msg_notice "CLASS"
-    pkgtools__msg_notice " |- version : ${version}"
-    pkgtools__msg_notice " |- from    : ${address}"
-    pkgtools__msg_notice " \`- to      : ${location}"
+    pkgtools::msg_notice "CLASS"
+    pkgtools::msg_notice " |- version : ${version}"
+    pkgtools::msg_notice " |- from    : ${address}"
+    pkgtools::msg_notice " \`- to      : ${location}"
 }
 
 function class::install()
@@ -27,13 +27,13 @@ function class::install()
         cd ${location}/../..
         cmt create class ${version}
         cd ${location}/cmt
-        if $(pkgtools__has_binary icc); then
+        if $(pkgtools::has_binary icc); then
             [[ ! -f requirements-class-icc.txt ]] && \
                 wget http://camel.in2p3.fr/wiki/uploads/Main/requirements-class-icc.txt
             sed -i -e 's#-openmp#-qopenmp -qoverride-limits#' requirements-class-icc.txt
             sed -i -e 's#/afs/in2p3.fr/.*-liomp5#'$(dirname $(which icc))'/../../lib/intel64 -liomp5#' requirements-class-icc.txt
             rm -f requirements; ln -sf requirements-class-icc.txt requirements
-        elif $(pkgtools__has_binary gcc); then
+        elif $(pkgtools::has_binary gcc); then
             [[ ! -f requirements-class-gcc.txt ]] && \
                 wget http://camel.in2p3.fr/wiki/uploads/Main/requirements-class-gcc.txt
             rm -f requirements; ln -sf requirements-class-gcc.txt requirements
@@ -47,19 +47,19 @@ function class::install()
 
 function class::uninstall()
 {
-    pkgtools__msg_warning "Do you really want to delete ${location} ?"
-    pkgtools__yesno_question
-    if $(pkgtools__answer_is_yes); then
+    pkgtools::msg_warning "Do you really want to delete ${location} ?"
+    pkgtools::yesno_question
+    if $(pkgtools::answer_is_yes); then
        rm -rf ${location}
     fi
 }
 
 function class::setup()
 {
-    pkgtools__set_variable CMTCLASS ${pkgman_install_dir}
+    pkgtools::set_variable CMTCLASS ${pkgman_install_dir}
 }
 
 function class::unsetup()
 {
-    pkgtools__unset_variable CMTCLASS
+    pkgtools::unset_variable CMTCLASS
 }

@@ -60,16 +60,16 @@ function cmb::setup()
 {
     __pkgtools__at_function_enter cmb::setup
     if [[ ${PKGMAN_SETUP_DONE} = cmb ]]; then
-        pkgtools__msg_error "CMB packages are already setup!"
+        pkgtools::msg_error "CMB packages are already setup!"
         __pkgtools__at_function_exit
         return 1
     elif [[ ! -z ${PKGMAN_SETUP_DONE} ]]; then
-        pkgtools__msg_error "Another set of packages (${PKGMAN_SETUP_DONE}) is setup!"
+        pkgtools::msg_error "Another set of packages (${PKGMAN_SETUP_DONE}) is setup!"
         __pkgtools__at_function_exit
         return 1
     fi
     --cmb::action setup $@
-    pkgtools__reset_variable PKGMAN_SETUP_DONE "cmb"
+    pkgtools::reset_variable PKGMAN_SETUP_DONE "cmb"
     __pkgtools__at_function_exit
     return 0
 }
@@ -78,12 +78,12 @@ function cmb::unsetup()
 {
     __pkgtools__at_function_enter cmb::unsetup
     if [[ ${PKGMAN_SETUP_DONE} != cmb ]]; then
-        pkgtools__msg_error "CMB packages are not setup!"
+        pkgtools::msg_error "CMB packages are not setup!"
         __pkgtools__at_function_exit
         return 1
     fi
    --cmb::action unsetup $@
-    pkgtools__unset_variable PKGMAN_SETUP_DONE
+    pkgtools::unset_variable PKGMAN_SETUP_DONE
     __pkgtools__at_function_exit
     return 0
 }

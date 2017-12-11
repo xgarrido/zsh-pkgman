@@ -21,9 +21,9 @@ function emacs::install()
 {
     __pkgtools__at_function_enter emacs::install
     local from_source=false
-    if $(pkgtools__has_binary yaourt); then
+    if $(pkgtools::has_binary yaourt); then
         yaourt -S --noconfirm --needed emacs
-    elif $(pkgtools__has_binary pacman); then
+    elif $(pkgtools::has_binary pacman); then
         pacman -S --noconfirm --needed emacs
     else
         (
@@ -42,7 +42,7 @@ function emacs::install()
     # Lambda function to install org-mode
     function {
         git get git://orgmode.org/org-mode.git
-        if $(pkgtools__last_command_succeeds); then
+        if $(pkgtools::last_command_succeeds); then
             cd ~/Development/orgmode.org/org-mode
         else
             cd $(mktemp -d)
@@ -61,7 +61,7 @@ function emacs::install()
     # Lambda function to install mu/mu4e
     function {
         git get https://github.com/djcb/mu
-        if $(pkgtools__last_command_succeeds); then
+        if $(pkgtools::last_command_succeeds); then
             cd ~/Development/github.com/djcb/mu
         else
             cd $(mktemp -d)

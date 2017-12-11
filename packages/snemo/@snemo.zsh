@@ -56,16 +56,16 @@ function snemo::setup()
 {
     __pkgtools__at_function_enter snemo::setup
     if [[ ${PKGMAN_SETUP_DONE} = snemo ]]; then
-        pkgtools__msg_error "snemo packages are already setup!"
+        pkgtools::msg_error "snemo packages are already setup!"
         __pkgtools__at_function_exit
         return 1
     elif [[ ! -z ${PKGMAN_SETUP_DONE} ]]; then
-        pkgtools__msg_error "Another set of packages (${PKGMAN_SETUP_DONE}) is setup!"
+        pkgtools::msg_error "Another set of packages (${PKGMAN_SETUP_DONE}) is setup!"
         __pkgtools__at_function_exit
         return 1
     fi
     --snemo::action setup $@
-    pkgtools__reset_variable PKGMAN_SETUP_DONE "snemo"
+    pkgtools::reset_variable PKGMAN_SETUP_DONE "snemo"
     __pkgtools__at_function_exit
     return 0
 }
@@ -74,12 +74,12 @@ function snemo::unsetup()
 {
     __pkgtools__at_function_enter snemo::unsetup
     if [[ ${PKGMAN_SETUP_DONE} != snemo ]]; then
-        pkgtools__msg_error "snemo packages are not setup!"
+        pkgtools::msg_error "snemo packages are not setup!"
         __pkgtools__at_function_exit
         return 1
     fi
     --snemo::action unsetup $@
-    pkgtools__unset_variable PKGMAN_SETUP_DONE
+    pkgtools::unset_variable PKGMAN_SETUP_DONE
     __pkgtools__at_function_exit
     return 0
 }

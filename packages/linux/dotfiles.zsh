@@ -16,7 +16,7 @@ function dotfiles::install()
         if [[ ! -f ~/.ssh/.id_rsa.pub ]]; then
             ssh-keygen
         fi
-        pkgtools__msg_warning "Do not forget to copy the ssh key to github.com!"
+        pkgtools::msg_warning "Do not forget to copy the ssh key to github.com!"
     }
 
     # Lambda function to install emacs.d
@@ -56,7 +56,7 @@ function dotfiles::install()
     # Install LaTeX styles files
     function {
         # Make sure emacs has been already installed otherwise do it
-        if ! $(pkgtools__has_binary emacs); then
+        if ! $(pkgtools::has_binary emacs); then
             pkgman install emacs
         fi
         cd ~/Development/github.com/xgarrido/latex-templates

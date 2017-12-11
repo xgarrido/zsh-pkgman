@@ -14,11 +14,11 @@ local data="${pkgman_install_dir}/../data/pico_data/pico3_tailmonty_v34.dat"
 
 function pypico::dump()
 {
-    pkgtools__msg_notice "pypico"
-    pkgtools__msg_notice " |- version : ${version}"
-    pkgtools__msg_notice " |- data    : ${data}"
-    pkgtools__msg_notice " |- to      : ${location}"
-    pkgtools__msg_notice " \`- from    : ${address}"
+    pkgtools::msg_notice "pypico"
+    pkgtools::msg_notice " |- version : ${version}"
+    pkgtools::msg_notice " |- data    : ${data}"
+    pkgtools::msg_notice " |- to      : ${location}"
+    pkgtools::msg_notice " \`- from    : ${address}"
 }
 
 function pypico::install()
@@ -38,21 +38,21 @@ function pypico::install()
 
 function pypico::uninstall()
 {
-    pkgtools__msg_warning "Do you really want to remove pypico ?"
-    pkgtools__yesno_question
-    if $(pkgtools__answer_is_yes); then
+    pkgtools::msg_warning "Do you really want to remove pypico ?"
+    pkgtools::yesno_question
+    if $(pkgtools::answer_is_yes); then
        pip uninstall pypico
     fi
 }
 
 function pypico::setup()
 {
-    pkgtools__set_variable PICO_CODE ${location}
-    pkgtools__set_variable PICO_DATA ${data}
+    pkgtools::set_variable PICO_CODE ${location}
+    pkgtools::set_variable PICO_DATA ${data}
 }
 
 function pypico::unsetup()
 {
-    pkgtools__unset_variable PICO_CODE
-    pkgtools__unset_variable PICO_DATA
+    pkgtools::unset_variable PICO_CODE
+    pkgtools::unset_variable PICO_DATA
 }
