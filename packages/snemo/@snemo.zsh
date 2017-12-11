@@ -23,6 +23,10 @@ function --snemo::action()
     __pkgtools__at_function_enter --snemo::action
     for ipkg in ${snemo_pkgs}; do
         pkgman $@ ${ipkg}
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_error "Something fails when applying '$@' action to '${ipkg}'!"
+            return 1
+        fi
     done
     __pkgtools__at_function_exit
     return 0

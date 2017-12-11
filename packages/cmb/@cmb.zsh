@@ -27,6 +27,10 @@ function --cmb::action()
     __pkgtools__at_function_enter --cmb::action
     for ipkg in ${cmb_pkgs}; do
         pkgman $@ ${ipkg}
+        if $(pkgtools::last_command_fails); then
+            pkgtools__msg_error "Something fails when applying '$@' action to '${ipkg}'!"
+            return 1
+        fi
     done
     __pkgtools__at_function_exit
     return 0

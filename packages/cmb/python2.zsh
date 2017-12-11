@@ -25,10 +25,11 @@ function python2::install()
     __pkgtools__at_function_enter python2::install
     (
         if [ ! -d ${location} ]; then
-            if [[ $(hostname) = cca* ]]; then
+            if [[ $(hostname) = cca* && ${SYSNAME/*_/} = sl6 ]]; then
                 (
                     cd $(mktemp -d)
                     local python_version=2.7.3
+                    pkgtools::msg_notice "Install local version of Python ${python_version}"
                     wget https://www.python.org/ftp/python/${python_version}/Python-${python_version}.tgz
                     tar xzvf Python-${python_version}.tgz
                     cd Python-${python_version}
