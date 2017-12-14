@@ -19,6 +19,7 @@ local _pkgs=(
     cblas
     ccache
     cmake
+    cronie
     docker
     dropbox
     freerdp
@@ -120,6 +121,9 @@ function archlinux::install()
         # Fix for colout
         pip install --user git+https://github.com/nojhan/colout.git
     }
+
+    # Enable services
+    sudo systemctl enable cronie
 
     # Install home setup
     pkgman install dotfiles
