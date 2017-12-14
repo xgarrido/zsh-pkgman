@@ -8,7 +8,7 @@
 # Status: not intended to be distributed yet
 
 local version=master
-local address="https://github.com/SuperNEMO-DBD/brew.git"
+local address="https://github.com/Linuxbrew/brew.git"
 local location="${pkgman_install_dir}/brew"
 
 function brew::dump()
@@ -34,18 +34,8 @@ function brew::install()
         ln -sf $(which g++) ${location}/bin/g++-${gcc_version:0:1}
         ln -sf $(which gcc) ${location}/bin/gcc-${gcc_version:0:1}
     fi
-    if [[ ${gcc_version} > 6 ]]; then
-        (
-            cd ${location}/Library/Homebrew/shims/linux/super
-            local main_version=${gcc_version[1]}
-            if [[ ! -f  gcc-${main_version} && ! -f g++-${main_version} ]]; then
-                ln -sf cc gcc-${main_version} && git add gcc-${main_version}
-                ln -sf cc g++-${main_version} && git add g++-${main_version}
-                git commit -m "add gcc/g++ 7"
-            fi
-        )
-    fi
     brew::setup
+    brew tap SuperNEMO-DBD/homebrew-cadfael
     brew install --build-from-source  \
          supernemo-dbd/cadfael/root6  \
          supernemo-dbd/cadfael/geant4 \
@@ -77,6 +67,9 @@ function brew::setup()
 {
     pkgtools::at_function_enter brew::setup
     pkgtools::add_path_to_PATH ${location}/bin
+    if [[ $SHELL = *zsh* ]]; then
+        fpath=($(brew --prefix)/completions/zsh $fpath)
+    fi
     pkgtools::at_function_exit
     return 0
 }
