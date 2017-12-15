@@ -50,8 +50,9 @@ function camel::build()
         pkgtools::at_function_exit
         return 1
     fi
-    make -C ${location}/cmt
-    make -C ${location}/cmt exec
+    make -C ${location}/cmt clean
+    make -j$(nproc) -C ${location}/cmt
+    make -j$(nproc) -C ${location}/cmt exec
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "CAMEL build fails !"
         pkgtools::at_function_exit
