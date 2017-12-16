@@ -7,8 +7,8 @@
 # Requirements: pkgtools
 # Status: not intended to be distributed yet
 
-local version=v2.6.1
-local address="https://github.com/lesgourg/class_public"
+local version=v2.4.4
+local address="https://github.com/lesgourg/class_public/archive"
 local location="${pkgman_install_dir}/class/${version}"
 
 function class::dump()
@@ -23,7 +23,13 @@ function class::install()
 {
     (
         pkgman setup cmt
-        git clone -b ${version} ${address} ${location}
+        cd $(mktemp -d)
+        wget ${address}/${version}.tar.gz
+        tar xzvf ${version}.tar.gz
+        mkdir -p ${location}
+        mv class_public-${version/v/}/* ${location}/.
+        rm -rf $(pwd)
+
         cd ${location}/../..
         cmt create class ${version}
         cd ${location}/cmt
