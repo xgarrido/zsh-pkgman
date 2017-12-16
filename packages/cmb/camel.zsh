@@ -50,9 +50,10 @@ function camel::build()
         pkgtools::at_function_exit
         return 1
     fi
-    make -C ${location}/cmt clean
-    make -j$(nproc) -C ${location}/cmt
-    make -j$(nproc) -C ${location}/cmt exec
+    (
+        cd ${location}/cmt
+        make clean && make && make exec
+    )
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "CAMEL build fails !"
         pkgtools::at_function_exit
@@ -96,7 +97,7 @@ function camel::uninstall()
 {
     pkgtools::at_function_enter camel::uninstall
     pkgtools::msg_warning "Do you really want to remove camel code @ [${location}]?"
-    pkgtools::yesno_question
+    pkgtools::yesno_question "Answer ? "
     if $(pkgtools::answer_is_yes); then
         rm -rf ${location}
     fi
