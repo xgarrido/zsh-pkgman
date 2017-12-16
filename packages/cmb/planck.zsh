@@ -75,5 +75,7 @@ function planck::unsetup()
 {
     pkgtools::remove_path_to_LD_LIBRARY_PATH ${location}/lib
     pkgtools::unset_variable CLIKDIR
+    pkgtools::unset_variable CLIKLIBS
+    pkgtools::unset_variable CLIKCFLAGS
     pkgtools::unset_variable PLANCK_DATA
 }

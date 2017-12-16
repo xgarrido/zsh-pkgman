@@ -13,7 +13,7 @@ case $(hostname) in
     cca*)
         # pkgman_install_dir=$SCRATCH_DIR/workdir/cmb/software
         sysname=${SYSNAME/*_/}
-        if [[ ${sysname} = sl6 || ${sysname} = sl7 ]]; then
+        if [[ ${sysname} = sl* ]]; then
             pkgman_install_dir=/sps/planck/camel/${sysname:u}/software
         fi
         ;;

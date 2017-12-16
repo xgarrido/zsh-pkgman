@@ -28,7 +28,7 @@ function pypico::install()
         git clone ${address} ${location}
         cd ${location}
         python setup.py --build_cython build
-        python setup.py --build_cython install
+        python setup.py --build_cython install --record installed_files.txt
         if [ ! -f ${data} ]; then
             mkdir -p $(dirname ${data})
             wget -O ${data} https://owncloud.lal.in2p3.fr/index.php/s/Q0VsmRpisQQUMKL/download
@@ -41,7 +41,8 @@ function pypico::uninstall()
     pkgtools::msg_warning "Do you really want to remove pypico ?"
     pkgtools::yesno_question
     if $(pkgtools::answer_is_yes); then
-       pip uninstall pypico
+        cat ${location}/installed_files.txt | xargs rm -fr
+        rm -rf ${location}
     fi
 }
 
