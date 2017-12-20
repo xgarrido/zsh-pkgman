@@ -184,6 +184,8 @@ function falaise::install()
         fi
         pkgtools::exit_directory
     }
+    pkgman setup brew
+    pkgman setup bayeux
     falaise::configure $@ --with-test
     falaise::build $@
 

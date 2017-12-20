@@ -71,17 +71,17 @@ function bayeux::configure()
     pkgtools::reset_variable CXX ${cxx}
     pkgtools::reset_variable CC ${cc}
 
-    local ret=0
     pkgtools::enter_directory ${location}/build
     cmake $(echo ${bayeux_options}) ${location}/${version}
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "Configuration of bayeux fails!"
-        ret=1
+        pkgtools::exit_directory
+        pkgtools::at_function_exit
+        return 1
     fi
     pkgtools::exit_directory
     pkgtools::at_function_exit
-    return ${ret}
-}
+    return 0
 
 function bayeux::update()
 {
@@ -129,6 +129,7 @@ function bayeux::install()
         pkgtools::msg_notice "Checkout bayeux from ${address}"
         git clone ${address} ${location}/${version}
     fi
+    pkgman setup brew
     bayeux::configure $@ --with-test
     bayeux::build $@
 
@@ -147,7 +148,7 @@ function bayeux::uninstall()
 {
     pkgtools::at_function_enter bayeux::uninstall
     pkgtools::msg_warning "Do you really want to delete ${location}/{build,install} ?"
-    pkgtools::yesno_question
+    pkgtools::yesno_question "Answer ? "
     if $(pkgtools::answer_is_yes); then
        rm -rf ${location}/{build,install}
     fi
