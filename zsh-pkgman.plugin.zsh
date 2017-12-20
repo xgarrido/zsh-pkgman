@@ -49,6 +49,7 @@ function pkgman()
 	    elif [[ ${opt} = --install-dir ]]; then
                 shift 1
                 new_pkgman_install_dir="$1"
+                append_list_of_options_arg=$(echo ${append_list_of_options_arg} | sed '/--install-dir/d')
             fi
         else
             if (( ${fcns[(I)${token}]} )); then
