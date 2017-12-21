@@ -33,7 +33,6 @@ function pkgman()
         local token="$1"
         if [ ${token[0,1]} = - ]; then
 	    local opt=${token}
-            append_list_of_options_arg+="${opt} "
 	    if [[ ${opt} = -h || ${opt} = --help ]]; then
                 return 0
 	    elif [[ ${opt} = -d || ${opt} = --debug ]]; then
@@ -49,7 +48,8 @@ function pkgman()
 	    elif [[ ${opt} = --install-dir ]]; then
                 shift 1
                 new_pkgman_install_dir="$1"
-                append_list_of_options_arg=$(echo ${append_list_of_options_arg} | sed '/--install-dir/d')
+            else
+                append_list_of_options_arg+="${opt} "
             fi
         else
             if (( ${fcns[(I)${token}]} )); then
