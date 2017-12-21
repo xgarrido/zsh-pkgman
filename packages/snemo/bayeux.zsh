@@ -128,7 +128,13 @@ function bayeux::install()
     pkgtools::at_function_enter bayeux::install
     if [[ ! -d ${location}/${version}/.git ]]; then
         pkgtools::msg_notice "Checkout bayeux from ${address}"
-        git clone ${address} ${location}/${version}
+        git clone ${address} ${location}/${version} || \
+            git clone ${address/git@github.com:/https:\/\/github.com\/\/} ${location}/${version}
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_error "git clone fails!"
+            pkgtools::at_function_exit
+            return 1
+        fi
     fi
     pkgman setup brew
     bayeux::configure $@ --with-test
