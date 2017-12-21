@@ -16,13 +16,22 @@ local local_dir=$(dirname $0)
 
 function --falaise::select()
 {
+    local args=($@)
     local versions=(xgarrido SuperNEMO-DBD SuperNEMO-DBD-France)
-    pkgtools::msg_notice "Which falaise version do you want to use ?"
-    select v in ${versions[@]}; do
-        version=$v
-        pkgtools::msg_devel "Selecting $version"
-        break
-    done
+    if [[ ${args[(r)--falaise-version=*]} ]]; then
+        version=$(echo ${args[(r)--falaise-version=*]} | cut -d= -f2)
+    else
+        pkgtools::msg_notice "Which falaise version do you want to use ?"
+        select v in ${versions[@]}; do
+            version=$v
+            pkgtools::msg_devel "Selecting $version"
+            break
+        done
+    fi
+    if [[ ! ${versions[(r)$version]} ]]; then
+        pkgtools::msg_error "Unknown Falaise version ($version) !"
+        return 1
+    fi
     address="git@github.com:${version}/Falaise.git"
     location="${pkgman_install_dir}/falaise/repo/${version}"
     build_dir="${location}/../../build"
@@ -148,7 +157,12 @@ function falaise::build()
 function falaise::install()
 {
     pkgtools::at_function_enter falaise::install
-    --falaise::select
+    --falaise::select $@
+    if $(pkgtools::last_command_fails); then
+        pkgtools::msg_error "Something gets wrong with Falaise version"
+        pkgtools::at_function_exit
+        return 1
+    fi
     if [[ ! -d ${location}/.git ]]; then
         pkgtools::msg_notice "Checkout falaise from ${address}"
         git clone ${address} ${location}/${version} || \
