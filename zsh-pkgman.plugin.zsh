@@ -159,7 +159,7 @@ function pkgman()
             pkgman_install_dir=${pkg_install_dir}
         fi
         # If install dir is not empty, it means it has been forced
-        if [[ ! -z ${new_pkgman_install_dir} ]]; then
+        if [[ -n ${new_pkgman_install_dir} ]]; then
             pkgman_install_dir=${new_pkgman_install_dir}
         fi
         pkgtools::msg_devel "pkgman_install_dir=${pkgman_install_dir}"
