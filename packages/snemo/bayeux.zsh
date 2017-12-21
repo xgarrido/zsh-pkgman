@@ -82,6 +82,7 @@ function bayeux::configure()
     pkgtools::exit_directory
     pkgtools::at_function_exit
     return 0
+}
 
 function bayeux::update()
 {
@@ -150,7 +151,7 @@ function bayeux::uninstall()
     pkgtools::msg_warning "Do you really want to delete ${location}/{build,install} ?"
     pkgtools::yesno_question "Answer ? "
     if $(pkgtools::answer_is_yes); then
-       rm -rf ${location}/{build,install}
+        rm -rf ${location}/{build,install}
     fi
     pkgtools::at_function_exit
     return 0
