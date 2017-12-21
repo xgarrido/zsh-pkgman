@@ -151,18 +151,26 @@ function falaise::install()
     --falaise::select
     if [[ ! -d ${location}/.git ]]; then
         pkgtools::msg_notice "Checkout falaise from ${address}"
-        git clone ${address} ${location}
+        git clone ${address} ${location}/${version} || \
+            git clone ${address/git@github.com:/https:\/\/github.com\/} ${location}/${version}
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_error "git clone fails!"
+            pkgtools::at_function_exit
+            return 1
+        fi
     fi
     # Anonymous function to add falaise modules
     function {
         pkgtools::enter_directory ${location}/modules
         if [[ ! -d ParticleIdentification ]]; then
             pkgtools::msg_notice "Checkout falaise/PID module"
-            git clone git@github.com:xgarrido/ParticleIdentification.git
+            git clone git@github.com:xgarrido/ParticleIdentification.git || \
+                git clone https://github.com/xgarrido/ParticleIdentification.git
         fi
         if [[ ! -d ProcessReport ]]; then
             pkgtools::msg_notice "Checkout falaise/ProcessReport module"
-            git clone git@github.com:xgarrido/ProcessReport.git
+            git clone git@github.com:xgarrido/ProcessReport.git || \
+                git clone https://github.com/xgarrido/ProcessReport.git
         fi
         local gs_desc="No more FalaiseModule + PID/Process report modules"
         local gs_list=$(git stash list)
