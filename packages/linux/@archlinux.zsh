@@ -29,6 +29,7 @@ local _pkgs=(
     gparted
     gmime
     imagemagick
+    jq
     lapack
     meld
     mplayer
