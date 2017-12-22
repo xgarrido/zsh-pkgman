@@ -118,6 +118,7 @@ function falaise::configure()
     pkgtools::exit_directory
     pkgtools::at_function_exit
     return 0
+}
 
 function falaise::update()
 {
@@ -169,8 +170,8 @@ function falaise::install()
     fi
     if [[ ! -d ${location}/.git ]]; then
         pkgtools::msg_notice "Checkout falaise from ${address}"
-        git clone ${address} ${location}/${version} || \
-            git clone ${address/git@github.com:/https:\/\/github.com\/} ${location}/${version}
+        git clone ${address} ${location} || \
+            git clone ${address/git@github.com:/https:\/\/github.com\/} ${location}
         if $(pkgtools::last_command_fails); then
             pkgtools::msg_error "git clone fails!"
             pkgtools::at_function_exit
