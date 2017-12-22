@@ -94,8 +94,12 @@ function falaise::configure()
     pkgtools::msg_devel "falaise_options=${falaise_options}"
 
     # Compiler options
-    local cxx="g++ -Wno-noexcept-type"
+    local cxx="g++"
     local cc="gcc"
+    local gcc_version=$(g++ -dumpversion)
+    if [[ ${gcc_version} > 7 ]]; then
+        cxx+="  -Wno-noexcept-type"
+    fi
     if $(pkgtools::has_binary ccache); then
         cxx="ccache ${cxx}"
         cc="ccache ${cc}"
@@ -103,17 +107,17 @@ function falaise::configure()
     pkgtools::reset_variable CXX ${cxx}
     pkgtools::reset_variable CC ${cc}
 
-    local ret=0
     pkgtools::enter_directory ${build_dir}
     cmake $(echo ${falaise_options}) ${location}
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "Configuration of falaise fails!"
-        ret=1
+        pkgtools::exit_directory
+        pkgtools::at_function_exit
+        return 1
     fi
     pkgtools::exit_directory
     pkgtools::at_function_exit
-    return ${ret}
-}
+    return 0
 
 function falaise::update()
 {

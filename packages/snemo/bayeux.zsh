@@ -64,7 +64,6 @@ function bayeux::configure()
     # Compiler options
     local cxx="g++"
     local cc="gcc"
-
     local gcc_version=$(g++ -dumpversion)
     if [[ ${gcc_version} > 7 ]]; then
         cxx+="  -Wno-noexcept-type"
