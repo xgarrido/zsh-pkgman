@@ -62,8 +62,13 @@ function bayeux::configure()
     pkgtools::msg_devel "bayeux_options=${bayeux_options}"
 
     # Compiler options
-    local cxx="g++ -Wno-noexcept-type"
+    local cxx="g++"
     local cc="gcc"
+
+    local gcc_version=$(g++ -dumpversion)
+    if [[ ${gcc_version} > 7 ]]; then
+        cxx+="  -Wno-noexcept-type"
+    fi
     if $(pkgtools::has_binary ccache); then
         cxx="ccache ${cxx}"
         cc="ccache ${cc}"
