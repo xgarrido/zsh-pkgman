@@ -29,11 +29,11 @@ function brew::install()
         pkgtools::msg_notice "Checkout brew from ${address}"
         git clone ${address} ${location}
     fi
-    local gcc_version=$(g++ --version | head -1 | awk '{print $3}')
-    if [[ $(hostname) = cca* ]]; then
-        ln -sf $(which g++) ${location}/bin/g++-${gcc_version:0:1}
-        ln -sf $(which gcc) ${location}/bin/gcc-${gcc_version:0:1}
-    fi
+    # local gcc_version=$(g++ --version | head -1 | awk '{print $3}')
+    # if [[ $(hostname) = cca* ]]; then
+    #     ln -sf $(which g++) ${location}/bin/g++-${gcc_version:0:1}
+    #     ln -sf $(which gcc) ${location}/bin/gcc-${gcc_version:0:1}
+    # fi
     brew::setup
     brew tap SuperNEMO-DBD/homebrew-cadfael
     brew install --build-from-source  \
