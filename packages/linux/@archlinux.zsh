@@ -40,6 +40,7 @@ local _pkgs=(
     perl-term-readkey
     python-pip
     remmina
+    ruby
     rsync
     subversion
     terminator
