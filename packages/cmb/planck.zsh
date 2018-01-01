@@ -58,7 +58,7 @@ function planck::install()
 function planck::uninstall()
 {
     pkgtools::msg_warning "Do you really want to remove planck ?"
-    pkgtools::yesno_question
+    pkgtools::yesno_question "Answer ?"
     if $(pkgtools::answer_is_yes); then
         rm -rf ${location}
     fi

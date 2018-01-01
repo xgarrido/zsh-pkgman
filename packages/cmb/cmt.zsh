@@ -43,7 +43,7 @@ function cmt::uninstall()
 {
     pkgtools::at_function_enter cmt::uninstall
     pkgtools::msg_warning "Do you really want to delete ${location} ?"
-    pkgtools::yesno_question
+    pkgtools::yesno_question "Answer ?"
     if $(pkgtools::answer_is_yes); then
        rm -rf ${location}
     fi

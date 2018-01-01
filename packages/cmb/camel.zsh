@@ -97,12 +97,12 @@ function camel::uninstall()
 {
     pkgtools::at_function_enter camel::uninstall
     pkgtools::msg_warning "Do you really want to remove camel code @ [${location}]?"
-    pkgtools::yesno_question "Answer ? "
+    pkgtools::yesno_question "Answer ?"
     if $(pkgtools::answer_is_yes); then
         rm -rf ${location}
     fi
     pkgtools::msg_warning "Do you really want to remove camel data @ [${data}]?"
-    pkgtools::yesno_question "Answer ? "
+    pkgtools::yesno_question "Answer ?"
     if $(pkgtools::answer_is_yes); then
         rm -rf ${data}
     fi
