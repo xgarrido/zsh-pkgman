@@ -7,7 +7,7 @@
 # Requirements: pkgtools
 # Status: not intended to be distributed yet
 
-local cmb_pkgs=(python2 cmt class pypico planck camel)
+local cmb_pkgs=(python2 pypico cmt class planck camel)
 
 case $(hostname) in
     cca*)

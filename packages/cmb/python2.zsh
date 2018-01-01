@@ -52,7 +52,7 @@ function python2::install()
             fi
         fi
         python2::setup
-        pip install -U pip numpy==1.6.1 scipy==0.10.1 cython pyfits ipython jupyter # healpy
+        pip install -U pip numpy==1.6.1 scipy==0.11.0 matplotlib==1.5.0 cython pyfits ipython jupyter # healpy
         if $(pkgtools::last_command_fails); then
             pkgtools::msg_error "Something wrong occurs when installing python packages!"
             pkgtools::at_function_exit
@@ -67,7 +67,7 @@ function python2::uninstall()
 {
     pkgtools::at_function_enter python2::uninstall
     pkgtools::msg_warning "Do you really want to delete ${location} ?"
-    pkgtools::yesno_question
+    pkgtools::yesno_question "Answer ?"
     if $(pkgtools::answer_is_yes); then
        rm -rf ${location}
     fi

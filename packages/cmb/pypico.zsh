@@ -39,7 +39,7 @@ function pypico::install()
 function pypico::uninstall()
 {
     pkgtools::msg_warning "Do you really want to remove pypico ?"
-    pkgtools::yesno_question
+    pkgtools::yesno_question "Answer ?"
     if $(pkgtools::answer_is_yes); then
         cat ${location}/installed_files.txt | xargs rm -fr
         rm -rf ${location}
