@@ -41,15 +41,20 @@ function emacs::install()
 
     # Lambda function to install org-mode
     function {
-        git get git://orgmode.org/org-mode.git
+        git get --force-https https://code.orgmode.org/bzg/org-mode.git
         if $(pkgtools::last_command_succeeds); then
-            cd ~/Development/orgmode.org/org-mode
+            cd ~/Development/code.orgmode.org/bzg/org-mode
         else
             cd $(mktemp -d)
-            git clone git://orgmode.org/org-mode.git
+            git clone https://code.orgmode.org/bzg/org-mode.git
             cd org-mode
         fi
+        # Add htmlize to contrib directory
+        if [ ! -f contrib/lisp/htmlize.el ]; then
+            wget https://raw.githubusercontent.com/hniksic/emacs-htmlize/master/htmlize.el -P contrib/lisp
+        fi
         make
+        sed -i -e 's/#ORG_ADD_CONTRIB.*/ORG_ADD_CONTRIB = htmlize/' local.mk
         if ${from_source}; then
             sed -i -e '/^prefix/ s#.*#prefix = '$HOME'\/.local/share#' local.mk
             make install
