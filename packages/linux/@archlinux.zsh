@@ -39,6 +39,7 @@ local _pkgs=(
     owncloud-client
     perl-term-readkey
     python-pip
+    pstoedit
     remmina
     ruby
     rsync
