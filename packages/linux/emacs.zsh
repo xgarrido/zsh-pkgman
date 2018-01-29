@@ -54,7 +54,7 @@ function emacs::install()
             wget https://raw.githubusercontent.com/hniksic/emacs-htmlize/master/htmlize.el -P contrib/lisp
         fi
         make
-        sed -i -e 's/#ORG_ADD_CONTRIB.*/ORG_ADD_CONTRIB = htmlize/' local.mk
+        sed -i -e 's/#ORG_ADD_CONTRIB.*/ORG_ADD_CONTRIB = htmlize ox-koma-letter/' local.mk
         if ${from_source}; then
             sed -i -e '/^prefix/ s#.*#prefix = '$HOME'\/.local/share#' local.mk
             make install
