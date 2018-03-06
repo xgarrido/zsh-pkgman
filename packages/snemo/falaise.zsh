@@ -243,7 +243,7 @@ function falaise::test()
 {
     pkgtools::at_function_enter falaise::test
     if $(pkgtools::has_binary ninja); then
-        ninja -C ${location}/build test
+        ninja -C ${build_dir} test
     elif $(pkgtools::has_binary make); then
         make -j$(nproc) -C ${build_dir} test
     else
