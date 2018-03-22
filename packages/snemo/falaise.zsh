@@ -10,8 +10,8 @@
 local version=xgarrido
 local address="git@github.com:${version}/Falaise.git"
 local location="${pkgman_install_dir}/falaise/repo/${version}"
-local build_dir="${location}/../../build"
-local install_dir="${location}/../../install"
+local build_dir="${pkgman_install_dir}/falaise/build"
+local install_dir="${pkgman_install_dir}/falaise/install"
 local local_dir=$(dirname $0)
 
 function --falaise::select()
