@@ -141,7 +141,7 @@ function bayeux::install()
             return 1
         fi
     fi
-    pkgman setup brew
+    pkgman $@ setup brew
     bayeux::configure $@ --with-test
     bayeux::build $@
 
