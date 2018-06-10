@@ -37,10 +37,13 @@ function pkgman()
                 return 0
 	    elif [[ ${opt} = -d || ${opt} = --debug ]]; then
 	        pkgtools::msg_using_debug
+                append_list_of_options_arg+="${opt} "
 	    elif [[ ${opt} = -D || ${opt} = --devel ]]; then
 	        pkgtools::msg_using_devel
+                append_list_of_options_arg+="${opt} "
 	    elif [[ ${opt} = -v || ${opt} = --verbose ]]; then
 	        pkgtools::msg_using_verbose
+                append_list_of_options_arg+="${opt} "
 	    elif [[ ${opt} = -q || ${opt} = --quiet ]]; then
 	        pkgtools::msg_using_quiet
 	    elif [[ ${opt} = -W || ${opt} = --no-warning ]]; then
@@ -135,7 +138,7 @@ function pkgman()
             has_decorator=true
             pkg=${pkg:1}
         fi
-        pkgtools::msg_devel "has_decorator=${has_decorator}"
+        pkgtools::msg_devel "has_decorator = ${has_decorator}"
 
         # Check package version
         if [[ -z ${version} && ! ${has_decorator} ]]; then
@@ -143,8 +146,10 @@ function pkgman()
             continue
         fi
 
+        pkgtools::msg_devel "Looking for ${ipkg} package (version ${version})"
+
         # Install directory from database
-        local pkg_install_dir=$(__pkgman::get_install_dir $ipkg $version)
+        local pkg_install_dir=$(__pkgman::get_install_dir ${ipkg} ${version})
         if [[ -z ${pkg_install_dir} ]]; then
             if [[ ! ${has_decorator} && ${mode} != install ]]; then
                 pkgtools::msg_error "The current package ${ipkg} is not installed!"
@@ -162,7 +167,7 @@ function pkgman()
         if [[ -n ${new_pkgman_install_dir} ]]; then
             pkgman_install_dir=${new_pkgman_install_dir}
         fi
-        pkgtools::msg_devel "pkgman_install_dir=${pkgman_install_dir}"
+        pkgtools::msg_devel "pkgman_install_dir = ${pkgman_install_dir}"
         # Need to be reloaded to update location variable
         . ${pkg_file}
 
@@ -189,8 +194,10 @@ function pkgman()
                 pkgtools::msg_devel "Function '$fcn' successfully finished"
                 if ! ${has_decorator}; then
                     if [[ ! -z ${version} ]]; then
+                        # Update info and get latest package to get installed
+                        . ${pkg_file} && ipkg=${loaded_pkgs[@]}
                         if [[ ${mode} = install ]]; then
-                            pkgtools::msg_devel "Store install directory ${pkgman_install_dir}"
+                            pkgtools::msg_devel "Store install directory ${pkgman_install_dir} for ${ipkg} and version ${version}"
                             __pkgman::store_install_dir $(echo ${ipkg} ${version} ${pkgman_install_dir})
                         elif [[ ${mode} = uninstall ]]; then
                             __pkgman::remove_install_dir $(echo ${ipkg} ${version})
