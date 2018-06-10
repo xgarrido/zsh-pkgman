@@ -7,7 +7,7 @@
 # Requirements: pkgtools
 # Status: not intended to be distributed yet
 
-local snemo_pkgs=(brew bayeux falaise)
+local snemo_pkgs=(brew bayeux falaise snfee)
 
 case $(hostname) in
     cca*)
