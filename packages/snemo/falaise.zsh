@@ -142,9 +142,9 @@ function falaise::build()
 {
     pkgtools::at_function_enter falaise::build
     if $(pkgtools::has_binary ninja); then
-        ninja -C ${build_dir} install
+        LC_ALL=C ninja -C ${build_dir} install
     elif $(pkgtools::has_binary make); then
-        make -j$(nproc) -C ${build_dir} install
+        LC_ALL=C make -j$(nproc) -C ${build_dir} install
     else
         pkgtools::msg_error "Missing both 'ninja' and 'make' to compile falaise !"
         pkgtools::at_function_exit

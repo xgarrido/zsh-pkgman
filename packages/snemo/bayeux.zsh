@@ -66,12 +66,13 @@ function bayeux::configure()
     local cc="gcc"
     local gcc_version=$(g++ -dumpversion)
     if [[ ${gcc_version} > 7 ]]; then
-        cxx+="  -Wno-noexcept-type"
+        cxx+=" -Wno-noexcept-type"
     fi
     if $(pkgtools::has_binary ccache); then
         cxx="ccache ${cxx}"
         cc="ccache ${cc}"
     fi
+
     pkgtools::reset_variable CXX ${cxx}
     pkgtools::reset_variable CC ${cc}
 
@@ -110,9 +111,9 @@ function bayeux::build()
 {
     pkgtools::at_function_enter bayeux::build
     if $(pkgtools::has_binary ninja); then
-        ninja -C ${location}/build install
+        LC_ALL=C ninja -C ${location}/build install
     elif $(pkgtools::has_binary make); then
-        make -j$(nproc) -C ${location}/build install
+        LC_ALL=C make -j$(nproc) -C ${location}/build install
     else
         pkgtools::msg_error "Missing both 'ninja' and 'make' to compile bayeux !"
         pkgtools::at_function_exit
