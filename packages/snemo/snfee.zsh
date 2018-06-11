@@ -38,20 +38,6 @@ function snfee::configure()
         -DCMAKE_BUILD_TYPE:STRING=Release
         -DCMAKE_INSTALL_PREFIX=${location}/install
         -DCMAKE_PREFIX_PATH=${bayeux_install_dir}/install "
-    # local args=($@)
-    # local -A opts=(with-test       BAYEUX_ENABLE_TESTING
-    #                with-doc        BAYEUX_WITH_DOCS
-    #                without-warning BAYEUX_COMPILER_ERROR_ON_WARNING)
-    # for k in "${(@k)opts}"; do
-    #     if [[ ${args[(r)--$k]} == --$k ]]; then
-    #         bayeux_options+="-D${opts[$k]}="
-    #         [[ $k == without-* ]] && bayeux_options+="OFF " || bayeux_options+="ON "
-    #     else
-    #         # elif [[ ${args[(r)--without-$k]} == --without-$k ]]; then
-    #         bayeux_options+="-D${opts[$k]}="
-    #         [[ $k == without-* ]] && bayeux_options+="ON " || bayeux_options+="OFF "
-    #     fi
-    # done
     if $(pkgtools::has_binary ninja); then
         snfee_options+="-G Ninja -DCMAKE_MAKE_PROGRAM=$(pkgtools::get_binary_path ninja)"
     fi
