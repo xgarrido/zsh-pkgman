@@ -88,6 +88,11 @@ function camel::install()
             rm -f requirements; ln -sf requirements-gcc requirements
         fi
         source camel_setup.sh && --camel::fix_CLIKLIBS && make && make exec
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_error "Installation of CAMEL software fails!"
+            pkgtools::at_function_exit
+            return 1
+        fi
     )
     pkgtools::at_function_exit
     return 0

@@ -42,6 +42,8 @@ function planck::install()
         fi
         if $(pkgtools::has_binary icc); then
             waf_options+="--icc --ifort "
+            # Patches
+            sed -i -e 's/openmp/qopenmp/g' waf_tools/try_icc.py waf_tools/try_ifort.py
         elif $(pkgtools::has_binary gcc); then
             waf_options+="--gcc --gfortran "
         fi
