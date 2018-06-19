@@ -71,6 +71,24 @@ function snfee::configure()
     return 0
 }
 
+function snfee::update()
+{
+    pkgtools::at_function_enter snfee::update
+    if [[ ! -d ${location}/${version}/.git ]]; then
+        pkgtools::msg_error "snfee is not a git repository !"
+        pkgtools::at_function_exit
+        return 1
+    fi
+    git --git-dir=${location}/${version}/.git --work-tree=${location}/${version} pull
+    if $(pkgtools::last_command_fails); then
+        pkgtools::msg_error "snfee update fails !"
+        pkgtools::at_function_exit
+        return 1
+    fi
+    pkgtools::at_function_exit
+    return 0
+}
+
 function snfee::build()
 {
     pkgtools::at_function_enter snfee::build
@@ -145,7 +163,7 @@ function snfee::test()
         return 1
     fi
     if $(pkgtools::last_command_fails); then
-        pkgtools::msg_error "Tests of bayeux fails!"
+        pkgtools::msg_error "Tests of snfee fails!"
         pkgtools::at_function_exit
         return 1
     fi
