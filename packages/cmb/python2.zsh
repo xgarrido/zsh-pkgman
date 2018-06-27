@@ -52,12 +52,15 @@ function python2::install()
             fi
         fi
         python2::setup
-        pip install -U pip numpy==1.6.1 scipy==0.11.0 matplotlib==1.5.0 cython pyfits ipython jupyter # healpy
-        if $(pkgtools::last_command_fails); then
-            pkgtools::msg_error "Something wrong occurs when installing python packages!"
-            pkgtools::at_function_exit
-            return 1
-        fi
+        local pips=(pip numpy==1.12.1 scipy matplotlib ipython jupyter cython pyfits healpy pymc)
+        for i in ${pips}; do
+            pip --cache-dir /tmp/pip.d install $i
+            if $(pkgtools::last_command_fails); then
+                pkgtools::msg_error "Something wrong occurs when installing $i python packages!"
+                pkgtools::at_function_exit
+                return 1
+            fi
+        done
     )
     pkgtools::at_function_exit
     return 0
