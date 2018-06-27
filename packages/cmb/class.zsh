@@ -3,7 +3,7 @@
 # Copyright (C) 2017 Xavier Garrido
 #
 # Author: garrido@lal.in2p3.fr
-# Keywords: CMT
+# Keywords: CLASS
 # Requirements: pkgtools
 # Status: not intended to be distributed yet
 
