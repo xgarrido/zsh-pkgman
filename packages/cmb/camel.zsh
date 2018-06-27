@@ -87,7 +87,7 @@ function camel::install()
         elif $(pkgtools::has_binary gcc); then
             rm -f requirements; ln -sf requirements-gcc requirements
         fi
-        source camel_setup.sh && --camel::fix_CLIKLIBS && make && make exec
+        source camel_setup.sh && make && make exec
         if $(pkgtools::last_command_fails); then
             pkgtools::msg_error "Installation of CAMEL software fails!"
             pkgtools::at_function_exit
@@ -129,7 +129,6 @@ function camel::setup()
         pkgtools::at_function_exit
         return 1
     fi
-    --camel::fix_CLIKLIBS
     pkgtools::exit_directory
     pkgtools::at_function_exit
     return 0
@@ -142,23 +141,4 @@ function camel::unsetup()
     pkgtools::unset_variable CAMEL_DATA
     pkgtools::at_function_exit
     return 0
-}
-
-function --camel::fix_CLIKLIBS()
-{
-    if [[ ${sysname} == sl7 ]]; then
-        local cliklibs=(${=CLIKLIBS})
-        local -A swap=(2 4 6 8)
-        for k in "${(@k)swap}"; do
-            local k1=$k
-            local k2=${swap[$k]}
-            local buf=${cliklibs[$k1]}
-            cliklibs[k1]=${cliklibs[k2]}
-            cliklibs[k2]=$buf
-        done
-        # Change libraries order to match planck cfitsio
-        pkgtools::msg_warning "Redefining CLIKLIBS for $SYSNAME machine"
-        pkgtools::msg_warning "CLIKLIBS=$cliklibs"
-        pkgtools::reset_variable CLIKLIBS "$(echo ${cliklibs})"
-    fi
 }
