@@ -10,7 +10,7 @@
 local cmb_pkgs=(python2 pypico cmt class planck camel)
 
 case $(hostname) in
-    cca*)
+    cc*)
         pkgman_install_dir=/sps/planck/camel/CentOS7/software
         ;;
     *)

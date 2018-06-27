@@ -37,7 +37,7 @@ function planck::install()
 
         cd ${location}
         local waf_options="--install_all_deps "
-        if [[ $(hostname) == cca* ]]; then
+        if [[ $(hostname) == cc* ]]; then
             waf_options+="--cfitsio_include=/usr/include/cfitsio --cfitsio_lib=/usr/lib64 "
         fi
         if $(pkgtools::has_binary icc); then
