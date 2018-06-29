@@ -41,19 +41,21 @@ function cfitsio::install()
 
 function cfitsio::uninstall()
 {
-    pkgtools::msg_warning "Do you really want to delete ${location} ?"
+    pkgtools::msg_warning "Do you really want to delete $(dirname ${location}) ?"
     pkgtools::yesno_question "Answer ?"
     if $(pkgtools::answer_is_yes); then
-       rm -rf ${location}
+       rm -rf $(dirname ${location})
     fi
 }
 
 function cfitsio::setup()
 {
-    # pkgtools::set_variable CMTCLASS ${pkgman_install_dir}
+    pkgtools::set_variable CFITSIO_INCLUDE ${location}/../install/include
+    pkgtools::set_variable CFITSIO_LIB ${location}/../install/lib
 }
 
 function cfitsio::unsetup()
 {
-    # pkgtools::unset_variable CMTCLASS
+    pkgtools::unset_variable CFITSIO_INCLUDE
+    pkgtools::unset_variable CFITSIO_LIB
 }
