@@ -16,9 +16,9 @@ function planck::dump()
 {
     pkgtools::at_function_enter planck::dump
     pkgtools::msg_notice "planck"
+    pkgtools::msg_notice " |- from    : ${address}"
     pkgtools::msg_notice " |- to      : ${location}"
-    pkgtools::msg_notice " |- data    : ${data}"
-    pkgtools::msg_notice " \`- from    : ${address}"
+    pkgtools::msg_notice " \`- data    : ${data}"
     pkgtools::at_function_exit
     return 0
 }

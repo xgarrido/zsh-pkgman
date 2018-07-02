@@ -17,9 +17,9 @@ function pypico::dump()
     pkgtools::at_function_enter pypico::dump
     pkgtools::msg_notice "pypico"
     pkgtools::msg_notice " |- version : ${version}"
-    pkgtools::msg_notice " |- data    : ${data}"
+    pkgtools::msg_notice " |- from    : ${address}"
     pkgtools::msg_notice " |- to      : ${location}"
-    pkgtools::msg_notice " \`- from    : ${address}"
+    pkgtools::msg_notice " \`- data    : ${data}"
     pkgtools::at_function_exit
     return 0
 }

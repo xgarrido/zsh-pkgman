@@ -15,7 +15,14 @@ function python2::dump()
     pkgtools::at_function_enter python2::dump
     pkgtools::msg_notice "Python"
     pkgtools::msg_notice " |- version : ${version}"
-    pkgtools::msg_notice " \`- to      : ${location}"
+    pkgtools::msg_notice " |- to      : ${location}"
+    pkgtools::msg_notice " |- pip packages:"
+    (
+        python2::setup
+        for p in $(pip freeze); do
+            pkgtools::msg_notice "    |-" $(echo $p | sed 's/==/ -> /g')
+        done
+    )
     pkgtools::at_function_exit
     return 0
 }

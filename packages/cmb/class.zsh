@@ -13,14 +13,18 @@ local location="${pkgman_install_dir}/class/${version}"
 
 function class::dump()
 {
-    pkgtools::msg_notice "CLASS"
+    pkgtools::at_function_enter class::dump
+    pkgtools::msg_notice "class"
     pkgtools::msg_notice " |- version : ${version}"
     pkgtools::msg_notice " |- from    : ${address}"
     pkgtools::msg_notice " \`- to      : ${location}"
+    pkgtools::at_function_exit
+    return 0
 }
 
 function class::install()
 {
+    pkgtools::at_function_enter class::install
     (
         pkgman setup cmt
         cd $(mktemp -d)
@@ -46,26 +50,42 @@ function class::install()
         fi
         cmt config
         make
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_error "Installation of class fails!"
+            pkgtools::at_function_exit
+            return 1
+        fi
         cd ${location}/..
         ln -sf ${version} HEAD
     )
+    pkgtools::at_function_exit
+    return 0
 }
 
 function class::uninstall()
 {
+    pkgtools::at_function_enter class::uninstall
     pkgtools::msg_warning "Do you really want to delete ${location} ?"
     pkgtools::yesno_question "Answer ?"
     if $(pkgtools::answer_is_yes); then
        rm -rf ${location}
     fi
+    pkgtools::at_function_exit
+    return 0
 }
 
 function class::setup()
 {
+    pkgtools::at_function_enter class::setup
     pkgtools::set_variable CMTCLASS ${pkgman_install_dir}
+    pkgtools::at_function_exit
+    return 0
 }
 
 function class::unsetup()
 {
+    pkgtools::at_function_enter class::unsetup
     pkgtools::unset_variable CMTCLASS
+    pkgtools::at_function_exit
+    return 0
 }
