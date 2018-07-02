@@ -50,8 +50,7 @@ function camb::install()
                 -e 's#\(.*subprocess.call.*\)\(COMPILER=gfortran\)\(.*$\)#\1COMPILER=ifort\3#' setup.py
         fi
         # pip install . does not work so do it by hand
-        local site_package_dir=$(dirname $(dirname $(which pip)))
-        python setup.py install --prefix=${site_package_dir}
+        python setup.py install --prefix=${VIRTUAL_ENV}
         if $(pkgtools::last_command_fails); then
             pkgtools::msg_error "Installation of CAMB python library fails!"
             pkgtools::at_function_exit
@@ -69,6 +68,8 @@ function camb::uninstall()
     pkgtools::yesno_question "Answer ?"
     if $(pkgtools::answer_is_yes); then
        rm -rf $(dirname ${location})
+       pkgman setup python2
+       pip uninstall camb
     fi
     pkgtools::at_function_exit
     return 0
