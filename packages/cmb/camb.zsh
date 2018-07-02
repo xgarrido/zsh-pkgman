@@ -44,6 +44,19 @@ function camb::install()
             return 1
         fi
         pkgman setup python2
+        cd pycamb
+        if [[ $(hostname) = *cc* ]]; then
+            sed -i -e 's#\(.*= check_gfortran.*\)#\#\1#' \
+                -e 's#\(.*subprocess.call.*\)\(COMPILER=gfortran\)\(.*$\)#\1COMPILER=ifort\3#' setup.py
+        fi
+        # pip install . does not work so do it by hand
+        local site_package_dir=$(dirname $(dirname $(which pip)))
+        python setup.py install --prefix=${site_package_dir}
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_error "Installation of CAMB python library fails!"
+            pkgtools::at_function_exit
+            return 1
+        fi
     )
     pkgtools::at_function_exit
     return 0
