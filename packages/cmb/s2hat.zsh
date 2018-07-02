@@ -44,7 +44,11 @@ function s2hat::install()
         chmod u+r *; chmod g+w *
         cp ${pkgman_dir}/packages/cmb/patches/s2hat/Makefile.template ./Makefile
         # Special binaries mpif90 and mpicc for s2hat
-        pkgtools::add_path_to_PATH /usr/local/intel/2018/compilers_and_libraries/linux/mpi/intel64/bin
+        if ! $(pkgtools::has_binary mpif90); then
+            pkgtools::msg_error "Missing mpi binaries!"
+            pkgtools::at_function_exit
+            return 1
+        fi
         make
         if $(pkgtools::last_command_fails); then
             pkgtools::msg_error "Installation of s²hat softawre fails!"
