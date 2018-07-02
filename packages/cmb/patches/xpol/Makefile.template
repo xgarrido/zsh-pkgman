@@ -1,0 +1,28 @@
+################################################################################################
+INSTALL_DIR=../install/bin
+
+MKL_LIB = -Wl,-R${MKLROOT}/lib/intel64 -L${MKLROOT}/lib/intel64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core
+S2HAT_LIB = -L${S2HAT_DIR} -ls2hat
+HLP_LIB = -Wl,-R${HEALPIX_DIR}/lib -L${HEALPIX_DIR}/lib -lhealpix -lchealpix
+FITS_LIB = -Wl,-R${CFITSIO_LIB} -L${CFITSIO_LIB} -lcfitsio
+
+export INC_DIR = -I${S2HAT_DIR} -I${HEALPIX_DIR}/include -I${CFITSIO_INCLUDE} -I${MKLROOT}/include
+export LIB_DIR = ${MKL_LIB} ${S2HAT_LIB} ${FITS_LIB} ${HLP_LIB} -ldl -lpthread -lm  #-liopm5
+export LIB =
+
+export CC  = mpicc
+export LL  = mpicc
+export F77 = mpif77
+
+export CFLAG = -O3 -DgFortran -fPIC -DMKL -DHEALPIXDATA=\"$(realpath ${HEALPIX_DATA})\" -Wall -Dx86_64 -DMPICH #OPEN_MPI
+export FFLAG = -O3
+export LFLAG = -O3 -fPIC -lgfortran #-Wl,-R/usr/local/intel/composer_xe_2013.3.163/compiler/lib/intel64 -L/usr/local/intel/composer_xe_2013.3.163/compiler/lib/intel64 -lifcore -lintlc -lifport -limf -lirc -ldl -lsvml -lgfortran
+################################################################################################
+
+
+all:
+	mkdir -p ${INSTALL_DIR}
+	make -C src xpol xpol_create_mll xpol_fisher
+	mv src/xpol ${INSTALL_DIR}
+	mv src/xpol_create_mll ${INSTALL_DIR}
+	mv src/xpol_fisher ${INSTALL_DIR}
