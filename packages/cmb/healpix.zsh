@@ -44,6 +44,8 @@ function healpix::install()
             pkgtools::at_function_exit
             return 1
         fi
+        mkdir -p ${location}/../share
+        cp -r data ${location}/../share/.
     )
     pkgtools::at_function_exit
     return 0
@@ -65,6 +67,7 @@ function healpix::setup()
 {
     pkgtools::at_function_enter healpix::setup
     pkgtools::set_variable HEALPIX_DIR $(dirname ${location})/install
+    pkgtools::set_variable HEALPIX_DATA ${HEALPIX_DIR}/data
     pkgtools::at_function_exit
     return 0
 }
@@ -73,6 +76,7 @@ function healpix::unsetup()
 {
     pkgtools::at_function_enter healpix::unsetup
     pkgtools::unset_variable HEALPIX_DIR
+    pkgtools::unset_variable HEALPIX_DATA
     pkgtools::at_function_exit
     return 0
 }
