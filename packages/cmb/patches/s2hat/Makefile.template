@@ -1,0 +1,25 @@
+FFTPATH = ${HEALPIX_DIR}
+
+DFLAGS = -DHEALPIX_fft -DGFORTRAN # -DFFTW3_HC2R -lfftw3 -Dopteron -DMAXCHK=1500
+
+FFLAGS = -g -fPIC -fno-second-underscore -ffixed-line-length-none -ffree-line-length-none
+CFLAGS = -g -fPIC -Dx86_64 -DMPICH #-DOPEN_MPI
+
+all:
+	mpif90 ${DFLAGS} ${FFLAGS}  -c s2hat_defs.f90
+	mpif90 ${DFLAGS} ${FFLAGS} -I ${FFTPATH}/include -c s2hat_types_internal.F90
+	mpif90 ${DFLAGS} ${FFLAGS}  -c s2hat_pixelization.f90
+	mpif90 ${DFLAGS} ${FFLAGS} -I ${FFTPATH}/include  -c s2hat_toolbox.F90
+	mpif90 ${DFLAGS} ${FFLAGS}  -c s2hat_alm2map.f90
+	mpif90 ${DFLAGS} ${FFLAGS}  -c s2hat_map2alm.F90
+	mpif90 ${DFLAGS} ${FFLAGS}  -c s2hat_c_interface.f90
+
+	mpicc ${DFLAGS} ${CFLAGS} -c s2hat_c_wrappers.c
+
+	make lib
+
+lib:
+	ar rv libs2hat_hlpx_g.a s2hat_alm2map.o s2hat_c_interface.o s2hat_c_wrappers.o s2hat_defs.o s2hat_map2alm.o s2hat_pixelization.o s2hat_toolbox.o s2hat_types_internal.o
+
+clean:
+	rm -f *.o *.a
