@@ -189,7 +189,7 @@ function pkgman()
                 "Missing function '$fcn'! Need to be implemented within '${pkg_file}'!"
         else
             pkgtools::msg_debug "Run '$fcn' function for version ${version}"
-            pkgtools::quietly_run $fcn ${append_list_of_options_arg}
+            $fcn ${append_list_of_options_arg}
             if $(pkgtools::last_command_succeeds); then
                 pkgtools::msg_devel "Function '$fcn' successfully finished"
                 if ! ${has_decorator}; then
