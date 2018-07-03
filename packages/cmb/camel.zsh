@@ -82,13 +82,13 @@ function camel::install()
 
         git clone ${address} ${location}
         cd ${location}/cmt
+        rm -f requirements
         if $(pkgtools::has_binary icc); then
-            rm -f requirements; ln -sf requirements-icc requirements
-        elif $(pkgtools::has_binary gcc); then
-            rm -f requirements
             cp ${pkgman_dir}/packages/cmb/patches/camel/requirements-gcc ./requirements-pkgman
-            ln -sf requirements-pkgman requirements
+        elif $(pkgtools::has_binary gcc); then
+            cp ${pkgman_dir}/packages/cmb/patches/camel/requirements-gcc ./requirements-pkgman
         fi
+        ln -sf requirements-pkgman requirements
 
         cp ${pkgman_dir}/packages/cmb/patches/camel/pkgman_setup.sh .
         source pkgman_setup.sh && make && make exec
