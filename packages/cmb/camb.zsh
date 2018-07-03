@@ -45,7 +45,7 @@ function camb::install()
         fi
         pkgman setup python2
         cd pycamb
-        if [[ $(hostname) = *cc* ]]; then
+        if $(cmb::at_cc); then
             sed -i -e 's#\(.*= check_gfortran.*\)#\#\1#' \
                 -e 's#\(.*subprocess.call.*\)\(COMPILER=gfortran\)\(.*$\)#\1COMPILER=ifort\3#' setup.py
         fi
@@ -71,6 +71,34 @@ function camb::uninstall()
        pkgman setup python2
        pip uninstall camb
     fi
+    pkgtools::at_function_exit
+    return 0
+}
+
+function camb::test()
+{
+    pkgtools::at_function_enter camb::test
+    (
+        camb::setup
+        cd $(mktemp -d)
+        pkgtools::msg_notice "Test camb binary with ${location}/params.ini input file"
+        cp ${location}/HighLExtrapTemplate_lenspotentialCls.dat .
+        camb ${location}/params.ini
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_error "Test of CAMB library fails!"
+            pkgtools::at_function_exit
+            return 1
+        fi
+        pkgtools::msg_notice "Test pycamb, the CAMB python library"
+        pkgman setup python2
+        python -c "import camb; print('CAMB version: %s '%camb.__version__)"
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_error "Test of CAMB python library fails!"
+            pkgtools::at_function_exit
+            return 1
+        fi
+        rm -rf $(pwd)
+    )
     pkgtools::at_function_exit
     return 0
 }
