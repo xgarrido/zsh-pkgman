@@ -37,10 +37,8 @@ function planck::install()
 
         cd ${location}
         local waf_options="--install_all_deps "
-        if $(cmb::at_cc); then
-            pkgman setup cfitsio
-            waf_options+="--cfitsio_include=${CFITSIO_INCLUDE} --cfitsio_lib=${CFITSIO_LIB} "
-        fi
+        pkgman setup cfitsio
+        waf_options+="--cfitsio_include=${CFITSIO_INCLUDE} --cfitsio_lib=${CFITSIO_LIB} "
         if $(pkgtools::has_binary icc); then
             waf_options+="--icc --ifort "
             # Patches
