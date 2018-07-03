@@ -85,9 +85,13 @@ function camel::install()
         if $(pkgtools::has_binary icc); then
             rm -f requirements; ln -sf requirements-icc requirements
         elif $(pkgtools::has_binary gcc); then
-            rm -f requirements; ln -sf requirements-gcc requirements
+            rm -f requirements
+            cp ${pkgman_dir}/packages/cmb/patches/camel/requirements-gcc ./requirements-pkgman
+            ln -sf requirements-pkgman requirements
         fi
-        source camel_setup.sh && make && make exec
+
+        cp ${pkgman_dir}/packages/cmb/patches/camel/pkgman_setup.sh .
+        source pkgman_setup.sh && make && make exec
         if $(pkgtools::last_command_fails); then
             pkgtools::msg_error "Installation of CAMEL software fails!"
             pkgtools::at_function_exit
@@ -122,7 +126,7 @@ function camel::setup()
     pkgtools::add_path_to_PATH ${location}/Linux-x86_64
 
     pkgtools::enter_directory ${location}/cmt
-    source camel_setup.sh
+    source pkgman_setup.sh
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "Something fails when sourcing camel setup!"
         pkgtools::exit_directory
