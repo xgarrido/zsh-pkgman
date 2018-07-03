@@ -47,7 +47,8 @@ function python2::install()
             fi
         fi
         python2::setup
-        local pips=(pip numpy==1.12.1 scipy matplotlib ipython jupyter cython pyfits healpy pymc)
+        local pips=(pip numpy==1.12.1 scipy matplotlib ipython jupyter cython pyfits healpy pymc \
+                        git+https://github.com/bthorne93/PySM_public.git)
         for i in ${pips}; do
             pip --cache-dir /tmp/pip.d install $i
             if $(pkgtools::last_command_fails); then
