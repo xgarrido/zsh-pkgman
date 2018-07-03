@@ -55,6 +55,24 @@ function cmb::install()
         pkgtools::at_function_exit
         return 1
     fi
+    local readme=${pkgman_install_dir}/../README
+    cat << EOF > ${readme}
+
+    The following directory ${pkgman_install_dir}/.. holds softwares for CMB analysis which
+    installation has been performed by pkgman script utility
+    (https://github.com/xgarrido/zsh-pkgman). All the installation recipes can be viewed in
+    https://github.com/xgarrido/zsh-pkgman/tree/master/packages/cmb.
+
+    Below is a list of installed softwares with their associated version.
+
+EOF
+    cmb::dump >> ${readme} 2>&1
+    sed -i -e 's#\(^.*NOTICE: \)\(.*dump: \)\(.*\)#\3#' -e 's#\(^[A-Za-z]\)\(.*\)#- \1\2#' ${readme}
+
+    cat << EOF >> ${readme}
+
+Automatically done $(date)
+EOF
     pkgtools::at_function_exit
     return 0
 }
