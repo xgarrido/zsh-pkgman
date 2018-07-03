@@ -58,7 +58,7 @@ function cmb::install()
         pkgtools::at_function_exit
         return 1
     fi
-    local readme=${pkgman_install_dir}/../README
+    local readme=${pkgman_install_dir}/README
     cat << EOF > ${readme}
 
     The following directory ${pkgman_install_dir}/.. holds softwares for CMB analysis which
