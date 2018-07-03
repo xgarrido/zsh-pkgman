@@ -18,6 +18,9 @@ if $(cmb::at_cc); then
     pkgman_install_dir=/sps/planck/camel/CentOS7/software
 else
     pkgman_install_dir=$HOME/Workdir/CMB/software
+    # Remove non compiling software
+    cmb_pkgs=("${(@)cmb_pkgs:#s2hat}")
+    cmb_pkgs=("${(@)cmb_pkgs:#xpol}")
 fi
 
 function --cmb::action()
