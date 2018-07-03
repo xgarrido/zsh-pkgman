@@ -58,6 +58,8 @@ function cmb::install()
         pkgtools::at_function_exit
         return 1
     fi
+
+    pkgtools::msg_notice "Generate README file..."
     local readme=${pkgman_install_dir}/README
     cat << EOF > ${readme}
 
@@ -76,6 +78,58 @@ EOF
 
 Automatically done $(date)
 EOF
+    pkgtools::msg_notice "Generate startup scripts..."
+    local startup_sh="# Automatic startup script - do not edit!\n"
+    local startup_csh="# Automatic startup script - do not edit!\n"
+    for ipkg in ${cmb_pkgs}; do
+        local pkg_file=$(find ${pkgman_dir}/packages -name ${ipkg}.zsh)
+        . ${pkg_file}
+        startup_sh+="\n# $ipkg setup\n"
+        startup_csh+="\n# $ipkg setup\n"
+        while read line; do
+            line=$(sed 's#${pkgman_install_dir}#'${pkgman_install_dir}'#' <<< $line)
+            line=$(sed 's#${location}#'${location}'#' <<< $line)
+            line=$(sed 's#${data}#'${data}'#' <<< $line)
+            line=$(sed 's#${version}#'${version}'#' <<< $line)
+            local words=( ${=line} )
+            case ${line} in
+                *set_variable*)
+                    startup_sh+="export ${words[2]}=${words[3]}\n"
+                    startup_csh+="setenv ${words[2]} ${words[3]}\n"
+                    ;;
+                *add_path_to_PATH*)
+                    startup_sh+="export PATH=${words[2]}:\$PATH\n"
+                    startup_csh+="setenv PATH ${words[2]}:\$PATH\n"
+                    ;;
+                *add_path_to_LD_LIBRARY_PATH*)
+                    startup_sh+="export LD_LIBRARY_PATH=${words[2]}:\$LD_LIBRARY_PATH\n"
+                    startup_csh+="setenv LD_LIBRARY_PATH ${words[2]}:\$LD_LIBRARY_PATH\n"
+                    ;;
+                *enter_directory*)
+                    startup_sh+="pushd ${words[2]}\n"
+                    startup_csh+="pushd ${words[2]}\n"
+                    entering=true
+                    ;;
+                *exit_directory*)
+                    if ${entering}; then
+                        startup_sh+="popd\n"
+                        startup_csh+="popd\n"
+                        entering=false
+                    fi
+                    ;;
+                *source*)
+                    startup_sh+="$line\n"
+                    startup_csh+="$line\n"
+                    ;;
+                *)
+                    ;;
+            esac
+        done <<< $(cat ${pkg_file} | sed -n '/^function.*::setup/,/^}/p')
+    done
+
+    echo ${startup_sh} > ${pkgman_install_dir}/startup.sh
+    echo ${startup_csh} > ${pkgman_install_dir}/startup.csh
+
     pkgtools::at_function_exit
     return 0
 }
