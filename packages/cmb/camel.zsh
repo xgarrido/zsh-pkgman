@@ -9,7 +9,7 @@
 
 local version=HEAD
 local address="git@gitlab.in2p3.fr:xgarrido/CAMEL.git"
-local location="${pkgman_install_dir}/camel/${version}"
+local location="${pkgman_install_dir}/CAMEL/${version}"
 local data="${pkgman_install_dir}/../data/camel_data"
 
 function camel::dump()
@@ -81,6 +81,7 @@ function camel::install()
         pkgtools::set_variable CAMEL_DATA ${data}
 
         git clone ${address} ${location}
+        cd ${location}
         git remote add upstream git@gitlab.in2p3.fr:cosmotools/CAMEL.git
         cd ${location}/cmt
         rm -f requirements
