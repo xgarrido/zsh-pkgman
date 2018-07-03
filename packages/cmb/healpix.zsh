@@ -66,7 +66,7 @@ function healpix::uninstall()
 function healpix::setup()
 {
     pkgtools::at_function_enter healpix::setup
-    pkgtools::set_variable HEALPIX_DIR $(dirname ${location})/install
+    pkgtools::set_variable HEALPIX_DIR ${location}/../install
     pkgtools::set_variable HEALPIX_DATA ${HEALPIX_DIR}/data
     pkgtools::at_function_exit
     return 0
