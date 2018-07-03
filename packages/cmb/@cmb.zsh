@@ -7,16 +7,18 @@
 # Requirements: pkgtools
 # Status: not intended to be distributed yet
 
-local cmb_pkgs=(python2 pypico cmt class planck camel)
+local cmb_pkgs=(python2 pypico cmt class cfitsio planck camel healpix camb s2hat xpol)
 
-case $(hostname) in
-    cc*)
-        pkgman_install_dir=/sps/planck/camel/CentOS7/software
-        ;;
-    *)
-        pkgman_install_dir=$HOME/Workdir/CMB/software
-        ;;
-esac
+function cmb::at_cc()
+{
+    [[ $(hostname) == cc* ]] && return 0 || return 1
+}
+
+if $(cmb::at_cc); then
+    pkgman_install_dir=/sps/planck/camel/CentOS7/software
+else
+    pkgman_install_dir=$HOME/Workdir/CMB/software
+fi
 
 function --cmb::action()
 {
@@ -24,7 +26,8 @@ function --cmb::action()
     for ipkg in ${cmb_pkgs}; do
         pkgman $@ ${ipkg}
         if $(pkgtools::last_command_fails); then
-            pkgtools__msg_error "Something fails when applying '$@' action to '${ipkg}'!"
+            pkgtools::msg_error "Something fails when applying '$@' action to '${ipkg}'!"
+            pkgtools::at_function_exit
             return 1
         fi
     done
@@ -36,6 +39,10 @@ function cmb::dump()
 {
     pkgtools::at_function_enter cmb::dump
     --cmb::action dump $@
+    if $(pkgtools::last_command_fails); then
+        pkgtools::at_function_exit
+        return 1
+    fi
     pkgtools::at_function_exit
     return 0
 }
@@ -44,6 +51,10 @@ function cmb::install()
 {
     pkgtools::at_function_enter cmb::install
     --cmb::action install $@
+    if $(pkgtools::last_command_fails); then
+        pkgtools::at_function_exit
+        return 1
+    fi
     pkgtools::at_function_exit
     return 0
 }
@@ -52,6 +63,22 @@ function cmb::uninstall()
 {
     pkgtools::at_function_enter cmb::uninstall
     --cmb::action uninstall $@
+    if $(pkgtools::last_command_fails); then
+        pkgtools::at_function_exit
+        return 1
+    fi
+    pkgtools::at_function_exit
+    return 0
+}
+
+function cmb::test()
+{
+    pkgtools::at_function_enter cmb::test
+    --cmb::action test $@
+    if $(pkgtools::last_command_fails); then
+        pkgtools::at_function_exit
+        return 1
+    fi
     pkgtools::at_function_exit
     return 0
 }
@@ -69,6 +96,10 @@ function cmb::setup()
         return 1
     fi
     --cmb::action setup $@
+    if $(pkgtools::last_command_fails); then
+        pkgtools::at_function_exit
+        return 1
+    fi
     pkgtools::reset_variable PKGMAN_SETUP_DONE "cmb"
     pkgtools::at_function_exit
     return 0
@@ -82,7 +113,11 @@ function cmb::unsetup()
         pkgtools::at_function_exit
         return 1
     fi
-   --cmb::action unsetup $@
+    --cmb::action unsetup $@
+    if $(pkgtools::last_command_fails); then
+        pkgtools::at_function_exit
+        return 1
+    fi
     pkgtools::unset_variable PKGMAN_SETUP_DONE
     pkgtools::at_function_exit
     return 0
