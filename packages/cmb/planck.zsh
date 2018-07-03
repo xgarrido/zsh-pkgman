@@ -37,7 +37,7 @@ function planck::install()
 
         cd ${location}
         local waf_options="--install_all_deps "
-        if [[ $(hostname) == cc* ]]; then
+        if $(cmb::at_cc); then
             pkgman setup cfitsio
             waf_options+="--cfitsio_include=${CFITSIO_INCLUDE} --cfitsio_lib=${CFITSIO_LIB} "
         fi
@@ -58,7 +58,7 @@ function planck::install()
             pkgtools::at_function_exit
             return 1
         fi
-        if [[ $(hostname) == cc* ]]; then
+        if $(cmb::at_cc); then
             # Fix clik-config
             sed -i -e 's#cflags = "\(.*\)#cflags = "-I'${location}'/include \1#g' bin/clik-config
             sed -i -e 's#-lcfitsio##' \
