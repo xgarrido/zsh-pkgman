@@ -130,8 +130,8 @@ EOF
         done <<< $(cat ${pkg_file} | sed -n '/^function.*::setup/,/^}/p')
     done
 
-    echo ${startup_sh} > ${pkgman_install_dir}/startup.sh
-    echo ${startup_csh} > ${pkgman_install_dir}/startup.csh
+    echo ${startup_sh} > ${pkgman_install_dir}/cmb_setup.sh
+    echo ${startup_csh} > ${pkgman_install_dir}/cmb_setup.csh
 
     pkgtools::at_function_exit
     return 0
