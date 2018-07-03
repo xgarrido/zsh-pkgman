@@ -68,6 +68,9 @@ function cmb::install()
     (https://github.com/xgarrido/zsh-pkgman). All the installation recipes can be viewed in
     https://github.com/xgarrido/zsh-pkgman/tree/master/packages/cmb.
 
+    To load all the software, you may source the startup scripts startup.sh or startup.csh depending
+    of your shell flavor.
+
     Below is a list of installed softwares with their associated version.
 
 EOF
