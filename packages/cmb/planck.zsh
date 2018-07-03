@@ -56,11 +56,15 @@ function planck::install()
             pkgtools::at_function_exit
             return 1
         fi
-        # Fix clik-config
-        sed -i -e 's#cflags = "\(.*\)#cflags = "-I'${location}'/include \1#g' bin/clik-config
-        sed -i -e 's#-lcfitsio##' \
-            -e 's#libs = "\(.*\)\(-Wl,-rpath,'${CFITSIO_LIB}'\)\(.*\)\(-L'${CFITSIO_LIB}'\)\(.*\)#libs = "\2 \4 -lcfitsio \1\3\5#g' \
-            bin/clik-config
+        if $(cmb::at_cc); then
+            # Fix clik-config
+            sed -i -e 's#cflags = "\(.*\)#cflags = "-I'${location}'/include \1#g' bin/clik-config
+            sed -i -e 's#-lcfitsio##' \
+                -e 's#libs = "\(.*\)\(-Wl,-rpath,'${CFITSIO_LIB}'\)\(.*\)\(-L'${CFITSIO_LIB}'\)\(.*\)#libs = "\2 \4 -lcfitsio \1\3\5#g' \
+                bin/clik-config
+        else
+            sed -i -e 's#\(-Wl,-Bdynamic.*'${location}'/lib\)\(.*\)\(-Wl,-rpath,'${location}'\)\(.*\)\(-L'${location}'\)#\2\3/lib\4\5/lib#g' bin/clik-config
+        fi
 
         if [ ! -d ${data} ]; then
             mkdir -p ${data}
