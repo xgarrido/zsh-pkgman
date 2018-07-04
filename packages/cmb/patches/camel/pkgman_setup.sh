@@ -52,8 +52,6 @@ if [ ! -z "$CLIKDIR" ] ; then
     CLIKLIBS=$($CLIKDIR/bin/clik-config --libs | sed 's/,-Bdynamic-Wl//g')
     export CLIKLIBS
     echo "CLIK support from: $CLIKDIR"
-    echo "CLIKLIBS=$CLIKLIBS"
-    echo "CLIKCFLAGS=$CLIKCFLAGS"
 fi
 
 
