@@ -1,0 +1,75 @@
+#+TITLE:  Zsh pkgman
+#+AUTHOR: Xavier Garrido
+#+DATE:   2018-07-04
+#+OPTIONS: toc:nil num:nil ^:nil
+
+* Introduction
+=pkgman= is a minimalist package manager based on recipes. It is far less complete than
+[[http://linuxbrew.sh/][linux brew]] and much more dedicated to my work i.e. neutrino physics with
+[[http://supernemo.org/][SuperNEMO]] software and CMB physics. In this way it provides recipes for
+these two topics + linux packages for my homework. On the other hand, =pkgman= uses all the power of
+=zsh= by providing a powerful completion that ease the use of =pkgman=.
+
+The latest version is at http://github.com/xgarrido/zsh-pkgman.
+
+* Installation
+You will need to install first the [[https://github.com/xgarrido/zsh-pkgtools][=pkgtools=]] plugin
+which is a small zsh library providing useful function such as colored text...
+
+There are different way to install this plugin :
+** In your =~/.zshrc=
+1) Download the script or clone this repository:
+   #+BEGIN_SRC shell
+     git clone git://github.com/xgarrido/zsh-pkgman.git
+   #+END_SRC
+
+2) Source this script *at the end* of =~/.zshrc=:
+   #+BEGIN_SRC shell
+     source /path/to/zsh-pkgman/zsh-pkgman.plugin.zsh
+   #+END_SRC
+
+3) Source =~/.zshrc= to take changes into account:
+   #+BEGIN_SRC shell
+     source ~/.zshrc
+   #+END_SRC
+
+** With [[https://github.com/zsh-users/antigen][antigen]] (recommended way)
+Add the following line into your =~/.zshrc= file:
+#+BEGIN_SRC shell
+  antigen bundle xgarrido/zsh-pkgman
+#+END_SRC
+
+* =pkgman= functions
+
+The recipes are stored in the =packages= directory and are organised by physics topics :
+
+- =snemo= holds recipes related to SuperNEMO experiment,
+- =cmb= holds recipes related to Cosmic Microwave Background analysis,
+- =linux= holds recipes in relation with the installation of my computers.
+
+Within each of these directories, you will find a @file that aggregates the installation of the
+different =snemo=, =cmb= or =linux= software. This file provides a common installation directory to
+all the topics software.
+
+In order to install all the =cmb= softwares, you can start with
+#+BEGIN_SRC shell
+  pkgman install @cmb
+#+END_SRC
+You can also gives the installation directory by doing
+#+BEGIN_SRC shell
+  pkgman --install-dir /tmp/cmb.d install @cmb
+#+END_SRC
+
+At the end of the process, you can view what have been installed by typing
+#+BEGIN_SRC shell
+  pkgman dump @cmb
+#+END_SRC
+
+Given the installation has succeeded and in order to use the =cmb= softwares, you can then setup
+your environment with
+#+BEGIN_SRC shell
+  pkgman setup @cmb
+#+END_SRC
+
+There are others command such as =build= to build a package, =update= to git/svn update a package or
+=test= to start a serie of test related to the package.
