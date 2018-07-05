@@ -74,6 +74,23 @@ function xpol::uninstall()
     return 0
 }
 
+function xpol::test()
+{
+    pkgtools::at_function_enter xpol::test
+    (
+        xpol::setup
+        cd $(mktemp -d)
+        cp ${location}/test/{xsimu.py,*.fits} .
+        # Patch xsimu.py
+        sed -i -e 's#\.\./xpol#xpol#' xsimu.py
+        pkgtools::msg_notice "Test of xpol..."
+        ./xsimu.py
+        rm -rf $(pwd)
+     )
+    pkgtools::at_function_exit
+    return 0
+}
+
 function xpol::setup()
 {
     pkgtools::at_function_enter xpol::setup
