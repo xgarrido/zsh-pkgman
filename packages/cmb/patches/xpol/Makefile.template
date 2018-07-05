@@ -14,7 +14,7 @@ export CC  = mpicc
 export LL  = mpicc
 export F77 = mpif77
 
-export CFLAG = -O3 -DgFortran -fPIC -DMKL -DHEALPIXDATA=\"$(realpath ${HEALPIX_DATA})\" -Wall -Dx86_64 -DMPICH #OPEN_MPI
+export CFLAG = -O3 -DgFortran -fPIC -DMKL -DHEALPIXDATA=\"$(shell echo ${HEALPIX_DATA})\" -Wall -Dx86_64 -DMPICH #OPEN_MPI
 export FFLAG = -O3
 export LFLAG = -O3 -fPIC -lgfortran #-Wl,-R/usr/local/intel/composer_xe_2013.3.163/compiler/lib/intel64 -L/usr/local/intel/composer_xe_2013.3.163/compiler/lib/intel64 -lifcore -lintlc -lifport -limf -lirc -ldl -lsvml -lgfortran
 ################################################################################################
