@@ -77,12 +77,15 @@ function python2::uninstall()
 function python2::setup()
 {
     pkgtools::at_function_enter python2::setup
+    pkgtools::msg_notice -n "Configuring python2..."
     source ${location}/bin/activate
     if $(pkgtools::last_command_fails); then
+        pkgtools::msg_color_red; echo "\033[3D ➜ error"; pkgtools::msg_color_normal
         pkgtools::msg_error "Something wrong occurs when initializing python2!"
         pkgtools::at_function_exit
         return 1
     fi
+    pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::at_function_exit
     return 0
 }
@@ -90,9 +93,11 @@ function python2::setup()
 function python2::unsetup()
 {
     pkgtools::at_function_enter python2::unsetup
+    pkgtools::msg_notice -n "Unconfiguring python2..."
     if [[ ${location} = $VIRTUAL_ENV ]]; then
         deactivate
     fi
+    pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::at_function_exit
     return 0
 }

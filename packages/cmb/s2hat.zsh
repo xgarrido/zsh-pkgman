@@ -76,6 +76,8 @@ function s2hat::uninstall()
 function s2hat::setup()
 {
     pkgtools::at_function_enter s2hat::setup
+    pkgtools::msg_notice -n "Configuring s²hat..."
+    pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::set_variable S2HAT_DIR ${location}
     pkgtools::at_function_exit
     return 0
@@ -84,6 +86,8 @@ function s2hat::setup()
 function s2hat::unsetup()
 {
     pkgtools::at_function_enter s2hat::unsetup
+    pkgtools::msg_notice -n "Unconfiguring s²hat..."
+    pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::unset_variable S2HAT_DIR
     pkgtools::at_function_exit
     return 0

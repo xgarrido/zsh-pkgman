@@ -124,18 +124,22 @@ function camel::uninstall()
 function camel::setup()
 {
     pkgtools::at_function_enter camel::setup
+    pkgtools::msg_notice -n "Configuring CAMEL..."
     pkgtools::set_variable CAMEL_DATA ${data}
     pkgtools::add_path_to_PATH ${location}/Linux-x86_64
 
     pkgtools::enter_directory ${location}/cmt
-    source pkgman_setup.sh
+    source pkgman_setup.sh | tee /tmp/camel.log > /dev/null 2>&1
     if $(pkgtools::last_command_fails); then
+        pkgtools::msg_color_red; echo "\033[3D ➜ error"; pkgtools::msg_color_normal
         pkgtools::msg_error "Something fails when sourcing camel setup!"
+        pkgtools::msg_error "Dump logfile:"; cat /tmp/camel.log
         pkgtools::exit_directory
         pkgtools::at_function_exit
         return 1
     fi
     pkgtools::exit_directory
+    pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::at_function_exit
     return 0
 }
@@ -143,8 +147,10 @@ function camel::setup()
 function camel::unsetup()
 {
     pkgtools::at_function_enter camel::unsetup
+    pkgtools::msg_notice -n "Unconfiguring CAMEL..."
     pkgtools::remove_path_to_PATH ${location}/Linux-x86_64
     pkgtools::unset_variable CAMEL_DATA
+    pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::at_function_exit
     return 0
 }

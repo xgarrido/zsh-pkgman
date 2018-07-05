@@ -54,8 +54,16 @@ function cmt::uninstall()
 function cmt::setup()
 {
     pkgtools::at_function_enter cmt::setup
+    pkgtools::msg_notice -n "Configuring CMT..."
     source ${location}/mgr/setup.sh
+    if $(pkgtools::last_command_fails); then
+        pkgtools::msg_color_red; echo "\033[3D ➜ error"; pkgtools::msg_color_normal
+        pkgtools::msg_error "Something wrong occurs when initializing python2!"
+        pkgtools::at_function_exit
+        return 1
+    fi
     pkgtools::reset_variable CMTCONFIG "Linux-x86_64"
+    pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::at_function_exit
     return 0
 }
@@ -63,6 +71,7 @@ function cmt::setup()
 function cmt::unsetup()
 {
     pkgtools::at_function_enter cmt::unsetup
+    pkgtools::msg_notice -n "Unconfiguring CMT..."
     if ! $(pkgtools::check_variable CMTROOT); then
         return 0
     fi
@@ -78,6 +87,7 @@ function cmt::unsetup()
     unalias cmt
     unfunction cmt_actions cmt_default_path cmt_make cmt_aliases cmt_fragments \
                cmt_patterns cmt_constituents cmt_macros cmt_sets
+    pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::at_function_exit
     return 0
 }

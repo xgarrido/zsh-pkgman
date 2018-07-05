@@ -77,6 +77,8 @@ function xpol::uninstall()
 function xpol::setup()
 {
     pkgtools::at_function_enter xpol::setup
+    pkgtools::msg_notice -n "Configuring xpol..."
+    pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::add_path_to_PATH ${location}/../install/bin
     pkgtools::at_function_exit
     return 0
@@ -85,6 +87,8 @@ function xpol::setup()
 function xpol::unsetup()
 {
     pkgtools::at_function_enter xpol::unsetup
+    pkgtools::msg_notice -n "Unconfiguring xpol..."
+    pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::remove_path_to_PATH ${location}/../install/bin
     pkgtools::at_function_exit
     return 0

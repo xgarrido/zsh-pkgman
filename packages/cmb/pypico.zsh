@@ -64,6 +64,8 @@ function pypico::uninstall()
 function pypico::setup()
 {
     pkgtools::at_function_enter pypico::setup
+    pkgtools::msg_notice -n "Configuring pypico..."
+    pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::set_variable PICO_CODE ${location}
     pkgtools::set_variable PICO_DATA ${data}
     pkgtools::at_function_exit
@@ -73,6 +75,8 @@ function pypico::setup()
 function pypico::unsetup()
 {
     pkgtools::at_function_enter pypico::unsetup
+    pkgtools::msg_notice -n "Unconfiguring pypico..."
+    pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::unset_variable PICO_CODE
     pkgtools::unset_variable PICO_DATA
     pkgtools::at_function_exit

@@ -66,6 +66,8 @@ function healpix::uninstall()
 function healpix::setup()
 {
     pkgtools::at_function_enter healpix::setup
+    pkgtools::msg_notice -n "Configuring healpix..."
+    pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::set_variable HEALPIX_DIR ${location}/../install
     pkgtools::set_variable HEALPIX_DATA ${location}/data
     pkgtools::at_function_exit
@@ -75,6 +77,8 @@ function healpix::setup()
 function healpix::unsetup()
 {
     pkgtools::at_function_enter healpix::unsetup
+    pkgtools::msg_notice -n "Unconfiguring healpix..."
+    pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::unset_variable HEALPIX_DIR
     pkgtools::unset_variable HEALPIX_DATA
     pkgtools::at_function_exit

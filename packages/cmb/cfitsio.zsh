@@ -60,8 +60,10 @@ function cfitsio::uninstall()
 function cfitsio::setup()
 {
     pkgtools::at_function_enter cfitsio::setup
+    pkgtools::msg_notice -n "Configuring cfitsio..."
     pkgtools::set_variable CFITSIO_INCLUDE ${location}/../install/include
     pkgtools::set_variable CFITSIO_LIB ${location}/../install/lib
+    pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::at_function_exit
     return 0
 }
@@ -69,8 +71,10 @@ function cfitsio::setup()
 function cfitsio::unsetup()
 {
     pkgtools::at_function_enter cfitsio::unsetup
+    pkgtools::msg_notice -n "Unconfiguring cfitsio..."
     pkgtools::unset_variable CFITSIO_INCLUDE
     pkgtools::unset_variable CFITSIO_LIB
+    pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::at_function_exit
     return 0
 }

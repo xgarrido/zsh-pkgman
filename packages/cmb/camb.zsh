@@ -106,6 +106,8 @@ function camb::test()
 function camb::setup()
 {
     pkgtools::at_function_enter camb::setup
+    pkgtools::msg_notice -n "Configuring CAMB..."
+    pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::add_path_to_PATH ${location}
     pkgtools::at_function_exit
     return 0
@@ -114,6 +116,8 @@ function camb::setup()
 function camb::unsetup()
 {
     pkgtools::at_function_enter camb::unsetup
+    pkgtools::msg_notice -n "Unconfiguring CAMB..."
+    pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::remove_path_to_PATH ${location}
     pkgtools::at_function_exit
     return 0

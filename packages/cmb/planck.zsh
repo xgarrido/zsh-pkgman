@@ -94,6 +94,8 @@ function planck::uninstall()
 function planck::setup()
 {
     pkgtools::at_function_enter planck::setup
+    pkgtools::msg_notice -n "Configuring planck..."
+    pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::add_path_to_LD_LIBRARY_PATH ${location}/lib
     pkgtools::set_variable CLIKDIR ${location}
     pkgtools::set_variable PLANCK_DATA ${data}
@@ -104,6 +106,8 @@ function planck::setup()
 function planck::unsetup()
 {
     pkgtools::at_function_enter planck::unsetup
+    pkgtools::msg_notice -n "Unconfiguring planck..."
+    pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::remove_path_to_LD_LIBRARY_PATH ${location}/lib
     pkgtools::unset_variable CLIKDIR
     pkgtools::unset_variable CLIKLIBS
