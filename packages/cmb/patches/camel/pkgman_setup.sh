@@ -35,13 +35,17 @@ if [ ! -d "${CAMEL_DATA}" ] ; then
 fi
 
 echo CAMEL_DATA="${CAMEL_DATA}"
-ln -sTf ${CAMEL_DATA} ${CAMELROOT}/lik/camel_data
+if [ ! -L ${CAMELROOT}/lik/camel_data ]; then
+    ln -sTf ${CAMEL_DATA} ${CAMELROOT}/lik/camel_data
+fi
 
 #CLIK support
 #creating link if necessary
 if [ ! -z "${PLANCK_DATA}" ] ; then
     echo "PLANCK_DATA=${PLANCK_DATA}"
-    ln -sTf ${PLANCK_DATA} ${CAMELROOT}/lik/planck_data
+    if [ ! -L ${CAMELROOT}/lik/planck_data ]; then
+        ln -sTf ${PLANCK_DATA} ${CAMELROOT}/lik/planck_data
+    fi
 else
     echo "no PLANCK_DATA defined"
 fi
