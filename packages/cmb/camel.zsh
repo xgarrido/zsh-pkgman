@@ -129,7 +129,7 @@ function camel::setup()
     pkgtools::add_path_to_PATH ${location}/Linux-x86_64
 
     pkgtools::enter_directory ${location}/cmt
-    source pkgman_setup.sh | tee /tmp/camel.log > /dev/null 2>&1
+    source pkgman_setup.sh > /tmp/camel.log 2>&1
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_color_red; echo "\033[3D ➜ error"; pkgtools::msg_color_normal
         pkgtools::msg_error "Something fails when sourcing camel setup!"
