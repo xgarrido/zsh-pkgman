@@ -99,6 +99,15 @@ function camel::install()
             pkgtools::at_function_exit
             return 1
         fi
+
+        pkgman setup python2
+        cd ${location}/work/tools/python
+        pip install -e .
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_error "Installation of Python library for CAMEL fails!"
+            pkgtools::at_function_exit
+            return 1
+        fi
     )
     pkgtools::at_function_exit
     return 0
