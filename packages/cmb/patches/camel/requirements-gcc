@@ -4,7 +4,7 @@ use class HEAD
 
 #compiler options
 #default is gcc here are the C++ compiler options
-macro cppflags " -O2  -pipe -ansi -Woverloaded-virtual -Wpedantic -Wunused -Wmaybe-uninitialized -Wno-deprecated -Wno-div-by-zero "
+macro cppflags " -O2 -pipe -Woverloaded-virtual -Wpedantic -Wunused -Wmaybe-uninitialized -Wno-deprecated -Wno-div-by-zero -Wno-variadic-macros -Wno-write-strings "
 
 # CAMEL includes
 include_dirs "$(CAMELROOT)/src"
