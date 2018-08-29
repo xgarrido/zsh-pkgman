@@ -72,6 +72,8 @@ local _pkgs=(
 
 local _pips=(
     Glances
+    cython
+    cartopy
     ipython
     jupyter
     matplotlib
