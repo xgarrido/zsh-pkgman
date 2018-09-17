@@ -80,7 +80,13 @@ function camel::install()
         fi
         pkgtools::set_variable CAMEL_DATA ${data}
 
-        git clone ${address} ${location}
+        git clone ${address} ${location} || \
+            git clone ${address/git@gitlab.in2p3.fr:/https:\/\/gitlab.in2p3.fr\/} ${location}
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_error "git clone fails!"
+            pkgtools::at_function_exit
+            return 1
+        fi
         cd ${location}
         git remote add upstream git@gitlab.in2p3.fr:cosmotools/CAMEL.git
         cd ${location}/cmt
