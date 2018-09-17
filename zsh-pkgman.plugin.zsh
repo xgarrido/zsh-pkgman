@@ -169,7 +169,9 @@ function pkgman()
         fi
         pkgtools::msg_devel "pkgman_install_dir = ${pkgman_install_dir}"
         # Need to be reloaded to update location variable
-        . ${pkg_file}
+        if ! ${has_decorator}; then
+            . ${pkg_file}
+        fi
 
         # Goto mode
         if [[ ${mode} = goto ]]; then
