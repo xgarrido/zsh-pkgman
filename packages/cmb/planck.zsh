@@ -66,7 +66,7 @@ function planck::install()
             sed -i -e 's#\(-Wl,-Bdynamic.*'${location}'/lib\)\(.*\)\(-Wl,-rpath,'${location}'\)\(.*\)\(-L'${location}'\)#\2\3/lib\4\5/lib#g' bin/clik-config
         fi
         # Fix clik_profile.sh for zsh
-        sed -i -e 's/local tmp="${!1}" ;/eval "tmp=\\"\${$1}\\""/' bin/clik_profile.sh
+        sed -i -e 's/local tmp="${!1}" ;/eval "tmp=\\"\\${$1}\\""/' bin/clik_profile.sh
 
         if [ ! -d ${data} ]; then
             mkdir -p ${data}
