@@ -79,6 +79,7 @@ local _pips=(
     matplotlib
     numpy
     pandas
+    scipy
     Pygments
 )
 
