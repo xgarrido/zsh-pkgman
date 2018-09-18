@@ -93,6 +93,24 @@ function planck::uninstall()
     return 0
 }
 
+function planck::test()
+{
+    pkgtools::at_function_enter planck::test
+    (
+        planck::setup
+        pkgtools::msg_notice "Testing planck..."
+        ${location}/bin/clik_example_C $PLANCK_DATA/hi_l/plik/plik_dx11dr2_HM_v18_TT.clik
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_error "Test of planck library fails!"
+            pkgtools::at_function_exit
+            return 1
+        fi
+        pkgtools::msg_notice "All tests passed!"
+    )
+    pkgtools::at_function_exit
+    return 0
+}
+
 function planck::setup()
 {
     pkgtools::at_function_enter planck::setup
