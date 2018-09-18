@@ -67,7 +67,7 @@ function pypico::test()
     (
         pypico::setup
         cd $(mktemp -d)
-        pkgtools::msg_notice "Test pypico..."
+        pkgtools::msg_notice "Testing pypico..."
         pkgman setup python2
         {
             echo "import pypico"
@@ -85,6 +85,7 @@ function pypico::test()
             return 1
         fi
         rm -rf $(pwd)
+        pkgtools::msg_notice "All tests passed!"
     )
     pkgtools::at_function_exit
     return 0
