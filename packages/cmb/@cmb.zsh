@@ -15,7 +15,8 @@ function cmb::at_cc()
 }
 
 if $(cmb::at_cc); then
-    pkgman_install_dir=/sps/planck/camel/CentOS7/software
+    # pkgman_install_dir=/sps/planck/camel/CentOS7/software
+    pkgman_install_dir=/sps/nemo/scratch/garrido/workdir/cmb/software
 else
     pkgman_install_dir=$HOME/Workdir/CMB/software
     # Remove non compiling software

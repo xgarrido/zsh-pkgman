@@ -4,7 +4,7 @@ use class HEAD
 
 #compiler options
 macro cpp "icpc"
-macro cppflags " -O2 -ip -ansi_alias -align -Wbrief -Wdeprecated -Wuninitialized -align -Wbrief -Wunused-function  -Wpointer-arith -Wreturn-type"
+macro cppflags " -O3 -ip -align -Wbrief -Wdeprecated -Wuninitialized -align -Wbrief -Wunused-function  -Wpointer-arith -Wreturn-type -Wno-variadic-macros -Wno-write-strings "
 
 #CAMEL includes
 include_dirs " $(CAMELROOT)/src"
