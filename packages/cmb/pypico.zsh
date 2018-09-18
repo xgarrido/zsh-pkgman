@@ -61,6 +61,35 @@ function pypico::uninstall()
     return 0
 }
 
+function pypico::test()
+{
+    pkgtools::at_function_enter pypico::test
+    (
+        pypico::setup
+        cd $(mktemp -d)
+        pkgtools::msg_notice "Test pypico..."
+        pkgman setup python2
+        {
+            echo "import pypico"
+            echo "import os"
+            echo "pico = pypico.load_pico(os.path.expandvars(\"$PICO_DATA\"))"
+            echo "print(pico.get_include())"
+            echo "print(pico.get_link())"
+            echo "result = pico.get(**pico.example_inputs())"
+            echo "print(result)"
+        } >> test_pico.py
+        python test_pico.py
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_error "Test of pypico library fails!"
+            pkgtools::at_function_exit
+            return 1
+        fi
+        rm -rf $(pwd)
+    )
+    pkgtools::at_function_exit
+    return 0
+}
+
 function pypico::setup()
 {
     pkgtools::at_function_enter pypico::setup
