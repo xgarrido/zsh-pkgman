@@ -82,9 +82,19 @@ function class::test()
         cd $(mktemp -d)
         pkgtools::msg_notice "Testing class..."
         cp ${location}/explanatory.ini .
-        cp -r ${location}/output .
         cp -r ${location}/bbn .
-        class.exe explanatory.ini
+        mkdir output
+        local bin
+        if $(pkgtools::has_binary class); then
+            bin=class
+        elif $(pkgtools::has_binary class.exe); then
+            bin=class.exe
+        else
+            pkgtools::msg_error "Missing class binary!"
+            pkgtools::at_function_exit
+            return 1
+        fi
+        eval "$bin explanatory.ini"
         if $(pkgtools::last_command_fails); then
             pkgtools::msg_error "Test of class library fails!"
             pkgtools::at_function_exit
