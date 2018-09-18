@@ -141,7 +141,7 @@ function pkgman()
         pkgtools::msg_devel "has_decorator = ${has_decorator}"
 
         # Check package version
-        if [[ -z ${version} && ! ${has_decorator} ]]; then
+        if [[ -z ${version} && ${has_decorator} = false ]]; then
             pkgtools::msg_error "Missing package version!"
             continue
         fi
