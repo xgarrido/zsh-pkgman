@@ -57,6 +57,32 @@ function cfitsio::uninstall()
     return 0
 }
 
+function cfitsio::test()
+{
+    pkgtools::at_function_enter cfitsio::test
+    (
+        cfitsio::setup
+        pkgtools::add_path_to_LD_LIBRARY_PATH $CFITSIO_LIB
+        pkgtools::msg_notice "Testing cfitsio..."
+        cd ${location}
+        make testprog && ./testprog > testprog.lis
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_error "Building test program fails!"
+            pkgtools::at_function_exit
+            return 1
+        fi
+        diff testprog.lis testprog.out && cmp testprog.fit testprog.std
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_error "Testing cfitsio fails!"
+            pkgtools::at_function_exit
+            return 1
+        fi
+        pkgtools::msg_notice "All tests passed!"
+    )
+    pkgtools::at_function_exit
+    return 0
+}
+
 function cfitsio::setup()
 {
     pkgtools::at_function_enter cfitsio::setup
