@@ -80,6 +80,7 @@ function class::setup()
     pkgtools::msg_notice -n "Configuring CLASS..."
     pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::set_variable CMTCLASS ${pkgman_install_dir}
+    pkgtools::add_path_to_PATH ${location}/Linux-x86_64
     pkgtools::at_function_exit
     return 0
 }
@@ -90,6 +91,7 @@ function class::unsetup()
     pkgtools::msg_notice -n "Unconfiguring CLASS..."
     pkgtools::msg_color_green; echo "\033[3D ➜ done"; pkgtools::msg_color_normal
     pkgtools::unset_variable CMTCLASS
+    pkgtools::remove_path_to_PATH ${location}/Linux-x86_64
     pkgtools::at_function_exit
     return 0
 }
