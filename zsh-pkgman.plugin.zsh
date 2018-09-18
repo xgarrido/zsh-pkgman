@@ -152,6 +152,7 @@ function pkgman()
         local pkg_install_dir=$(__pkgman::get_install_dir ${ipkg} ${version})
         if [[ -z ${pkg_install_dir} ]]; then
             if [[ ${has_decorator} = false && ${mode} != install ]]; then
+                pkgtools::msg_error "The current package ${ipkg} is not installed!"
                 continue
             fi
         else
