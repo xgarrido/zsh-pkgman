@@ -151,8 +151,7 @@ function pkgman()
         # Install directory from database
         local pkg_install_dir=$(__pkgman::get_install_dir ${ipkg} ${version})
         if [[ -z ${pkg_install_dir} ]]; then
-            if [[ ! ${has_decorator} && ${mode} != install ]]; then
-                pkgtools::msg_error "The current package ${ipkg} is not installed!"
+            if [[ ${has_decorator} = false && ${mode} != install ]]; then
                 continue
             fi
         else
