@@ -50,7 +50,7 @@ else
     echo "no PLANCK_DATA defined"
 fi
 if [ ! -z "$CLIKDIR" ] ; then
-    source $CLIKDIR/bin/clik_profile.sh > /dev/null 2>&1
+    #source $CLIKDIR/bin/clik_profile.sh > /dev/null 2>&1
     CLIKCFLAGS=`$CLIKDIR/bin/clik-config --cflags`
     export CLIKCFLAGS
     CLIKLIBS=$($CLIKDIR/bin/clik-config --libs | sed 's/,-Bdynamic-Wl//g')
