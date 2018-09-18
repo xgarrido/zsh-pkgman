@@ -74,6 +74,29 @@ function class::uninstall()
     return 0
 }
 
+function class::test()
+{
+    pkgtools::at_function_enter class::test
+    (
+        class::setup
+        cd $(mktemp -d)
+        pkgtools::msg_notice "Testing class..."
+        cp ${location}/explanatory.ini .
+        cp -r ${location}/output .
+        cp -r ${location}/bbn .
+        class.exe explanatory.ini
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_error "Test of class library fails!"
+            pkgtools::at_function_exit
+            return 1
+        fi
+        rm -rf $(pwd)
+        pkgtools::msg_notice "All tests passed!"
+    )
+    pkgtools::at_function_exit
+    return 0
+}
+
 function class::setup()
 {
     pkgtools::at_function_enter class::setup
