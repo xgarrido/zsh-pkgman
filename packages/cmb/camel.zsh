@@ -92,7 +92,7 @@ function camel::install()
         cd ${location}/cmt
         rm -f requirements
         if $(pkgtools::has_binary icc); then
-            cp ${pkgman_dir}/packages/cmb/patches/camel/requirements-gcc ./requirements-pkgman
+            cp ${pkgman_dir}/packages/cmb/patches/camel/requirements-icc ./requirements-pkgman
         elif $(pkgtools::has_binary gcc); then
             cp ${pkgman_dir}/packages/cmb/patches/camel/requirements-gcc ./requirements-pkgman
         fi
