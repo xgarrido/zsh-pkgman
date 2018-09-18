@@ -72,9 +72,9 @@ function pypico::test()
         {
             echo "import pypico"
             echo "import os"
+            echo "print(pypico.get_include())"
+            echo "print(pypico.get_link())"
             echo "pico = pypico.load_pico(os.path.expandvars(\"$PICO_DATA\"))"
-            echo "print(pico.get_include())"
-            echo "print(pico.get_link())"
             echo "result = pico.get(**pico.example_inputs())"
             echo "print(result)"
         } >> test_pico.py
