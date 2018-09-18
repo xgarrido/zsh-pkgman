@@ -51,6 +51,26 @@ function cmt::uninstall()
     return 0
 }
 
+function cmt::test()
+{
+    pkgtools::at_function_enter cmt::test
+    (
+        cmt::setup
+        cd $(mktemp -d)
+        pkgtools::msg_notice "Testing cmt..."
+        cmt create A v1
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_error "Test of cmt library fails!"
+            pkgtools::at_function_exit
+            return 1
+        fi
+        rm -rf $(pwd)
+        pkgtools::msg_notice "All tests passed!"
+    )
+    pkgtools::at_function_exit
+    return 0
+}
+
 function cmt::setup()
 {
     pkgtools::at_function_enter cmt::setup
