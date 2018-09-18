@@ -56,7 +56,7 @@ function planck::install()
             pkgtools::at_function_exit
             return 1
         fi
-        if $(cmb::at_cc); then
+        if $(pkgtools::at_cc); then
             # Fix clik-config
             sed -i -e 's#cflags = "\(.*\)#cflags = "-I'${location}'/include \1#g' bin/clik-config
             sed -i -e 's#-lcfitsio##' \

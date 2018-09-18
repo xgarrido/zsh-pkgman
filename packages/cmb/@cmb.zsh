@@ -9,12 +9,7 @@
 
 local cmb_pkgs=(python2 pypico cmt class cfitsio planck camel healpix camb s2hat xpol)
 
-function cmb::at_cc()
-{
-    [[ $(hostname) == cc* ]] && return 0 || return 1
-}
-
-if $(cmb::at_cc); then
+if $(pkgtools::at_cc); then
     # pkgman_install_dir=/sps/planck/camel/CentOS7/software
     pkgman_install_dir=/sps/nemo/scratch/garrido/workdir/cmb/software
 else

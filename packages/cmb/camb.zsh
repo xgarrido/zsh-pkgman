@@ -45,7 +45,7 @@ function camb::install()
         fi
         pkgman setup python2
         cd pycamb
-        if $(cmb::at_cc); then
+        if $(pkgtools::at_cc); then
             sed -i -e 's#\(.*= check_gfortran.*\)#\#\1#' \
                 -e 's#\(.*subprocess.call.*\)\(COMPILER=gfortran\)\(.*$\)#\1COMPILER=ifort\3#' setup.py
         fi

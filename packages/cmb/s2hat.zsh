@@ -25,7 +25,7 @@ function s2hat::dump()
 function s2hat::install()
 {
     pkgtools::at_function_enter s2hat::install
-    if ! $(cmb::at_cc); then
+    if ! $(pkgtools::at_cc); then
         pkgtools::msg_warning "s²hat can not be installed other than at CC!"
         pkgtools::at_function_exit
         return 1

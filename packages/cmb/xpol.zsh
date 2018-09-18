@@ -25,7 +25,7 @@ function xpol::dump()
 function xpol::install()
 {
     pkgtools::at_function_enter xpol::install
-    if ! $(cmb::at_cc); then
+    if ! $(pkgtools::at_cc); then
         pkgtools::msg_warning "Xpol can not be installed other than at CC!"
         pkgtools::at_function_exit
         return 1
