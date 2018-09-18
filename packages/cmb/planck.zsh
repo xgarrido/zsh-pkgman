@@ -62,6 +62,7 @@ function planck::install()
             sed -i -e 's#-lcfitsio##' \
                 -e 's#libs = "\(.*\)\(-Wl,-rpath,'${CFITSIO_LIB}'\)\(.*\)\(-L'${CFITSIO_LIB}'\)\(.*\)#libs = "\2 \4 -lcfitsio \1\3\5#g' \
                 bin/clik-config
+            sed -i -e 's#-L/lib64##g' -e 's#-L/lib ##g' -e 's#-Wl,-rpath,/lib64##g' -e 's#-Wl,-rpath,/lib##g' bin/clik-config
         else
             sed -i -e 's#\(-Wl,-Bdynamic.*'${location}'/lib\)\(.*\)\(-Wl,-rpath,'${location}'\)\(.*\)\(-L'${location}'\)#\2\3/lib\4\5/lib#g' bin/clik-config
         fi
