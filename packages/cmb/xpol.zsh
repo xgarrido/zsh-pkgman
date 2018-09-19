@@ -79,6 +79,7 @@ function xpol::test()
     pkgtools::at_function_enter xpol::test
     (
         xpol::setup
+        pkgman setup python2
         cd $(mktemp -d)
         cp ${location}/test/{xsimu.py,*.fits} .
         # Patch xsimu.py
