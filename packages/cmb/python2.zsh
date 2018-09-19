@@ -74,6 +74,30 @@ function python2::uninstall()
     return 0
 }
 
+function python2::test()
+{
+    pkgtools::at_function_enter python2::test
+    (
+        python2::setup
+        cd $(mktemp -d)
+        pkgtools::msg_notice "Testing python2 installation..."
+        pkgtools::msg_notice "Testing matplotlib installation..."
+        {
+            echo "import matplotlib.pyplot as plt"
+        } >> test_python2.py
+        python test_python2.py
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_error "Test of python2 library fails!"
+            pkgtools::at_function_exit
+            return 1
+        fi
+        rm -rf $(pwd)
+        pkgtools::msg_notice "All tests passed!"
+    )
+    pkgtools::at_function_exit
+    return 0
+}
+
 function python2::setup()
 {
     pkgtools::at_function_enter python2::setup
