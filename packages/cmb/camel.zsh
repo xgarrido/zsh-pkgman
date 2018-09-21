@@ -52,7 +52,7 @@ function camel::build()
     fi
     (
         cd ${location}/cmt
-        make clean && make && make exec
+        make clean && rm -rf ../$CMTCONFIG && make && make exec
     )
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "CAMEL build fails !"
@@ -132,6 +132,37 @@ function camel::uninstall()
     if $(pkgtools::answer_is_yes); then
         rm -rf ${data}
     fi
+    pkgtools::at_function_exit
+    return 0
+}
+
+function camel::test()
+{
+    pkgtools::at_function_enter camel::test
+    (
+        camel::setup
+        pkgtools::msg_notice "Testing CAMEL..."
+        cd ${location}/cmt
+        make test
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_error "Making test for CAMEL fails!"
+            pkgtools::at_function_exit
+            return 1
+        fi
+        cd $(mktemp -d)
+        local tests=(testKlass)
+        for f in ${tests}; do
+            pkgtools::msg_notice "Testing ${f}..."
+            eval ${f}
+            if $(pkgtools::last_command_fails); then
+                pkgtools::msg_error "Testing ${f} fails!"
+                pkgtools::at_function_exit
+                return 1
+            fi
+        done
+        rm -rf $(pwd)
+        pkgtools::msg_notice "All tests passed!"
+    )
     pkgtools::at_function_exit
     return 0
 }
