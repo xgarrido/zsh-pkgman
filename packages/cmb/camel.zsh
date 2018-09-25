@@ -150,7 +150,7 @@ function camel::test()
             return 1
         fi
         cd $(mktemp -d)
-        local tests=(testKlass)
+        local tests=(testCLHEP testKlass testPico)
         for f in ${tests}; do
             pkgtools::msg_notice "Testing ${f}..."
             eval ${f}
