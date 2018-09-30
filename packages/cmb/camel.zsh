@@ -72,7 +72,8 @@ function camel::install()
         pkgman setup class
         pkgman setup planck
         pkgman setup pypico
-        if [ ! -d ${data} ]; then
+        local args=($@)
+        if [[ ! ${args[(r)--without-data]} && ! -d ${data} ]]; then
             mkdir -p ${data}; cd ${data}/..
             wget http://camel.in2p3.fr/data/camel_data.tar
             tar -xvf camel_data.tar

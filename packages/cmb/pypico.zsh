@@ -39,7 +39,8 @@ function pypico::install()
             return 1
         fi
 
-        if [ ! -f ${data} ]; then
+        local args=($@)
+        if [[ ! ${args[(r)--without-data]} && ! -d ${data} ]]; then
             mkdir -p $(dirname ${data})
             wget -O ${data} https://owncloud.lal.in2p3.fr/index.php/s/Q0VsmRpisQQUMKL/download
         fi

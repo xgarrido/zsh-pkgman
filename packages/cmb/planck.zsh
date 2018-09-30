@@ -69,7 +69,8 @@ function planck::install()
         # Fix clik_profile.sh for zsh
         sed -i -e 's/local tmp="${!1}" ;/eval "tmp=\\"\\${$1}\\""/' bin/clik_profile.sh
 
-        if [ ! -d ${data} ]; then
+        local args=($@)
+        if [[ ! ${args[(r)--without-data]} && ! -d ${data} ]]; then
             mkdir -p ${data}
             cd $(mktemp -d)
             wget "${address}=1900" -O planck_data.tar.gz
