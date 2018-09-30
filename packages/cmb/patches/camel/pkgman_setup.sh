@@ -29,10 +29,10 @@ if [ -z "${CAMEL_DATA}" ] ; then
     echo "CAMEL_DATA undefined: review your installation (see http://camel.in2p3.fr/wiki/pmwiki.php?n=Main.Install)"
     return 1
 fi
-if [ ! -d "${CAMEL_DATA}" ] ; then
-    echo "empty CAMEL_DATA directory : please fix (see http://camel.in2p3.fr/wiki/pmwiki.php?n=Main.Install)"
-    return 1
-fi
+# if [ ! -d "${CAMEL_DATA}" ] ; then
+#     echo "empty CAMEL_DATA directory : please fix (see http://camel.in2p3.fr/wiki/pmwiki.php?n=Main.Install)"
+#     return 1
+# fi
 
 echo CAMEL_DATA="${CAMEL_DATA}"
 if [ ! -L ${CAMELROOT}/lik/camel_data ]; then
