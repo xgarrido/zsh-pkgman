@@ -2,7 +2,7 @@
 #cmt stuff
 if [ -z "$CMTCLASS" ] ; then
     echo "CMTCLASS is undefined"
-    return
+    return 1
 else
     if [ -z "$CMTPATH" ] ; then
         export CMTPATH=${CMTCLASS}
@@ -20,18 +20,18 @@ fi
 source ./setup.sh
 if [ -z "$CAMELROOT" ] ; then
     echo "CAMELROOT undefined ...something went wrong. do you have a requirements file?"
-    return
+    return 1
 fi
 
 #creating link
 
 if [ -z "${CAMEL_DATA}" ] ; then
     echo "CAMEL_DATA undefined: review your installation (see http://camel.in2p3.fr/wiki/pmwiki.php?n=Main.Install)"
-    return
+    return 1
 fi
 if [ ! -d "${CAMEL_DATA}" ] ; then
     echo "empty CAMEL_DATA directory : please fix (see http://camel.in2p3.fr/wiki/pmwiki.php?n=Main.Install)"
-    return
+    return 1
 fi
 
 echo CAMEL_DATA="${CAMEL_DATA}"
