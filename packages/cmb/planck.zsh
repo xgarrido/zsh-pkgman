@@ -69,6 +69,9 @@ function planck::install()
         # Fix clik_profile.sh for zsh
         sed -i -e 's/local tmp="${!1}" ;/eval "tmp=\\"\\${$1}\\""/' bin/clik_profile.sh
 
+        # Create data directory
+        mkdir -p ${pkgman_install_dir}/../data
+
         local args=($@)
         if [[ ! ${args[(r)--without-data]} && ! -d ${data} ]]; then
             mkdir -p ${data}
