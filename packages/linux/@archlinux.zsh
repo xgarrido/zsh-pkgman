@@ -22,20 +22,24 @@ local _pkgs=(
     cronie
     docker
     dropbox
+    dunst
     freerdp
     gcc-fortran
     gdb
     go
     gparted
     gmime
+    hsetroot
     imagemagick
     jq
     lapack
+    lxappearance
     meld
     mplayer
     ncurses
     ninja
     offlineimap
+    openbox
     owncloud-client
     perl-term-readkey
     python-pip
