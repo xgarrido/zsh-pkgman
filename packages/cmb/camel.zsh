@@ -95,10 +95,10 @@ function camel::install()
         git remote add upstream git@gitlab.in2p3.fr:cosmotools/CAMEL.git
         cd ${location}/cmt
         rm -f requirements
-        if $(pkgtools::has_binary icc); then
-            cp ${pkgman_dir}/packages/cmb/patches/camel/requirements-icc ./requirements-pkgman
-        elif $(pkgtools::has_binary gcc); then
-            cp ${pkgman_dir}/packages/cmb/patches/camel/requirements-gcc ./requirements-pkgman
+        if $(pkgtools::at_cc); then
+            cp ${pkgman_dir}/packages/cmb/patches/camel/requirements-lyon ./requirements-pkgman
+        elif $(pkgtools::in_docker); then
+            cp ${pkgman_dir}/packages/cmb/patches/camel/requirements-docker ./requirements-pkgman
         fi
         ln -sf requirements-pkgman requirements
 
