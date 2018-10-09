@@ -81,12 +81,14 @@ function camel::install()
         fi
         pkgtools::set_variable CAMEL_DATA ${data}
 
-        git clone ${address} ${location} || \
-            git clone ${address/git@gitlab.in2p3.fr:/https:\/\/gitlab.in2p3.fr\/} ${location}
-        if $(pkgtools::last_command_fails); then
-            pkgtools::msg_error "git clone fails!"
-            pkgtools::at_function_exit
-            return 1
+        if [[ ! -d ${location}/.git ]]; then
+            git clone ${address} ${location} || \
+                git clone ${address/git@gitlab.in2p3.fr:/https:\/\/gitlab.in2p3.fr\/} ${location}
+            if $(pkgtools::last_command_fails); then
+                pkgtools::msg_error "git clone fails!"
+                pkgtools::at_function_exit
+                return 1
+            fi
         fi
         cd ${location}
         git remote add upstream git@gitlab.in2p3.fr:cosmotools/CAMEL.git
@@ -106,6 +108,13 @@ function camel::install()
             pkgtools::at_function_exit
             return 1
         fi
+        # Add emacs dir locals
+        cat << EOF > ${location}/.dir-locals.el
+((nil . (
+         (compile-command . "make -C ${location}/cmt install")
+         )
+))
+EOF
 
         pkgman setup python2
         cd ${location}/work/tools/python
@@ -123,6 +132,10 @@ function camel::install()
 function camel::uninstall()
 {
     pkgtools::at_function_enter camel::uninstall
+    (
+        cd ${location}/cmt
+        make clean && rm -rf ../$CMTCONFIG
+    )
     pkgtools::msg_warning "Do you really want to remove camel code @ [${location}]?"
     pkgtools::yesno_question "Answer ?"
     if $(pkgtools::answer_is_yes); then
