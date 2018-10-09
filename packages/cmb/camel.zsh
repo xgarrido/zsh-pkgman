@@ -70,6 +70,7 @@ function camel::install()
         pkgman setup python2
         pkgman setup cmt
         pkgman setup class
+        pkgman setup cfitsio
         pkgman setup planck
         pkgman setup pypico
         local args=($@)
@@ -116,7 +117,6 @@ function camel::install()
 ))
 EOF
 
-        pkgman setup python2
         cd ${location}/work/tools/python
         pip install -e .
         if $(pkgtools::last_command_fails); then
@@ -133,6 +133,7 @@ function camel::uninstall()
 {
     pkgtools::at_function_enter camel::uninstall
     (
+        pkgman setup cmt
         cd ${location}/cmt
         make clean && rm -rf ../$CMTCONFIG
     )
