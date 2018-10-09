@@ -5,6 +5,8 @@ use class HEAD
 #compiler options
 #default is gcc here are the C++ compiler options
 macro cppflags " -O2 -pipe -Woverloaded-virtual -Wpedantic -Wunused -Wmaybe-uninitialized -Wno-deprecated -Wno-div-by-zero -Wno-variadic-macros -Wno-write-strings "
+macro_append CAMEL_linkopts " -L$(MKLROOT)/lib/intel64 -L$(IOMP5LIB) -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -liomp5 -lpthread "
+#macro_append CAMEL_linkopts " -L/usr/lib64/atlas -ltatlas "
 
 # CAMEL includes
 include_dirs "$(CAMELROOT)/src"
@@ -16,10 +18,15 @@ include_dirs "$(CAMELROOT)/src/AbsRand"
 include_dirs "$(CAMELROOT)/src/camel/JLA"
 include_dirs "$(CAMELROOT)/src/camel/JLA/jla_likelihood_v3/src"
 
+# JLA :requires cblas/lapack (use intel versions)
+macro_append cppflags " -DJLA "
+macro_append CAMEL_linkopts " -ljla "
+application test_jla -group=test -s=$(CAMELROOT)/src/camel test/test_jla.cc
+
 # PLANCK
 macro_append cppflags " -DCLIK  $(CLIKCFLAGS)"
 macro_append cflags " -DCLIK  $(CLIKCFLAGS)"
-macro_append  CAMEL_linkopts " $(CLIKLIBS) "
+macro_append CAMEL_linkopts " $(CLIKLIBS) "
 
 # PICO
 macro_append cppflags " -DPICO $(PICOINC) "
