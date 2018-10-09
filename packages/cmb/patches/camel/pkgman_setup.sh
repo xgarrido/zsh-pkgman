@@ -51,11 +51,16 @@ else
 fi
 if [ ! -z "$CLIKDIR" ] ; then
     #source $CLIKDIR/bin/clik_profile.sh > /dev/null 2>&1
-    CLIKCFLAGS=`$CLIKDIR/bin/clik-config --cflags`
+    # CLIKCFLAGS=`$CLIKDIR/bin/clik-config --cflags`
+    pythondir="$(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")"
+    CLIKCFLAGS="-I$CLIKDIR/include -I$CFITSIO_INCLUDE -DPYTHONDIR=\"${pythondir}\" -DPYTHONARCHDIR=\"${pythondir}\" -DHAVE_PYEMBED=1 -DHAVE_PYTHON_H=1 -DHAS_LAPACK -DLAPACK_CLIK -m64"
     export CLIKCFLAGS
-    CLIKLIBS=$($CLIKDIR/bin/clik-config --libs | sed 's/,-Bdynamic-Wl//g')
+    # CLIKLIBS=$($CLIKDIR/bin/clik-config --libs | sed 's/,-Bdynamic-Wl//g')
+    CLIKLIBS="-Wl,-rpath,$CFITSIO_LIB -L$CFITSIO_LIB -lcfitsio -Wl,-rpath,$CLIKDIR/lib -L$CLIKDIR/lib -lclik -llapack -lblas -ldl -lgfortran -lgomp"
     export CLIKLIBS
     echo "CLIK support from: $CLIKDIR"
+    echo "CLIKCFLAGS=$CLIKCFLAGS"
+    echo "CLIKLIBS=$CLIKLIBS"
 fi
 
 

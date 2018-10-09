@@ -56,16 +56,6 @@ function planck::install()
             pkgtools::at_function_exit
             return 1
         fi
-        if $(pkgtools::at_cc); then
-            # Fix clik-config
-            sed -i -e 's#cflags = "\(.*\)#cflags = "-I'${location}'/include \1#g' bin/clik-config
-            sed -i -e 's#-lcfitsio##' \
-                -e 's#libs = "\(.*\)\(-Wl,-rpath,'${CFITSIO_LIB}'\)\(.*\)\(-L'${CFITSIO_LIB}'\)\(.*\)#libs = "\2 \4 -lcfitsio \1\3\5#g' \
-                bin/clik-config
-            sed -i -e 's#-L/lib64##g' -e 's#-L/lib ##g' -e 's#-Wl,-rpath,/lib64##g' -e 's#-Wl,-rpath,/lib##g' bin/clik-config
-        else
-            sed -i -e 's#\(-Wl,-Bdynamic.*'${location}'/lib\)\(.*\)\(-Wl,-rpath,'${location}'\)\(.*\)\(-L'${location}'\)#\2\3/lib\4\5/lib#g' bin/clik-config
-        fi
         # Fix clik_profile.sh for zsh
         sed -i -e 's/local tmp="${!1}" ;/eval "tmp=\\"\\${$1}\\""/' bin/clik_profile.sh
 
