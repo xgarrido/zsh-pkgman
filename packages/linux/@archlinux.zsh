@@ -14,6 +14,7 @@ if ! $(pkgtools::has_binary pacman); then
 fi
 
 local _pkgs=(
+    acpi
     autofs
     bzip2
     cblas
