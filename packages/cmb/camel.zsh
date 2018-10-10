@@ -95,12 +95,16 @@ function camel::install()
         git remote add upstream git@gitlab.in2p3.fr:cosmotools/CAMEL.git
         cd ${location}/cmt
         rm -f requirements
-        if $(pkgtools::at_cc); then
-            cp ${pkgman_dir}/packages/cmb/patches/camel/requirements-lyon ./requirements-pkgman
-        elif $(pkgtools::in_docker); then
-            cp ${pkgman_dir}/packages/cmb/patches/camel/requirements-docker ./requirements-pkgman
+        if $(pkgtools::has_binary icc); then
+            cp ${pkgman_dir}/packages/cmb/patches/camel/requirements-icc ./requirements-pkgman
+        elif $(pkgtools::has_binary gcc); then
+            cp ${pkgman_dir}/packages/cmb/patches/camel/requirements-gcc ./requirements-pkgman
         fi
         ln -sf requirements-pkgman requirements
+        # Remove MKL reference if no MKL lib installed
+        if ! $(pkgtools::check_variable MKLLIB); then
+            sed -i '/MKLLIB/d' requirements
+        fi
 
         cp ${pkgman_dir}/packages/cmb/patches/camel/pkgman_setup.sh .
         source pkgman_setup.sh && make && make exec
