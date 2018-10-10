@@ -43,11 +43,11 @@ function planck::install()
             waf_options+="--icc --ifort "
             # Patches
             sed -i -e 's/openmp/qopenmp/g' waf_tools/try_icc.py waf_tools/try_ifort.py
+            if $(pkgtools::check_variable MKLROOT); then
+                waf_options+="--lapack_mkl=$MKLROOT "
+            fi
         elif $(pkgtools::has_binary gcc); then
             waf_options+="--gcc --gfortran "
-        fi
-        if $(pkgtools::check_variable MKLROOT); then
-            waf_options+="--lapack_mkl=$MKLROOT"
         fi
         ./waf configure $(echo ${waf_options})
         ./waf install
