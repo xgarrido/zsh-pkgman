@@ -43,6 +43,7 @@ function planck::install()
             waf_options+="--icc --ifort "
             # Patches
             sed -i -e 's/openmp/qopenmp/g' waf_tools/try_icc.py waf_tools/try_ifort.py
+            # MKL can only be used with intel compilers https://cosmocoffee.info/viewtopic.php?t=2721
             if $(pkgtools::check_variable MKLROOT); then
                 waf_options+="--lapack_mkl=$MKLROOT "
             fi
