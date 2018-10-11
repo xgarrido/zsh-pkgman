@@ -82,8 +82,6 @@ function xpol::test()
         pkgman setup python2
         cd $(mktemp -d)
         cp ${location}/test/{xsimu.py,*.fits} .
-        # Patch xsimu.py
-        sed -i -e 's#\.\./xpol#xpol#' xsimu.py
         pkgtools::msg_notice "Test of xpol..."
         ./xsimu.py
         rm -rf $(pwd)
