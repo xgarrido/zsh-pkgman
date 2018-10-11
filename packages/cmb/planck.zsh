@@ -59,6 +59,13 @@ function planck::install()
         fi
         # Fix clik_profile.sh for zsh
         sed -i -e 's/local tmp="${!1}" ;/eval "tmp=\\"\\${$1}\\""/' bin/clik_profile.sh
+        # Patch clik-config
+        local pythondir="$(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")"
+        sed -e 's#@@CLIKDIR@@#'${location}'#g' \
+            -e 's#@@PYTHONDIR@@#'${pythondir}'#g' \
+            -e 's#@@CFITSIO_LIB@@#'${CFITSIO_LIB}'#g' \
+            -e 's#@@CFITSIO_INCLUDE@@#'${CFITSIO_INCLUDE}'#g' \
+            ${pkgman_dir}/packages/cmb/patches/planck/clik-config.template > bin/clik-config
 
         # Create data directory
         mkdir -p ${pkgman_install_dir}/../data
