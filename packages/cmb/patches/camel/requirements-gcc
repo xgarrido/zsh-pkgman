@@ -5,7 +5,7 @@ use class HEAD
 #compiler options
 #default is gcc here are the C++ compiler options
 macro cppflags " -O2 -pipe -Woverloaded-virtual -Wpedantic -Wunused -Wmaybe-uninitialized -Wno-deprecated -Wno-div-by-zero -Wno-variadic-macros -Wno-write-strings "
-macro_append CAMEL_linkopts " -L$(MKLLIB) -L$(IOMP5LIB) -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -liomp5 -lpthread "
+macro_append CAMEL_linkopts " -Wl,-rpath,$(MKLLIB) -Wl,-rpath,$(IOMP5LIB) -L$(MKLLIB) -L$(IOMP5LIB) -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -liomp5 -lpthread "
 
 # CAMEL includes
 include_dirs "$(CAMELROOT)/src"
