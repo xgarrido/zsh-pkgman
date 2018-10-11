@@ -10,8 +10,8 @@
 local cmb_pkgs=(python2 pypico cmt class cfitsio planck camel healpix camb s2hat xpol)
 
 if $(pkgtools::at_cc); then
-    # pkgman_install_dir=/sps/planck/camel/CentOS7/software
-    pkgman_install_dir=/sps/nemo/scratch/garrido/workdir/cmb/software
+    pkgman_install_dir=/sps/planck/camel/CentOS7/software
+    #pkgman_install_dir=/sps/nemo/scratch/garrido/workdir/cmb/software
 else
     pkgman_install_dir=$HOME/Workdir/CMB/software
     # Remove non compiling software
@@ -49,6 +49,13 @@ function cmb::dump()
 function cmb::install()
 {
     pkgtools::at_function_enter cmb::install
+    # Make sure icc/ifort are not in the path
+    if $(pkgtools::has_binary icc); then
+        pkgtools::msg_error "Intel compilers are within your PATH!"
+        pkgtools::msg_error "Remove them to make sure the CMB software suite can be installed."
+        return 1
+    fi
+
     --cmb::action install $@
     if $(pkgtools::last_command_fails); then
         pkgtools::at_function_exit
