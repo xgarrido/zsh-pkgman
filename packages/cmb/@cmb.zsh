@@ -124,8 +124,8 @@ EOF
                     fi
                     ;;
                 *source*)
-                    startup_sh+="$line\n"
-                    startup_csh+="$line\n"
+                    startup_sh+="${words[1]} ${words[2]}\n"
+                    startup_csh+="${words[1]} ${words[2]}\n"
                     ;;
                 *)
                     ;;
