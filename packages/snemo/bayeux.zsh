@@ -7,7 +7,7 @@
 # Requirements: pkgtools
 # Status: not intended to be distributed yet
 
-local version=master
+local version=develop
 local address="git@github.com:BxCppDev/Bayeux.git"
 local location="${pkgman_install_dir}/bayeux"
 
