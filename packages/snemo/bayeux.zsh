@@ -7,9 +7,38 @@
 # Requirements: pkgtools
 # Status: not intended to be distributed yet
 
-local version=develop
-local address="git@github.com:BxCppDev/Bayeux.git"
-local location="${pkgman_install_dir}/bayeux"
+local version=xgarrido
+local address="git@github.com:xgarrido/Bayeux.git"
+local location="${pkgman_install_dir}/bayeux/repo/${version}"
+local build_dir="${pkgman_install_dir}/bayeux/build"
+local install_dir="${pkgman_install_dir}/bayeux/install"
+local local_dir=$(dirname $0)
+
+function --bayeux::select()
+{
+    local args=($@)
+    local versions=(xgarrido BxCppDev)
+    if [[ ${args[(r)--bayeux-version=*]} ]]; then
+        version=$(echo ${args[(r)--bayeux-version=*]} | cut -d= -f2)
+    else
+        pkgtools::msg_notice "Which Bayeux version do you want to use ?"
+        select v in ${versions[@]}; do
+            version=$v
+            pkgtools::msg_devel "Selecting $version"
+            break
+        done
+    fi
+    if [[ ! ${versions[(r)$version]} ]]; then
+        pkgtools::msg_error "Unknown Bayeux version ($version) !"
+        return 1
+    fi
+    address="git@github.com:${version}/Bayeux.git"
+    location="${pkgman_install_dir}/bayeux/repo/${version}"
+    build_dir="${location}/../../build"
+    install_dir="${location}/../../install"
+    sed -i -e 's/^local version=\(.*\)/local version='${version}'/' ${local_dir}/bayeux.zsh
+    return 0
+}
 
 function bayeux::dump()
 {
@@ -36,7 +65,7 @@ function bayeux::configure()
     # Parse Bayeux options
     local bayeux_options="
         -DCMAKE_BUILD_TYPE:STRING=Release
-        -DCMAKE_INSTALL_PREFIX=${location}/install
+        -DCMAKE_INSTALL_PREFIX=${install_dir}
         -DCMAKE_PREFIX_PATH=${brew_install_dir}/brew
         -DBAYEUX_CXX_STANDARD=14 "
     if [[ $(hostname) != cca* ]]; then
@@ -76,8 +105,8 @@ function bayeux::configure()
     pkgtools::reset_variable CXX ${cxx}
     pkgtools::reset_variable CC ${cc}
 
-    pkgtools::enter_directory ${location}/build
-    cmake $(echo ${bayeux_options}) ${location}/${version}
+    pkgtools::enter_directory ${build_dir}
+    cmake $(echo ${bayeux_options}) ${location}
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "Configuration of bayeux fails!"
         pkgtools::exit_directory
@@ -97,7 +126,7 @@ function bayeux::update()
         pkgtools::at_function_exit
         return 1
     fi
-    git --git-dir=${location}/${version}/.git --work-tree=${location}/${version} pull
+    git --git-dir=${location}/${version}/.git --work-tree=${location} pull
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "bayeux update fails !"
         pkgtools::at_function_exit
@@ -111,9 +140,9 @@ function bayeux::build()
 {
     pkgtools::at_function_enter bayeux::build
     if $(pkgtools::has_binary ninja); then
-        LC_ALL=C ninja -C ${location}/build install
+        LC_ALL=C ninja -C ${build_dir} install
     elif $(pkgtools::has_binary make); then
-        LC_ALL=C make -j$(nproc) -C ${location}/build install
+        LC_ALL=C make -j$(nproc) -C ${build_dir} install
     else
         pkgtools::msg_error "Missing both 'ninja' and 'make' to compile bayeux !"
         pkgtools::at_function_exit
@@ -131,10 +160,16 @@ function bayeux::build()
 function bayeux::install()
 {
     pkgtools::at_function_enter bayeux::install
+    --bayeux::select $@
+    if $(pkgtools::last_command_fails); then
+        pkgtools::msg_error "Something gets wrong with Bayeux version"
+        pkgtools::at_function_exit
+        return 1
+    fi
     if [[ ! -d ${location}/${version}/.git ]]; then
         pkgtools::msg_notice "Checkout bayeux from ${address}"
-        git clone ${address} ${location}/${version} || \
-            git clone ${address/git@github.com:/https:\/\/github.com\/} ${location}/${version}
+        git clone ${address} ${location} || \
+            git clone ${address/git@github.com:/https:\/\/github.com\/} ${location}
         if $(pkgtools::last_command_fails); then
             pkgtools::msg_error "git clone fails!"
             pkgtools::at_function_exit
@@ -146,7 +181,7 @@ function bayeux::install()
     bayeux::build $@
 
     # Add emacs dir locals
-    cat << EOF > ${location}/${version}/.dir-locals.el
+    cat << EOF > ${location}/.dir-locals.el
 ((nil . (
          (compile-command . "ninja -C ${location}/build install")
          )
@@ -162,7 +197,7 @@ function bayeux::uninstall()
     pkgtools::msg_warning "Do you really want to delete ${location}/{build,install} ?"
     pkgtools::yesno_question "Answer ? "
     if $(pkgtools::answer_is_yes); then
-        rm -rf ${location}/{build,install}
+        rm -rf ${build_dir} ${install_dir}
     fi
     pkgtools::at_function_exit
     return 0
@@ -172,9 +207,9 @@ function bayeux::test()
 {
     pkgtools::at_function_enter bayeux::test
     if $(pkgtools::has_binary ninja); then
-        ninja -C ${location}/build test
+        ninja -C ${build_dir} test
     elif $(pkgtools::has_binary make); then
-        make -j$(nproc) -C ${location}/build test
+        make -j$(nproc) -C ${build_dir} test
     else
         pkgtools::msg_error "Missing both 'ninja' and 'make' to compile bayeux !"
         pkgtools::at_function_exit
@@ -192,7 +227,7 @@ function bayeux::test()
 function bayeux::setup()
 {
     pkgtools::at_function_enter bayeux::setup
-    pkgtools::add_path_to_PATH ${location}/install/bin
+    pkgtools::add_path_to_PATH ${install_dir}/bin
     pkgtools::at_function_exit
     return 0
 }
@@ -200,7 +235,7 @@ function bayeux::setup()
 function bayeux::unsetup()
 {
     pkgtools::at_function_enter bayeux::unsetup
-    pkgtools::remove_path_to_PATH ${location}/install/bin
+    pkgtools::remove_path_to_PATH ${install_dir}/bin
     pkgtools::at_function_exit
     return 0
 }

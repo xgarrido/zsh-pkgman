@@ -26,7 +26,7 @@ function snfee::configure()
 {
     pkgtools::at_function_enter snfee::configure
 
-    local bayeux_install_dir=$(__pkgman::get_install_dir bayeux master)
+    local bayeux_install_dir=$(__pkgman::get_install_dir bayeux xgarrido)
     if [[ -z ${bayeux_install_dir} ]]; then
         pkgtools::msg_error "Missing bayeux install!"
         pkgtools::at_function_exit
