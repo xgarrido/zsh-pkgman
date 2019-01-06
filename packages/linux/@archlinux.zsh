@@ -27,6 +27,7 @@ local _pkgs=(
     freerdp
     gcc-fortran
     gdb
+    gnuplot
     go
     gparted
     gmime
@@ -86,6 +87,7 @@ local _pips=(
     pandas
     scipy
     Pygments
+    pyyaml
 )
 
 function archlinux::dump()
