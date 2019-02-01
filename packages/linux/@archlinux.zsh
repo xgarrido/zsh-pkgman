@@ -82,9 +82,11 @@ local _pips=(
     cartopy
     ipython
     jupyter
+    jupyer-repo2docker
     matplotlib
     numpy
     pandas
+    seaborn
     scipy
     Pygments
     pyyaml
