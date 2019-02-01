@@ -48,6 +48,7 @@ local _pkgs=(
     pstoedit
     remmina
     ruby
+    ruby-irb
     rsync
     subversion
     terminator
