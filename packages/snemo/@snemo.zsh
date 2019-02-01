@@ -1,6 +1,6 @@
 # -*- mode: shell-script; -*-
 #
-# Copyright (C) 2017 Xavier Garrido
+# Copyright (C) 2017-2019 Xavier Garrido
 #
 # Author: garrido@lal.in2p3.fr
 # Keywords: SuperNEMO

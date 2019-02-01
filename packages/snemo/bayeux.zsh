@@ -1,6 +1,6 @@
 # -*- mode: shell-script; -*-
 #
-# Copyright (C) 2017 Xavier Garrido
+# Copyright (C) 2017-2019 Xavier Garrido
 #
 # Author: garrido@lal.in2p3.fr
 # Keywords: bayeux, supernemo
@@ -121,12 +121,12 @@ function bayeux::configure()
 function bayeux::update()
 {
     pkgtools::at_function_enter bayeux::update
-    if [[ ! -d ${location}/${version}/.git ]]; then
+    if [[ ! -d ${location}/.git ]]; then
         pkgtools::msg_error "bayeux is not a git repository !"
         pkgtools::at_function_exit
         return 1
     fi
-    git --git-dir=${location}/${version}/.git --work-tree=${location} pull
+    git --git-dir=${location}/.git --work-tree=${location} pull
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "bayeux update fails !"
         pkgtools::at_function_exit
@@ -166,7 +166,7 @@ function bayeux::install()
         pkgtools::at_function_exit
         return 1
     fi
-    if [[ ! -d ${location}/${version}/.git ]]; then
+    if [[ ! -d ${location}/.git ]]; then
         pkgtools::msg_notice "Checkout bayeux from ${address}"
         git clone ${address} ${location} || \
             git clone ${address/git@github.com:/https:\/\/github.com\/} ${location}
