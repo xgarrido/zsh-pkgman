@@ -8,7 +8,7 @@
 # Status: not intended to be distributed yet
 
 local version=master
-local address="https://github.com/Linuxbrew/brew.git"
+local address="https://github.com/Homebrew/brew.git"
 local location="${pkgman_install_dir}/brew"
 
 function brew::dump()
@@ -29,18 +29,13 @@ function brew::install()
         pkgtools::msg_notice "Checkout brew from ${address}"
         git clone ${address} ${location}
     fi
-    # local gcc_version=$(g++ --version | head -1 | awk '{print $3}')
-    # if [[ $(hostname) = cca* ]]; then
-    #     ln -sf $(which g++) ${location}/bin/g++-${gcc_version:0:1}
-    #     ln -sf $(which gcc) ${location}/bin/gcc-${gcc_version:0:1}
-    # fi
     brew::setup
-    brew tap SuperNEMO-DBD/homebrew-cadfael
+    brew tap xgarrido/homebrew-cadfael
     brew install --build-from-source  \
-         supernemo-dbd/cadfael/root6  \
-         supernemo-dbd/cadfael/geant4 \
-         supernemo-dbd/cadfael/boost  \
-         supernemo-dbd/cadfael/camp
+         xgarrido/cadfael/root6  \
+         xgarrido/cadfael/geant4 \
+         xgarrido/cadfael/boost  \
+         xgarrido/cadfael/camp
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "Something wrongs occurs when installing brew !"
         pkgtools::at_function_exit
