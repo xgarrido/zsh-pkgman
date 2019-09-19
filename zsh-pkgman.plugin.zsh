@@ -34,6 +34,7 @@ function pkgman()
         if [ ${token[0,1]} = - ]; then
 	    local opt=${token}
 	    if [[ ${opt} = -h || ${opt} = --help ]]; then
+                pkgtools::msg_warning "Sorry no help!"
                 return 0
 	    elif [[ ${opt} = -d || ${opt} = --debug ]]; then
 	        pkgtools::msg_using_debug
