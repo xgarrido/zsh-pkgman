@@ -16,6 +16,7 @@ fi
 local _pkgs=(
     acpi
     autofs
+    bat
     bzip2
     cblas
     ccache
