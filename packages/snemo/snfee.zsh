@@ -26,7 +26,7 @@ function snfee::configure()
 {
     pkgtools::at_function_enter snfee::configure
 
-    local bayeux_install_dir=$(__pkgman::get_install_dir bayeux xgarrido)
+    local bayeux_install_dir=$(__pkgman::get_install_dir bayeux BxCppDev)
     if [[ -z ${bayeux_install_dir} ]]; then
         pkgtools::msg_error "Missing bayeux install!"
         pkgtools::at_function_exit
@@ -37,7 +37,7 @@ function snfee::configure()
     local snfee_options="
         -DCMAKE_BUILD_TYPE:STRING=Release
         -DCMAKE_INSTALL_PREFIX=${location}/install
-        -DCMAKE_PREFIX_PATH=${bayeux_install_dir}/install "
+        -DCMAKE_PREFIX_PATH=${bayeux_install_dir}/bayeux/install "
     if $(pkgtools::has_binary ninja); then
         snfee_options+="-G Ninja -DCMAKE_MAKE_PROGRAM=$(pkgtools::get_binary_path ninja)"
     fi

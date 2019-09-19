@@ -30,12 +30,13 @@ function brew::install()
         git clone ${address} ${location}
     fi
     brew::setup
-    brew tap xgarrido/homebrew-cadfael
+    tap="xgarrido"
+    brew tap ${tap}/homebrew-cadfael
     brew install --build-from-source  \
-         xgarrido/cadfael/root6  \
-         xgarrido/cadfael/geant4 \
-         xgarrido/cadfael/boost  \
-         xgarrido/cadfael/camp
+         ${tap:l}/cadfael/root6  \
+         ${tap:l}/cadfael/geant4 \
+         ${tap:l}/cadfael/boost  \
+         ${tap:l}/cadfael/camp
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "Something wrongs occurs when installing brew !"
         pkgtools::at_function_exit

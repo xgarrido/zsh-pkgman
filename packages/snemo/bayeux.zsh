@@ -7,7 +7,7 @@
 # Requirements: pkgtools
 # Status: not intended to be distributed yet
 
-local version=xgarrido
+local version=BxCppDev
 local address="git@github.com:xgarrido/Bayeux.git"
 local location="${pkgman_install_dir}/bayeux/repo/${version}"
 local build_dir="${pkgman_install_dir}/bayeux/build"

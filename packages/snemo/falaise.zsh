@@ -7,7 +7,7 @@
 # Requirements: pkgtools
 # Status: not intended to be distributed yet
 
-local version=xgarrido
+local version=SuperNEMO-DBD
 local address="git@github.com:${version}/Falaise.git"
 local location="${pkgman_install_dir}/falaise/repo/${version}"
 local build_dir="${pkgman_install_dir}/falaise/build"
@@ -60,7 +60,7 @@ function falaise::configure()
         pkgtools::at_function_exit
         return 1
     fi
-    local bayeux_install_dir=$(__pkgman::get_install_dir bayeux xgarrido)
+    local bayeux_install_dir=$(__pkgman::get_install_dir bayeux BxCppDev)
     if [[ -z ${brew_install_dir} ]]; then
         pkgtools::msg_error "Missing bayeux install!"
         pkgtools::at_function_exit
