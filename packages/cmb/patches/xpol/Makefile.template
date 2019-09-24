@@ -7,16 +7,16 @@ HLP_LIB = -Wl,-R${HEALPIX_DIR}/lib -L${HEALPIX_DIR}/lib -lhealpix -lchealpix
 FITS_LIB = -Wl,-R${CFITSIO_LIB} -L${CFITSIO_LIB} -lcfitsio
 
 export INC_DIR = -I${S2HAT_DIR} -I${HEALPIX_DIR}/include -I${CFITSIO_INCLUDE} -I${MKLROOT}/include
-export LIB_DIR = ${MKL_LIB} ${S2HAT_LIB} ${FITS_LIB} ${HLP_LIB} -ldl -lpthread -lm  #-liopm5
+export LIB_DIR = ${MKL_LIB} ${S2HAT_LIB} ${FITS_LIB} ${HLP_LIB} -ldl -lpthread -lm
 export LIB =
 
 export CC  = mpicc
 export LL  = mpicc
 export F77 = mpif77
 
-export CFLAG = -O3 -DgFortran -fPIC -DMKL -DHEALPIXDATA=\"$(shell echo ${HEALPIX_DATA})\" -Wall -Dx86_64 -DMPICH #OPEN_MPI
+export CFLAG = -O3 -DgFortran -fPIC -DMKL -DHEALPIXDATA=\"$(shell echo ${HEALPIX_DATA})\" -Wall -Dx86_64 -DMPICH
 export FFLAG = -O3
-export LFLAG = -O3 -fPIC -lgfortran #-Wl,-R/usr/local/intel/composer_xe_2013.3.163/compiler/lib/intel64 -L/usr/local/intel/composer_xe_2013.3.163/compiler/lib/intel64 -lifcore -lintlc -lifport -limf -lirc -ldl -lsvml -lgfortran
+export LFLAG = -O3 -fPIC -lgfortran
 ################################################################################################
 
 
