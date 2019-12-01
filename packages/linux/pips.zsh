@@ -7,6 +7,7 @@
 # Requirements: pkgtools
 # Status: not intended to be distributed yet
 
+local version=null
 local _pips=(
     glances
     camb
