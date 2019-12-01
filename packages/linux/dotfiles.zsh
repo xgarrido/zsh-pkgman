@@ -28,6 +28,9 @@ function dotfiles::install()
         make install
     }
 
+    # Make sure ~/.bin is in the PATH
+    pkgtools::add_path_to_PATH $HOME/.bin
+    
     # Clone github repositories
     local githubs=(
         artist
