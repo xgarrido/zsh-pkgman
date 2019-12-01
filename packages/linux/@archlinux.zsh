@@ -79,18 +79,18 @@ local _pkgs=(
 )
 
 local _pips=(
-    Glances
+    glances
     cython
-    cartopy
     ipython
     jupyter
-    jupyer-repo2docker
+    jupyter-repo2docker
     matplotlib
     numpy
     pandas
     seaborn
     scipy
-    Pygments
+    pipenv
+    pygments
     pyyaml
 )
 
@@ -125,16 +125,33 @@ function archlinux::install()
         if ! $(pkgtools::has_binary g++); then
             sudo pacman ${=pkg_options} base-devel
         fi
-        if ! $(pkgtools::has_binary yaourt); then
-            sudo echo "[archlinuxfr]\nSigLevel = Never\nServer = http://repo.archlinux.fr/$arch" >> /etc/pacman.conf
-            sudo pacman ${=pkg_options} yaourt
+        if ! $(pkgtools::has_binary git); then
+            sudo pacman ${=pkg_options} git
         fi
-        yaourt ${=pkg_options} $(eval print -l ${_pkgs})
+        if ! $(pkgtools::has_binary yaourt); then
+            (
+                cd $(mktemp -d)
+                git clone https://aur.archlinux.org/package-query.git
+                cd package-query
+                makepkg -si --noconfirm
+                cd ..
+                git clone https://aur.archlinux.org/yaourt.git
+                cd yaourt
+                makepkg -si --noconfirm
+                cd ..
+                rm -rf $(pwd)
+            )
+        fi
+        for ipkg in ${_pkgs}; do
+            yaourt ${=pkg_options} ${ipkg}
+        done
     }
 
     # Lambda function for pip packages
     function {
-        pip install -U --user $(eval print -l ${_pips})
+        for ipip in ${_pips}; do
+            pip install --upgrade --user ${ipip}
+        done
         # Fix for colout
         pip install --user git+https://github.com/nojhan/colout.git
     }
