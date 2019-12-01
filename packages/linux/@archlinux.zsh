@@ -80,12 +80,14 @@ local _pkgs=(
 
 local _pips=(
     glances
+    camb
+    cobaya
     cython
     ipython
     jupyter
     jupyter-repo2docker
-    matplotlib
     numpy
+    matplotlib
     pandas
     seaborn
     scipy
