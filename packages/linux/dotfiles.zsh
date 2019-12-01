@@ -7,7 +7,7 @@
 # Requirements: pkgtools
 # Status: not intended to be distributed yet
 
-local version=master
+local version=null
 function dotfiles::install()
 {
     pkgtools::at_function_enter dotfiles::install
