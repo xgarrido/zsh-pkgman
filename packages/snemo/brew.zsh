@@ -32,11 +32,18 @@ function brew::install()
     brew::setup
     tap="xgarrido"
     brew tap ${tap}/homebrew-cadfael
-    brew install --build-from-source  \
-         ${tap:l}/cadfael/root6  \
-         ${tap:l}/cadfael/geant4 \
-         ${tap:l}/cadfael/boost  \
-         ${tap:l}/cadfael/camp
+    function {
+        brew install freetype
+        (
+            cd $(brew --prefix)/include
+            ln -sf freetype2/ft2build.h
+            ln -sf freetype2/freetype
+        )
+    }
+    brew install --build-from-source ${tap:l}/cadfael/root6      && \
+        brew install --build-from-source ${tap:l}/cadfael/geant4 && \
+        brew install --build-from-source ${tap:l}/cadfael/boost  && \
+        brew install --build-from-source ${tap:l}/cadfael/camp
     if $(pkgtools::last_command_fails); then
         pkgtools::msg_error "Something wrongs occurs when installing brew !"
         pkgtools::at_function_exit
