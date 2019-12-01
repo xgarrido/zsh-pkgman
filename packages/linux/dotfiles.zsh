@@ -12,14 +12,6 @@ function dotfiles::install()
 {
     pkgtools::at_function_enter dotfiles::install
 
-    # Lambda function to generate ssh key
-    function {
-        if [[ ! -f ~/.ssh/.id_rsa.pub ]]; then
-            ssh-keygen
-        fi
-        pkgtools::msg_warning "Do not forget to copy the ssh key to github.com!"
-    }
-
     # Lambda function to install emacs.d
     function {
         cd ~
