@@ -15,7 +15,8 @@ function dotfiles::install()
     # Lambda function to install emacs.d
     function {
         cd ~
-        git clone git@github.com:xgarrido/emacs-starter-kit
+        rm -rf .emacs.d
+        git clone git@github.com:xgarrido/emacs-starter-kit .emacs.d
     }
 
     # Lambda function to install xgarrido/dotfiles
@@ -30,7 +31,7 @@ function dotfiles::install()
 
     # Make sure ~/.bin is in the PATH
     pkgtools::add_path_to_PATH $HOME/.bin
-    
+
     # Clone github repositories
     local githubs=(
         artist
