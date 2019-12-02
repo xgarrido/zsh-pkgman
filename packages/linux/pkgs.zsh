@@ -15,6 +15,7 @@ local _pkgs=(
     bzip2
     cblas
     ccache
+    chromium
     cmake
     cronie
     docker
@@ -64,7 +65,7 @@ local _pkgs=(
     tk
     the_silver_searcher
     tree
-    ttf-adobe-fonts
+    ttf-adobe-source-fonts
     ttf-inconsolata
     ttf-ubuntu-font-family
     xapian-core
