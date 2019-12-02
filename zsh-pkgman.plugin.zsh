@@ -157,7 +157,7 @@ function pkgman()
                 continue
             fi
         else
-            if [[ ${mode} = install ]]; then
+            if [[ ${mode} = install && ${version} != "null" ]]; then
                 pkgtools::msg_warning \
                     "The current package ${ipkg} is already installed @ ${pkg_install_dir}! Remove it first!"
                 continue
@@ -199,7 +199,7 @@ function pkgman()
                     if [[ ! -z ${version} ]]; then
                         # Update info and get latest package to get installed
                         . ${pkg_file} && ipkg=${loaded_pkgs[@]}
-                        if [[ ${mode} = install ]]; then
+                        if [[ ${mode} = install && ${version} != "null" ]]; then
                             pkgtools::msg_devel "Store install directory ${pkgman_install_dir} for ${ipkg} and version ${version}"
                             __pkgman::store_install_dir $(echo ${ipkg} ${version} ${pkgman_install_dir})
                         elif [[ ${mode} = uninstall ]]; then
