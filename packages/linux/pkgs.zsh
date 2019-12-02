@@ -9,6 +9,7 @@
 
 local version=null
 local _pkgs=(
+    arc-gtk-theme
     acpi
     autofs
     bat
@@ -18,6 +19,7 @@ local _pkgs=(
     chromium
     cmake
     cronie
+    dmenu
     docker
     dropbox
     dunst
