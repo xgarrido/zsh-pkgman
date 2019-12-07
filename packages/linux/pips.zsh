@@ -9,11 +9,11 @@
 
 local version=null
 local _pips=(
-    astropy
     glances
     camb
     cobaya
     cython
+    healpy
     ipython
     jupyter
     jupyter-repo2docker
