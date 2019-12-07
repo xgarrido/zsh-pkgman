@@ -9,6 +9,7 @@
 
 local version=null
 local _pips=(
+    astropy
     glances
     camb
     cobaya

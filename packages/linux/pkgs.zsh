@@ -37,6 +37,7 @@ local _pkgs=(
     lxappearance
     meld
     mplayer
+    net-tools
     ncurses
     ninja
     offlineimap
