@@ -38,6 +38,12 @@ function dotfiles::install()
         fi
     }
 
+    # Install add. fonts
+    ( cd ~/.fonts
+      git clone https://github.com/pdf/ubuntu-mono-powerline-ttf.git
+      git clone ttps://github.com/FortAwesome/Font-Awesome.git
+    )
+
     # Make sure ~/.bin is in the PATH
     pkgtools::add_path_to_PATH $HOME/.bin
 
