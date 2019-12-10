@@ -25,8 +25,17 @@ function dotfiles::install()
         cd ~/Development/github.com/xgarrido
         git clone git@github.com:xgarrido/dotfiles
         cd dotfiles
+        # Take care of keys if any
+        has_keys=false
+        if [ -f ~/.ssh/id_rsa ]; then
+            mv ~/.ssh/id_rsa* /tmp/
+            has_keys=true
+        fi
         make clean
         make install
+        if ${has_keys}; then
+            mv /tmp/id_rsa* ~/.ssh/.
+        fi
     }
 
     # Make sure ~/.bin is in the PATH
