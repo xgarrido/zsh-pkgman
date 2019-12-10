@@ -83,6 +83,7 @@ function dotfiles::install()
 
     # Install go packages
     function {
+        pkgtools::reset_variable GOPATH ${HOME}/Development/go
         go get -u github.com/sbinet/go-svn2git
         go get -u github.com/junegunn/fzf
     }
