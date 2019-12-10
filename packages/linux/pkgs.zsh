@@ -32,6 +32,7 @@ local _pkgs=(
     gmime
     hsetroot
     imagemagick
+    inetutils
     jq
     lapack
     lxappearance
