@@ -75,6 +75,7 @@ local _pkgs=(
     xapian-core
     xclip
     xdotool
+    xorg-xrandr
     wmctrl
 )
 
