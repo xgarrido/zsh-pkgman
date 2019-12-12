@@ -43,6 +43,7 @@ local _pkgs=(
     ninja
     offlineimap
     openbox
+    openssh
     owncloud-client
     perl-term-readkey
     python-pip
@@ -117,6 +118,7 @@ function pkgs::install()
         pkgtools::msg_notice "Installing '${ipkg}' via yaourt..."
         yaourt ${=pkg_options} ${ipkg}
     done
+
     pkgtools::at_function_exit
     return 0
 }

@@ -34,6 +34,8 @@ function archlinux::install()
 
     # Enable services
     sudo systemctl enable cronie
+    sudo systemctl enable avahi-daemon
+    sudo systemctl enable sshd
 
     # Install home setup
     pkgman install dotfiles
