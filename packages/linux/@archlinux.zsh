@@ -22,6 +22,15 @@ function archlinux::dump()
     return 0
 }
 
+function archlinux::update()
+{
+    pkgtools::at_function_enter archlinux::update
+    pkgman update pips
+    pkgman update dotfiles
+    pkgtools::at_function_exit
+    return 0
+}
+
 function archlinux::install()
 {
     pkgtools::at_function_enter archlinux::install

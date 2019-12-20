@@ -199,9 +199,13 @@ function pkgman()
                     if [[ ! -z ${version} ]]; then
                         # Update info and get latest package to get installed
                         . ${pkg_file} && ipkg=${loaded_pkgs[@]}
-                        if [[ ${mode} = install && ${version} != "null" ]]; then
-                            pkgtools::msg_devel "Store install directory ${pkgman_install_dir} for ${ipkg} and version ${version}"
-                            __pkgman::store_install_dir $(echo ${ipkg} ${version} ${pkgman_install_dir})
+                        if [[ ${mode} = install ]]; then
+                            if [[ ${version} == "null" ]]; then
+                                __pkgman::store_install_dir $(echo ${ipkg} ${version} "null")
+                            else
+                                pkgtools::msg_devel "Store install directory ${pkgman_install_dir} for ${ipkg} and version ${version}"
+                                __pkgman::store_install_dir $(echo ${ipkg} ${version} ${pkgman_install_dir})
+                            fi
                         elif [[ ${mode} = uninstall ]]; then
                             __pkgman::remove_install_dir $(echo ${ipkg} ${version})
                         fi

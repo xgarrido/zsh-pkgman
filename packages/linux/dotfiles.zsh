@@ -8,15 +8,55 @@
 # Status: not intended to be distributed yet
 
 local version=null
+local _githubs=(
+    artist
+    d3-change.org
+    dockerfiles
+    install_archlinux
+    latex-templates
+    org-book
+    org-life
+    org-notes
+    org-resume
+    org-web-links
+    org-website
+    pygments-styles
+    tikz-figures
+    xgarrido.github.io
+)
+
+function dotfiles::update()
+{
+    pkgtools::at_function_enter dotfiles::update
+
+    (
+        cd ~/.emacs.d && git pull
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_warning "Can not update emacs dotfiles!"
+        fi
+
+        cd ~/Development/github.com/xgarrido
+        for igit in ${_githubs}; do
+            (
+                cd ${igit} && git pull
+                if $(pkgtools::last_command_fails); then
+                    pkgtools::msg_warning "Can not update ${igit} dotfiles!"
+                fi
+            )
+        done
+     )
+
+    pkgtools::at_function_exit
+    return 0
+}
+
 function dotfiles::install()
 {
     pkgtools::at_function_enter dotfiles::install
 
     # Lambda function to install emacs.d
     function {
-        cd ~
-        rm -rf .emacs.d
-        git clone git@github.com:xgarrido/emacs-starter-kit .emacs.d
+        git clone git@github.com:xgarrido/emacs-starter-kit ~/.emacs.d
     }
 
     # Lambda function to install xgarrido/dotfiles
@@ -39,29 +79,16 @@ function dotfiles::install()
     }
 
     # Install add. fonts
-    ( cd ~/.fonts
-      git clone https://github.com/pdf/ubuntu-mono-powerline-ttf.git
-      git clone ttps://github.com/FortAwesome/Font-Awesome.git
-    )
+    function {
+        git clone https://github.com/pdf/ubuntu-mono-powerline-ttf.git ~/.fonts/ubuntu-mono-powerline-ttf
+        git clone ttps://github.com/FortAwesome/Font-Awesome.git ~/.fonts/Font-Awesome
+    }
 
     # Make sure ~/.bin is in the PATH
     pkgtools::add_path_to_PATH $HOME/.bin
 
     # Clone github repositories
-    local githubs=(
-        artist
-        d3-change.org
-        latex-templates
-        org-book
-        org-life
-        org-notes
-        org-resume
-        org-web-links
-        org-website
-        pygments-styles
-        tikz-figures
-    )
-    for igit in ${githubs}; do
+    for igit in ${_githubs}; do
         git get github.com/xgarrido/${igit}
     done
 
@@ -73,12 +100,6 @@ function dotfiles::install()
         fi
         cd ~/Development/github.com/xgarrido/latex-templates
         make
-        cd $TEXMFHOME/tex/latex/commonstuff
-        if [[ ! -f font-awesomesty ]]; then
-            wget \
-                https://gist.githubusercontent.com/xgarrido/b4176717a24c530ed3f309c46c38fc5a/raw/0016c76e532b55d5802aefad248b39472776420c/font-awesome.sty
-        fi
-        pip install --user pygments-style-solarized
     }
 
     # Install go packages
