@@ -30,6 +30,7 @@ function dotfiles::update()
     pkgtools::at_function_enter dotfiles::update
 
     (
+        pkgtools::msg_notice "Updating emacs dotfiles..."
         cd ~/.emacs.d && git pull
         if $(pkgtools::last_command_fails); then
             pkgtools::msg_warning "Can not update emacs dotfiles!"
@@ -38,6 +39,7 @@ function dotfiles::update()
         cd ~/Development/github.com/xgarrido
         for igit in ${_githubs}; do
             (
+                pkgtools::msg_notice "Updating '${igit}'..."
                 cd ${igit} && git pull
                 if $(pkgtools::last_command_fails); then
                     pkgtools::msg_warning "Can not update ${igit} dotfiles!"
