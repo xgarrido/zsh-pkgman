@@ -9,10 +9,10 @@
 
 local version=null
 local _pips=(
-    glances
     camb
     cobaya
     cython
+    glances
     healpy
     ipython
     jupyter
@@ -22,8 +22,10 @@ local _pips=(
     pandas
     seaborn
     scipy
+    pip
     pipenv
     pygments
+    pygments-style-solarized
     pyyaml
 )
 
@@ -40,12 +42,25 @@ function pips::dump()
     return 0
 }
 
+function pips::update()
+{
+    pkgtools::at_function_enter pips::update
+    pips::install
+    pkgtools::at_function_exit
+    return 0
+}
+
 function pips::install()
 {
     pkgtools::at_function_enter pips::install
     for ipip in ${_pips}; do
         pkgtools::msg_notice "Installing '${ipip}' via pip..."
         pip install --upgrade --user ${ipip}
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_error "pips update fails !"
+            pkgtools::at_function_exit
+            return 1
+        fi
     done
     # Fix for colout
     pip install --user git+https://github.com/nojhan/colout.git
