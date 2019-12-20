@@ -30,6 +30,10 @@ function dotfiles::update()
     pkgtools::at_function_enter dotfiles::update
 
     (
+        if $(pkgtools::has_binary antigen); then
+            pkgtools::msg_notice "Updating antigen bundles..."
+            antigen update
+        fi
         pkgtools::msg_notice "Updating emacs dotfiles..."
         cd ~/.emacs.d && git pull
         if $(pkgtools::last_command_fails); then
