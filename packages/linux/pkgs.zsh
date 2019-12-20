@@ -83,6 +83,7 @@ local _pkgs=(
     xclip
     xdotool
     xorg-xrandr
+    xorg-xinput
     wmctrl
 )
 
