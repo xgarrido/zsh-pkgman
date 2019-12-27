@@ -50,7 +50,13 @@ function dotfiles::update()
                 fi
             )
         done
-     )
+        pkgtools::msg_notice "Updating 'dotfiles'..."
+        cd ~/Development/github.com/xgarrido/dotfiles
+        git pull
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_warning "Can not update 'dotfiles'!"
+        fi
+    )
 
     pkgtools::at_function_exit
     return 0
