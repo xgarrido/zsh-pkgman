@@ -19,10 +19,12 @@ local _pkgs=(
     chromium
     cmake
     cronie
+    diff-so-fancy
     dmenu
     docker
     dropbox
     dunst
+    fasd
     freerdp
     gcc-fortran
     gdb
