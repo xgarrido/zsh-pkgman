@@ -56,6 +56,7 @@ local _pkgs=(
     rsync
     subversion
     terminator
+    scrot
     sshfs
     texlive-bibtexextra
     texlive-core
@@ -75,6 +76,7 @@ local _pkgs=(
     ttf-adobe-source-fonts
     ttf-inconsolata
     ttf-ubuntu-font-family
+    ttf-font-awesome
     xapian-core
     xclip
     xdotool
