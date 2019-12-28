@@ -50,12 +50,6 @@ function dotfiles::update()
                 fi
             )
         done
-        pkgtools::msg_notice "Updating 'dotfiles'..."
-        cd ~/Development/github.com/xgarrido/dotfiles
-        git pull
-        if $(pkgtools::last_command_fails); then
-            pkgtools::msg_warning "Can not update 'dotfiles'!"
-        fi
     )
 
     pkgtools::at_function_exit
@@ -69,31 +63,6 @@ function dotfiles::install()
     # Lambda function to install emacs.d
     function {
         git clone git@github.com:xgarrido/emacs-starter-kit ~/.emacs.d
-    }
-
-    # Lambda function to install xgarrido/dotfiles
-    function {
-        mkdir -p ~/Development/github.com/xgarrido
-        cd ~/Development/github.com/xgarrido
-        git clone git@github.com:xgarrido/dotfiles
-        cd dotfiles
-        # Take care of keys if any
-        has_keys=false
-        if [ -f ~/.ssh/id_rsa ]; then
-            mv ~/.ssh/id_rsa* /tmp/
-            has_keys=true
-        fi
-        make clean
-        make install
-        if ${has_keys}; then
-            mv /tmp/id_rsa* ~/.ssh/.
-        fi
-    }
-
-    # Install add. fonts
-    function {
-        git clone https://github.com/pdf/ubuntu-mono-powerline-ttf.git ~/.fonts/ubuntu-mono-powerline-ttf
-        git clone ttps://github.com/FortAwesome/Font-Awesome.git ~/.fonts/Font-Awesome
     }
 
     # Make sure ~/.bin is in the PATH
