@@ -27,6 +27,7 @@ local _pkgs=(
     fasd
     freerdp
     gcc-fortran
+    gcolor2
     gdb
     gnuplot
     go
