@@ -9,6 +9,7 @@
 
 local version=null
 local _pkgs=(
+    alsa-utils
     arc-gtk-theme
     acpi
     autofs
