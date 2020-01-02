@@ -75,7 +75,6 @@ local _pkgs=(
     tk
     the_silver_searcher
     tree
-    ttf-adobe-source-fonts
     ttf-inconsolata
     ttf-ubuntu-font-family
     ttf-font-awesome
