@@ -17,6 +17,7 @@ local _pips=(
     ipython
     jupyter
     jupyter-repo2docker
+    mock
     numpy
     matplotlib
     pandas
@@ -27,6 +28,7 @@ local _pips=(
     pygments
     pygments-style-solarized
     pyyaml
+    sphinx_rtd_theme
 )
 
 function pips::dump()
