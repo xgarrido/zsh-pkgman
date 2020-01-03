@@ -31,6 +31,7 @@ local _pips=(
     pyyaml
     setuptools
     sphinx_rtd_theme
+    twine
     versioneer
     wheel
 )
