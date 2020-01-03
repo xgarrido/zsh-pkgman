@@ -29,8 +29,10 @@ local _pips=(
     pygments
     pygments-style-solarized
     pyyaml
+    setuptools
     sphinx_rtd_theme
     versioneer
+    wheel
 )
 
 function pips::dump()
