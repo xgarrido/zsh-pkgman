@@ -9,6 +9,7 @@
 
 local version=null
 local _pips=(
+    bump2version
     camb
     cobaya
     cython
@@ -29,6 +30,7 @@ local _pips=(
     pygments-style-solarized
     pyyaml
     sphinx_rtd_theme
+    versioneer
 )
 
 function pips::dump()
