@@ -16,6 +16,7 @@ local _pips=(
     glances
     healpy
     ipython
+    isort
     jupyter
     jupyter-repo2docker
     mock
@@ -34,6 +35,7 @@ local _pips=(
     twine
     versioneer
     wheel
+    yapf
 )
 
 function pips::dump()
