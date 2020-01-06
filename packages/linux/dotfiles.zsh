@@ -23,24 +23,29 @@ local _githubs=(
     pygments-styles
     tikz-figures
     xgarrido.github.io
+    emacs-starter-kit
+    zsh-dotfiles
+    zsh-org-pages
+    zsh-pkgman
+    zsh-pkgtools
+    zsh-themes
+    zsh-utilities
 )
+
+pkgtools::reset_variable GIT_GET_DIRECTORY ${HOME}/Development
 
 function dotfiles::update()
 {
     pkgtools::at_function_enter dotfiles::update
 
     (
-        if $(pkgtools::has_binary antigen); then
-            pkgtools::msg_notice "Updating antigen bundles..."
-            antigen update
-        fi
         pkgtools::msg_notice "Updating emacs dotfiles..."
         cd ~/.emacs.d && git pull
         if $(pkgtools::last_command_fails); then
             pkgtools::msg_warning "Can not update emacs dotfiles!"
         fi
 
-        cd ~/Development/github.com/xgarrido
+        cd ${GIT_GET_DIRECTORY}/github.com/xgarrido
         for igit in ${_githubs}; do
             (
                 pkgtools::msg_notice "Updating '${igit}'..."
@@ -60,11 +65,6 @@ function dotfiles::install()
 {
     pkgtools::at_function_enter dotfiles::install
 
-    # Lambda function to install emacs.d
-    function {
-        git clone git@github.com:xgarrido/emacs-starter-kit ~/.emacs.d
-    }
-
     # Make sure ~/.bin is in the PATH
     pkgtools::add_path_to_PATH $HOME/.bin
 
@@ -73,13 +73,31 @@ function dotfiles::install()
         git get github.com/xgarrido/${igit}
     done
 
+    # Create link for emacs.d and zsh
+    function {
+        if [[ ! -L ~/.emacs.d && -d ~/.emacs.d ]]; then
+            pkgtools::msg_warning "Do you really want to delete ~/.emacs.d directory ?"
+            pkgtools::yesno_question "Answer ?"
+            if $(pkgtools::answer_is_yes); then
+                rm -rf ~/.emacs.d
+            fi
+        fi
+        ln -sf ~/Development/github.com/xgarrido/emacs-starter-kit ~/.emacs.d
+        for igit in ${_githubs}; do
+            if [[ ${igit} == zsh-* ]]; then
+                ln -sf ${GIT_GET_DIRECTORY}/github.com/xgarrido/${igit} ~/.config/zsh/antigen-repo/bundles/xgarrido/
+            fi
+        done
+    }
+
+
     # Install LaTeX styles files
     function {
         # Make sure emacs has been already installed otherwise do it
         if ! $(pkgtools::has_binary emacs); then
             pkgman install emacs
         fi
-        cd ~/Development/github.com/xgarrido/latex-templates
+        cd ${GIT_GET_DIRECTORY}/github.com/xgarrido/latex-templates
         make
     }
 
