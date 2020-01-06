@@ -23,13 +23,6 @@ local _githubs=(
     pygments-styles
     tikz-figures
     xgarrido.github.io
-    emacs-starter-kit
-    zsh-dotfiles
-    zsh-org-pages
-    zsh-pkgman
-    zsh-pkgtools
-    zsh-themes
-    zsh-utilities
 )
 
 pkgtools::reset_variable GIT_GET_DIRECTORY ${HOME}/Development
@@ -72,24 +65,6 @@ function dotfiles::install()
     for igit in ${_githubs}; do
         git get github.com/xgarrido/${igit}
     done
-
-    # Create link for emacs.d and zsh
-    function {
-        if [[ ! -L ~/.emacs.d && -d ~/.emacs.d ]]; then
-            pkgtools::msg_warning "Do you really want to delete ~/.emacs.d directory ?"
-            pkgtools::yesno_question "Answer ?"
-            if $(pkgtools::answer_is_yes); then
-                rm -rf ~/.emacs.d
-            fi
-        fi
-        ln -sf ~/Development/github.com/xgarrido/emacs-starter-kit ~/.emacs.d
-        for igit in ${_githubs}; do
-            if [[ ${igit} == zsh-* ]]; then
-                ln -sf ${GIT_GET_DIRECTORY}/github.com/xgarrido/${igit} ~/.config/zsh/antigen-repo/bundles/xgarrido/
-            fi
-        done
-    }
-
 
     # Install LaTeX styles files
     function {
