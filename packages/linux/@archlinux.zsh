@@ -45,6 +45,7 @@ function archlinux::install()
     sudo systemctl enable cronie
     sudo systemctl enable avahi-daemon
     sudo systemctl enable sshd
+    sudo systemctl enable org.cups.cupsd
 
     # Install home setup
     pkgman install dotfiles

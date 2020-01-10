@@ -20,6 +20,7 @@ local _pkgs=(
     chromium
     cmake
     cronie
+    cups
     diff-so-fancy
     dmenu
     docker
@@ -44,6 +45,7 @@ local _pkgs=(
     mplayer
     net-tools
     ncurses
+    network-manager-applet
     ninja
     offlineimap
     openbox
@@ -72,6 +74,7 @@ local _pkgs=(
     texlive-pstricks
     texlive-publishers
     texlive-science
+    tint2
     tk
     the_silver_searcher
     tree
