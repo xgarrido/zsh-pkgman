@@ -14,6 +14,7 @@ local _pips=(
     cobaya
     cython
     glances
+    getdist
     healpy
     ipython
     isort
