@@ -77,6 +77,7 @@ local _pkgs=(
     tint2
     tk
     the_silver_searcher
+    transmission-remote-gtk
     tree
     ttf-inconsolata
     ttf-ubuntu-font-family
