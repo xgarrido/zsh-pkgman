@@ -88,6 +88,7 @@ local _pkgs=(
     xorg-xrandr
     xorg-xinput
     wmctrl
+    wget
 )
 
 function pkgs::dump()
