@@ -13,6 +13,7 @@ local _pips=(
     camb
     cobaya
     cython
+    flake8
     glances
     getdist
     healpy
@@ -28,8 +29,10 @@ local _pips=(
     scipy
     pip
     pipenv
+    pre-commit
     pygments
     pygments-style-solarized
+    pyside2
     pyyaml
     setuptools
     sphinx_rtd_theme
@@ -37,7 +40,6 @@ local _pips=(
     twine
     versioneer
     wheel
-    yapf
 )
 
 function pips::dump()
@@ -85,7 +87,7 @@ function pips::uninstall()
     pkgtools::msg_warning "Do you really want to uninstall pip packages ?"
     pkgtools::yesno_question
     if $(pkgtools::answer_is_yes); then
-        pip uninstall $(eval print -l ${_pips})
+        pip uninstall --yes $(eval print -l ${_pips})
     fi
     pkgtools::at_function_exit
     return 0
