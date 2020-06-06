@@ -47,7 +47,7 @@ local _pkgs=(
     ncurses
     network-manager-applet
     ninja
-    nodejs
+    npm
     offlineimap
     openbox
     openssh
