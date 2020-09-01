@@ -32,6 +32,7 @@ local _pips=(
     pre-commit
     pygments
     pygments-style-solarized
+    pylint
     pyside2
     pyyaml
     setuptools
