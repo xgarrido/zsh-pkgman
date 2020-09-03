@@ -9,6 +9,7 @@
 
 local version=null
 local _pips=(
+    black
     bump2version
     camb
     cobaya
