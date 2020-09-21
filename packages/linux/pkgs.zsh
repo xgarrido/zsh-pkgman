@@ -51,6 +51,7 @@ local _pkgs=(
     offlineimap
     openbox
     openssh
+    openntpd
     owncloud-client
     perl-term-readkey
     python-pip
@@ -131,6 +132,9 @@ function pkgs::install()
         yaourt ${=pkg_options} ${ipkg}
     done
 
+    pkgtools::msg_notice "Post-action like enabling service"
+    sudo systemctl enable openntpd.service
+    sudo systemctl start  openntpd.service
     pkgtools::at_function_exit
     return 0
 }
