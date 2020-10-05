@@ -21,6 +21,7 @@ local _pips=(
     ipython
     isort
     jupyter
+    jupyterlab
     jupyter-repo2docker
     mock
     numpy
@@ -41,6 +42,7 @@ local _pips=(
     tabulate
     twine
     versioneer
+    voila
     wheel
 )
 

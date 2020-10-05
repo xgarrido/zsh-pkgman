@@ -46,6 +46,7 @@ local _pkgs=(
     net-tools
     ncurses
     network-manager-applet
+    ngrok-bin
     ninja
     npm
     offlineimap
