@@ -19,11 +19,14 @@ local _pips=(
     getdist
     healpy
     ipython
+    ipympl
     isort
     jupyter
     jupyterlab
+    jupyterlab-git
     jupyter-repo2docker
     mock
+    nbdime
     numpy
     matplotlib
     pandas
@@ -31,7 +34,10 @@ local _pips=(
     scipy
     pip
     pipenv
+    plotly
     pre-commit
+    pspy
+    psplay
     pygments
     pygments-style-solarized
     pylint
@@ -44,6 +50,19 @@ local _pips=(
     versioneer
     voila
     wheel
+)
+
+local _jlabs=(
+    @jupyter-widgets/jupyterlab-manager
+    @jupyter-widgets/jupyterlab-sidecar
+    @jupyterlab/git
+    @jupyterlab/toc
+    plotlywidget
+    jupyterlab-plotly
+    nbdime-jupyterlab
+    @ryantam626/jupyterlab_code_formatter
+    jupyter-leaflet
+    jupyter-leaflet-car
 )
 
 function pips::dump()
@@ -81,6 +100,17 @@ function pips::install()
     done
     # Fix for colout
     pip install --user git+https://github.com/nojhan/colout.git
+
+    for ijlab in ${_jlabs}; do
+        pkgtools::msg_notice "Installing '${ijlab}' extension for jupyterlab..."
+        jupyter labextension install ${ijlab}
+        if $(pkgtools::last_command_fails); then
+            pkgtools::msg_error "jlab update fails !"
+            pkgtools::at_function_exit
+            return 1
+        fi
+    done
+    jupyter serverextension enable --py jupyterlab_git
     pkgtools::at_function_exit
     return 0
 }
