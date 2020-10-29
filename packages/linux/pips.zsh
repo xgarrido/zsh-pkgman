@@ -111,6 +111,7 @@ function pips::install()
         fi
     done
     jupyter serverextension enable --py jupyterlab_git
+    jupyter serverextension enable --py nbdime
     pkgtools::at_function_exit
     return 0
 }
