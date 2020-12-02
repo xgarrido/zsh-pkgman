@@ -25,6 +25,7 @@ local _pips=(
     jupyterlab
     jupyterlab-git
     jupyter-repo2docker
+    jupyterlab_code_formatter
     mock
     nbdime
     numpy
@@ -32,7 +33,6 @@ local _pips=(
     pandas
     seaborn
     scipy
-    pip
     pipenv
     plotly
     pre-commit
@@ -89,6 +89,7 @@ function pips::update()
 function pips::install()
 {
     pkgtools::at_function_enter pips::install
+    pip install --upgrade --user pip
     for ipip in ${_pips}; do
         pkgtools::msg_notice "Installing '${ipip}' via pip..."
         pip install --upgrade --user ${ipip}
@@ -112,6 +113,7 @@ function pips::install()
     done
     jupyter serverextension enable --py jupyterlab_git
     jupyter serverextension enable --py nbdime
+    jupyter serverextension enable --py jupyterlab_code_formatter
     pkgtools::at_function_exit
     return 0
 }
