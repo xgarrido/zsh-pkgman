@@ -26,6 +26,7 @@ local _pkgs=(
     docker
     dropbox
     dunst
+    exa
     fasd
     freerdp
     gcc-fortran
@@ -56,6 +57,7 @@ local _pkgs=(
     owncloud-client
     perl-term-readkey
     python-pip
+    pyenv
     pstoedit
     remmina
     ruby
