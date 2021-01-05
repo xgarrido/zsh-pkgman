@@ -56,6 +56,7 @@ local _pkgs=(
     openntpd
     owncloud-client
     perl-term-readkey
+    pdf2svg
     python-pip
     pyenv
     pstoedit
