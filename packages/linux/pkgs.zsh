@@ -24,6 +24,7 @@ local _pkgs=(
     diff-so-fancy
     dmenu
     docker
+    docker-compose
     dropbox
     dunst
     exa
