@@ -17,7 +17,6 @@ local _pkgs=(
     bzip2
     cblas
     ccache
-    chromium
     cmake
     cronie
     cups
@@ -33,6 +32,7 @@ local _pkgs=(
     gcc-fortran
     gcolor2
     gdb
+    google-chrome
     gnuplot
     go
     gparted
