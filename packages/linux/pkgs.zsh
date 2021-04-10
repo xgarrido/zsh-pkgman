@@ -51,11 +51,14 @@ local _pkgs=(
     ngrok-bin
     ninja
     npm
+    numix-icon-theme-git
     offlineimap
     openbox
+    openbox-arc-git
     openssh
     openntpd
     owncloud-client
+    pacman-contrib
     perl-term-readkey
     pdf2svg
     python-pip
@@ -65,6 +68,8 @@ local _pkgs=(
     ruby
     ruby-irb
     rsync
+    slack-desktop
+    syncthing-gtk
     subversion
     terminator
     scrot
@@ -94,8 +99,10 @@ local _pkgs=(
     xdotool
     xorg-xrandr
     xorg-xinput
+    xorg-xinit
     wmctrl
     wget
+    zoom
 )
 
 function pkgs::dump()
@@ -132,6 +139,8 @@ function pkgs::install()
             rm -rf $(pwd)
         )
     fi
+    # Add GPG for dropbox
+    gpg --recv-keys 1C61A2656FB57B7E4DE0F4C1FC918B335044912E
     for ipkg in ${_pkgs}; do
         pkgtools::msg_notice "Installing '${ipkg}' via yaourt..."
         yaourt ${=pkg_options} ${ipkg}
