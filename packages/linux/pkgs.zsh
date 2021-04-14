@@ -59,6 +59,7 @@ local _pkgs=(
     openntpd
     owncloud-client
     pacman-contrib
+    pandoc-bin
     perl-term-readkey
     pdf2svg
     python-pip
