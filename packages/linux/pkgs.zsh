@@ -45,6 +45,7 @@ local _pkgs=(
     lxappearance
     meld
     mplayer
+    mu
     net-tools
     ncurses
     network-manager-applet
