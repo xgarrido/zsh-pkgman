@@ -17,13 +17,15 @@ local _pips=(
     flake8
     glances
     getdist
-    healpy
+    # healpy
     ipython
     ipympl
     isort
     jupyter
     jupyterlab
     jupyterlab-git
+    jupyterlab-github
+    jupyterlab-notifications
     jupyter-repo2docker
     jupyterlab_code_formatter
     mock
@@ -36,33 +38,19 @@ local _pips=(
     pipenv
     plotly
     pre-commit
-    pspy
-    psplay
     pygments
-    pygments-style-solarized
+    pygments-solarized
     pylint
     pyside2
     pyyaml
     setuptools
-    sphinx_rtd_theme
     tabulate
     twine
     versioneer
     voila
-    wheel
 )
 
 local _jlabs=(
-    @jupyter-widgets/jupyterlab-manager
-    @jupyter-widgets/jupyterlab-sidecar
-    @jupyterlab/git
-    @jupyterlab/toc
-    plotlywidget
-    jupyterlab-plotly
-    nbdime-jupyterlab
-    @ryantam626/jupyterlab_code_formatter
-    jupyter-leaflet
-    jupyter-leaflet-car
 )
 
 function pips::dump()
@@ -89,7 +77,7 @@ function pips::update()
 function pips::install()
 {
     pkgtools::at_function_enter pips::install
-    pip install --upgrade --user pip
+    pip install --upgrade --user pip wheel
     for ipip in ${_pips}; do
         pkgtools::msg_notice "Installing '${ipip}' via pip..."
         pip install --upgrade --user ${ipip}
@@ -111,9 +99,8 @@ function pips::install()
             return 1
         fi
     done
-    jupyter serverextension enable --py jupyterlab_git
-    jupyter serverextension enable --py nbdime
-    jupyter serverextension enable --py jupyterlab_code_formatter
+    jupyter serverextension enable --py nbdime --user
+    jupyter serverextension enable --py jupyterlab_code_formatter --user
     pkgtools::at_function_exit
     return 0
 }
