@@ -44,6 +44,7 @@ local _pips=(
     pyside2
     pyyaml
     setuptools
+    sidecar
     tabulate
     twine
     versioneer
