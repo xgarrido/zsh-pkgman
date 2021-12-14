@@ -45,6 +45,7 @@ local _pips=(
     pyyaml
     setuptools
     sidecar
+    sphinx
     tabulate
     twine
     versioneer

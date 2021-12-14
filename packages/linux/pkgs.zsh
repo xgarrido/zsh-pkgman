@@ -17,6 +17,7 @@ local _pkgs=(
     bzip2
     cblas
     ccache
+    cfitsio
     cmake
     cronie
     cups
