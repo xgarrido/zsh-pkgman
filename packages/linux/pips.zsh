@@ -17,7 +17,8 @@ local _pips=(
     flake8
     glances
     getdist
-    # healpy
+    healpy
+    ipyleaflet
     ipython
     ipympl
     isort
@@ -46,6 +47,7 @@ local _pips=(
     setuptools
     sidecar
     sphinx
+    statsmodels
     tabulate
     twine
     versioneer
