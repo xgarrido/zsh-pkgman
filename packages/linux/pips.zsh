@@ -29,6 +29,7 @@ local _pips=(
     jupyterlab-notifications
     jupyter-repo2docker
     jupyterlab_code_formatter
+    jupyterlab_rise
     mock
     nbdime
     numpy
