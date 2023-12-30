@@ -19,14 +19,11 @@ local _pips=(
     getdist
     healpy
     ipyleaflet
-    ipython
     ipympl
     isort
-    jupyter
     jupyterlab
     jupyterlab-git
     jupyterlab-github
-    jupyterlab-notifications
     jupyter-repo2docker
     jupyterlab_code_formatter
     jupyterlab_rise
@@ -34,6 +31,7 @@ local _pips=(
     nbdime
     numpy
     matplotlib
+    openpyxl
     pandas
     seaborn
     scipy
@@ -46,13 +44,13 @@ local _pips=(
     pyside2
     pyyaml
     setuptools
-    sidecar
+    # sidecar
     sphinx
     statsmodels
     tabulate
     twine
     versioneer
-    voila
+    # voila
 )
 
 local _jlabs=(
@@ -104,8 +102,8 @@ function pips::install()
             return 1
         fi
     done
-    jupyter serverextension enable --py nbdime --user
-    jupyter serverextension enable --py jupyterlab_code_formatter --user
+    # jupyter serverextension enable --py nbdime --user
+    # jupyter serverextension enable --py jupyterlab_code_formatter --user
     pkgtools::at_function_exit
     return 0
 }
