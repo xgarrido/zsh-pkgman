@@ -25,31 +25,31 @@ function rpi::install()
 {
   pkgtools::at_function_enter rpi::install
 
-  cat <<EOF | sudo tee /etc/systemd/system/media-lacie.automount
+  cat <<EOF | sudo tee /etc/systemd/system/media-external.automount
 [Unit]
-Description=Automount lacie disk
+Description=Automount external disk
 
 [Automount]
-Where=/media/lacie
+Where=/media/external
 
 [Install]
 WantedBy=multi-user.target
 EOF
-  cat <<EOF | sudo tee /etc/systemd/system/media-lacie.mount
+  cat <<EOF | sudo tee /etc/systemd/system/media-external.mount
 [Unit]
-Description=Lacie
+Description=External HD
 
 [Mount]
 What=/dev/sda1
-Where=/media/lacie
+Where=/media/external
 Type=ext4
 
 [Install]
 WantedBy=multi-user.target
 EOF
-  systemctl is-enabled media-lacie.mount
-  systemctl is-enabled media-lacie.automount
-  systemctl start media-lacie.automount
+  systemctl enable media-external.mount
+  systemctl enable media-external.automount
+  systemctl start media-external.automount
   systemctl daemon-reload
 
   pkgtools::at_function_exit
@@ -108,16 +108,28 @@ function rpi::install_samba()
 
   sudo apt install samba
 
-  cat <<EOF | sudo tee /etc/samba/smb.conf2
+  cat <<EOF | sudo tee /etc/samba/smb.conf
 [share]
    comment = Mount & share media
-   path = /media/lacie
+   path = /media/external
    browseable = yes
    read only = yes
    guest ok = yes
 EOF
 
   sudo systemctl restart smbd
+  pkgtools::at_function_exit
+  return 0
+}
+
+function rpi::install_jellyfin()
+{
+  pkgtools::at_function_enter rpi::install_jellyfin
+
+  curl https://repo.jellyfin.org/install-debuntu.sh | sudo bash
+
+  sudo usermod -a -G rpi jellyfin
+
   pkgtools::at_function_exit
   return 0
 }
