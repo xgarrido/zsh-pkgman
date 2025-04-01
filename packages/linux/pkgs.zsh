@@ -13,6 +13,7 @@ local _pkgs=(
   alsa-utils
   arc-gtk-theme
   aspell-fr
+  aspell-en
   autofs
   bat
   bzip2
