@@ -9,9 +9,10 @@
 
 local version=null
 local _pkgs=(
+  acpi
   alsa-utils
   arc-gtk-theme
-  acpi
+  aspell-fr
   autofs
   bat
   bzip2
